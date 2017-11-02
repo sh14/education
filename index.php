@@ -17,3 +17,4 @@ echo 'hello world!';//ok
 //test 2
 //test №3
 //test without programm
+//нет ничего!
