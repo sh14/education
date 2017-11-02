@@ -6,7 +6,7 @@
  * Time: 20:08
  */
 
-echo 'hello world!';
+echo 'hello world!';//ok
 //Костяков
 //Иванников
 //Шлобин
