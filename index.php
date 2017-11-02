@@ -8,3 +8,6 @@
 
 echo 'hello world!';
 //Костяков
+
+echo 'Hello World!';
+//Шлобин
