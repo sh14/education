@@ -19,4 +19,5 @@ echo 'hello world!';//ok
 //нет ничего!
 //vrotmnenogi
 
+//new com
 //sdfffff
