@@ -20,3 +20,4 @@ echo 'hello world!';//ok
 //vrotmnenogi
 
 //что-то всегда есть. Природа не терпит пустоты ;))
+//new com
