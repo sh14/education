@@ -42,3 +42,4 @@ echo 'hello world!';//ok
 //Тестируем на github.com
 >>>>>>> 3cac3ef78af47f3dfedf3a3c65bdd225250fa5c5
 //0123456789
+0-123456789
