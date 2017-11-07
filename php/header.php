@@ -10,21 +10,3 @@
     <title>Blog</title>
 </head>
 <body>
-
-<div class="menu">
-	<?php echo get_menu(); ?>
-</div>
-<?php
-switch (get_page_name()) {
-    case 'main':
-	    include 'publishing-form.php';
-        break;
-    case 'registration':
-	    include 'registration-form.php';
-	    break;
-    case 'sing_in':
-	    include 'sing-in-form.php';
-	    break;
-}
-?>
-<div class="container">
