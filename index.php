@@ -1,6 +1,8 @@
 <?php
 header( 'Content-Type: text/html; charset=utf-8' );
 
-require 'php/functions.php';
+require 'functions.php';
 
-init();
+//init();
+include 'header.php';
+include 'footer.php';
