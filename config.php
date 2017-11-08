@@ -9,5 +9,5 @@
 // определение именованных констант
 define('HOST','localhost');
 define('LOGIN','root');
-define('PASSWORD','root');
-define('DATABASE','shlob');
+define('PASSWORD','');
+define('DATABASE','shlo');
