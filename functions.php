@@ -10,6 +10,10 @@ if ( empty( $link ) ) {
 	$link = mysqli_connect( HOST, LOGIN, PASSWORD, DATABASE );
 }
 
+function init() {
+	get_header();
+	get_footer();
+}
 
 
 /**
