@@ -10,19 +10,17 @@ if ( empty( $link ) ) {
 	$link = mysqli_connect( HOST, LOGIN, PASSWORD, DATABASE );
 }
 
-function init() {
-	get_header();
 
-	if(!empty($_GET['p'])){
+function init() {
+
+	if ( ! empty( $_GET['p'] ) ) {
 		$page = $_GET['p'];
 	}
-	if(empty($page)){
-		$page = 'page';
+	if ( empty( $page ) ) {
+		$page = 'index';
 	}
 
-	include $page.'.php';
-
-	get_footer();
+	get_template_part( $page );
 }
 
 
@@ -45,12 +43,66 @@ function do_query( $query ) {
  * Функция подключения шапки сайта
  */
 function get_header() {
-	include 'header.php';
+	get_template_part( 'header' );
 }
 
 /**
  * Функция подключения подвала
  */
 function get_footer() {
-	include 'footer.php';
+	get_template_part( 'footer' );
+}
+
+/**
+ * Функция подключения шаблона
+ *
+ * @param $name
+ *
+ * @return bool
+ */
+function get_template_part( $name ) {
+
+	$template_path   = [];
+	$template_path[] = get_root_path() . '/templates/' . $name . '.php';
+	foreach ( $template_path as $path ) {
+		if ( file_exists( $path ) ) {
+			include $path;
+
+			return true;
+		}
+	}
+
+	return false;
+}
+
+/**
+ * Функция получения директории сайта
+ *
+ * @return string
+ */
+function get_root_path() {
+	$path = dirname( __FILE__ );
+
+	return $path;
+}
+
+/**
+ * Функция получения url'а сайта
+ *
+ * @return string
+ */
+function get_root_url() {
+	$protocol = stripos( $_SERVER['SERVER_PROTOCOL'], 'https' ) === true ? 'https://' : 'http://';
+	$port     = ! empty( $_SERVER['SERVER_PORT'] ) ? ':' . $_SERVER['SERVER_PORT'] : '';
+
+	return $protocol . $_SERVER["SERVER_NAME"] . $port . dirname( $_SERVER["SCRIPT_NAME"] );
+}
+
+/**
+ * Функция получения директории папки со стилями шаблона
+ *
+ * @return string
+ */
+function get_stylesheet_directory() {
+	return get_root_url() . '/templates';
 }
