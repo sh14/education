@@ -12,6 +12,16 @@ if ( empty( $link ) ) {
 
 function init() {
 	get_header();
+
+	if(!empty($_GET['p'])){
+		$page = $_GET['p'];
+	}
+	if(empty($page)){
+		$page = 'page';
+	}
+
+	include $page.'.php';
+
 	get_footer();
 }
 
