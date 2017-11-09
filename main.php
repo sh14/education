@@ -5,7 +5,9 @@
  * Date: 07.11.2017
  * Time: 21:52
  */?>
-<div class="registrate">
-	<button class="login">Вход</button>
-	<button class="registration">Регистрация</button>
+<div class="main container">
+    <div class="registrate">
+        <button class="main_login">Вход</button>
+        <button class="main_registration">Регистрация</button>
+    </div>
 </div>
