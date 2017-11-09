@@ -61,13 +61,33 @@
         });
     }
 
-    function base_control() {
+    function control_auth() {
         var base = setInterval(function(){
             $.ajax({
-                url:
+                url: 'res.php',
+                success: function(url) {
+                    $('#results_form').html(data);
+                },
+                error:  function(xhr, str){
+                    alert('Возникла ошибка: ' + xhr.responseCode);
+                }
             });
-        }, 10);
+        }, 100);
+        clearInterval (base);
+    }
+
+    function control_message() {
+        var base = setInterval(function(){
+            $.ajax({
+                url: 'mes.php',
+                success: function(url) {
+                    $('#results_message').html(data);
+                },
+                error:  function(xhr, str){
+                    alert('Возникла ошибка: ' + xhr.responseCode);
+                }
+            });
+        }, 100);
         clearInterval (base);
     }
     </script>
-<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
