@@ -106,3 +106,58 @@ function get_root_url() {
 function get_stylesheet_directory() {
 	return get_root_url() . '/templates';
 }
+
+/**
+ *  Функция редактирования профиля пользователя
+ */
+
+function profile_edit() {
+	list( $url ) = explode( '?', $_SERVER['REQUEST_URI'] );
+	$event = '';
+	if ( ! empty( $_GET['event'] ) && $_GET['event'] == 'edit_user_info' ) {
+		$vars_string       = 'login,email,first_name,last_name';
+		$vars              = array_map( 'trim', explode( ',', $vars_string ) );
+		$values            = [];
+		$empty_input_count = 0;
+		$allow_query       = 1;
+		foreach ( $vars as $var_key => $var_value ) {
+			if ( ! empty( $_POST[ $var_value ] ) ) {
+				$values[] = "'$_POST[$var_value]'";
+			} else {
+				unset( $vars[ $var_key ] );
+				++ $empty_input_count;
+				if ( $empty_input_count == 4 ) {
+					$allow_query = 0;
+					break;
+				}
+			}
+		}
+
+		$vars = array_combine( array_keys( $values ), array_values( $vars ) );
+		for ( $i = 0; $i < count( $values ); $i ++ ) {
+			$values[ $i ] = $vars[ $i ] . '=' . $values[ $i ];
+		}
+		$ID = $_POST['ID'];
+
+		if ( $allow_query == 1 ) {
+			$event = 'success';
+
+			$values = implode( ',', $values );
+			$ID     = "WHERE ID = $ID";
+			$query  = "UPDATE posts SET $values $ID";
+
+			do_query( $query );
+		} else {
+			$event = 'error';
+		}
+	}
+
+	/*if ( ! empty( $_GET['event'] ) && $_GET['event'] == 'edit_user_password' && ! empty( $_POST ) ) {
+
+	}*/
+
+	if ( ! empty( $event ) ) {
+		$event = '?event=' . $event;
+		header( 'location: ' . $url . $event );
+	}
+}
