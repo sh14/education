@@ -16,7 +16,11 @@
 <div class="menu">
     <ul>
         <li>
+            <a href="?p=index">Главная страница</a>
+        </li>
+        <li>
             <a href="?p=profile_edit">Профиль</a>
         </li>
     </ul>
 </div>
+<?php get_template_part('profile_edit'); ?>
