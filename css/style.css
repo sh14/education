@@ -14,3 +14,7 @@
   background-color: black;
   border-color: black;
 }
+/* Стили меню сайта */
+.menu ul {
+  list-style: none;
+}
