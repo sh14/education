@@ -24,23 +24,10 @@
 }
 
 /* Стили формы авторизации */
-.login_window {
-    margin: auto;
-}
 
 /* Ошибки формы авторизации */
-.error {
-    position: absolute;
-    bottom: 320px;
-    right: 570px;
-    width: 290px;
-    height: 20px;
-    color: #c00;
-    background-color: #FCC;
-    border-radius: 6px;
-    -webkit-border-radius: 6px;
-    -moz-border-radius: 5px;
-    border: 1px solid #c00;
-    text-align: center;
-    padding: 5px 0 0 0;
+
+/* Форма написания сообщения */
+.post_form > div {
+    margin: 5px;
 }
