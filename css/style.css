@@ -1,40 +1,46 @@
 .main_container {
-  background: rgba(220, 220, 220, 0.81);
-  height: 100%;
+    background: rgba(220, 220, 220, 0.81);
+    height: 100%;
 }
+
 .registration_buttons {
-  float: right;
-  margin-top: 2px;
+    float: right;
+    margin-top: 2px;
 }
+
 .btn_main {
-  background-color: #0783ec;
-  border-color: #0783ec;
+    background-color: #0783ec;
+    border-color: #0783ec;
 }
+
 .btn_main:hover {
-  background-color: black;
-  border-color: black;
+    background-color: black;
+    border-color: black;
 }
+
 /* Стили меню сайта */
 .menu ul {
-  list-style: none;
+    list-style: none;
 }
-/* Стили формы авторизации */
 
+/* Стили формы авторизации */
+.login_window {
+    margin: auto;
+}
 
 /* Ошибки формы авторизации */
-.error{
-  position:absolute;
-  bottom: 320px;
-  right: 570px;
-  width: 290px;
-  height: 20px;
-  color: #c00;
-  background-color:#FCC;
-  border-radius:6px;
-  -webkit-border-radius:6px;
-  -moz-border-radius:5px;
-  -khtml-border-radius:10px;
-  border: 1px solid #c00;
-  text-align:center;
-  padding: 5px 0 0 0;
+.error {
+    position: absolute;
+    bottom: 320px;
+    right: 570px;
+    width: 290px;
+    height: 20px;
+    color: #c00;
+    background-color: #FCC;
+    border-radius: 6px;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 5px;
+    border: 1px solid #c00;
+    text-align: center;
+    padding: 5px 0 0 0;
 }
