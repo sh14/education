@@ -6,10 +6,10 @@
  * Time: 20:55
  */?>
 <div class="login_window">
-	<form class="login">
-		<input class="login_input" placeholder="Логин"/>
-		<input type="password" class="password_input" placeholder="Пароль"/>
-		<button class="login">Вход</button>
+	<form class="login" action="autorization.php" method="post">
+		<input class="login_input" name="login" type="text" placeholder="Логин"/>
+		<input type="password" class="password_input" name="password" placeholder="Пароль"/>
+		<button class="submit" type="submit">Вход</button>
 		<button class="registration">Регистрация</button>
 	</form>
 </div>

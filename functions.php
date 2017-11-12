@@ -19,8 +19,9 @@ function init() {
 	if ( empty( $page ) ) {
 		$page = 'index';
 	}
-
+	include 'header.php';
 	get_template_part( $page );
+
 }
 
 
