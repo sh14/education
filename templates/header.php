@@ -23,4 +23,3 @@
         </li>
     </ul>
 </div>
-<?php get_template_part('profile_edit'); ?>
