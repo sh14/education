@@ -221,7 +221,7 @@ add_action( 'init', 'upload_image' );
  * Функция верификации пользователя
  *
  */
-function ferification_user(){
+function verification_user(){
     global $link;
     if ( isset( $_COOKIE['RestrictedArea'] ) ) {
         $data_array = explode( ':', $_COOKIE['RestrictedArea'] );
