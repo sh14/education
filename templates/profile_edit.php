@@ -15,21 +15,25 @@ if ( ! empty( $_GET['event'] ) ) {
 		$message = 'Запись добавлена.';
 	}
 }
+echo 'Файл здесь'.__FILE__;//$_SERVER['php_self'];
 ?>
 <div class="container profile">
     <h1>Редактирование профиля</h1>
     <hr>
 
     <!-- Колонка аватара -->
-    <div class="row">
-        <div class="text-center col-md-3">
-            <div class="avatar col-md-12 " alt="avatar"></div>
-            <div class="file_upload col-md-12 col-xs-12">
-                <button type="button">Загрузить фотографию</button>
-                <input type="file" accept="image/*">
+    <form action="?event=upload" method="post" enctype="multipart/form-data">
+        <div class="row">
+            <div class="text-center col-md-3">
+                <div class="avatar col-md-12 " alt="avatar"></div>
+                <div class="file_upload col-md-12 col-xs-12">
+                    <button type="button">Загрузить фотографию</button>
+                    <input type="file" name="file_to_upload" id="file_to_upload" accept="image/*">
+                </div>
+                <button type="submit" value="upload_image" name="submit" class="btn btn-success">Отправить</button>
             </div>
         </div>
-    </div>
+    </form>
 
     <!-- Колонка профиля -->
     <div class="row">

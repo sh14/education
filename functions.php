@@ -15,6 +15,7 @@ if ( empty( $link ) ) {
 
 
 function init() {
+	upload_image();
 	profile_edit();
 
 	if ( ! empty( $_GET['p'] ) ) {
@@ -167,6 +168,50 @@ function profile_edit() {
 	}
 }
 
+/**
+ * Функция загрузки фотографии пользователя
+ */
+function upload_image() {
+	if ( ! empty( $_GET['event'] ) && $_GET['event'] == 'upload' ) {
+		$target_dir      = '/images/';
+		$target_file     = SITE_ROOT . $target_dir . basename( $_FILES['file_to_upload']['name'] );
+		$upload_ok       = 1;
+		$image_file_type = pathinfo( $target_file, PATHINFO_EXTENSION );
+		if ( isset( $_POST['submit'] ) ) {
+			$check = getimagesize( $_FILES['file_to_upload']['tmp_name'] );
+			if ( $check !== false ) {
+				echo 'Файл ' . $check['mime'] . ' является изображением.';
+				$upload_ok = 1;
+			} else {
+				echo 'Файл не является изображением.';
+				$upload_ok = 0;
+			}
+		}
+
+		if ( file_exists( $target_file ) ) {
+			echo 'Файл уже существует.';
+			$upload_ok = 0;
+		}
+		if ( $_FILES['file_to_upload']['size'] > 500000 ) {
+			echo 'Файл слишком большой.';
+			$upload_ok = 0;
+		}
+		if ( $image_file_type != "jpg" && $image_file_type != "png" && $image_file_type != "jpeg"
+		     && $image_file_type != "gif" ) {
+			echo 'Можно загружать только файлы JPG, JPEG, PNG & GIF.';
+			$upload_ok = 0;
+		}
+		if ( $upload_ok == 0 ) {
+			echo 'Файл не загружен.';
+		} else {
+			if ( move_uploaded_file( $_FILES['file_to_upload']['tmp_name'], $target_file ) ) {
+				echo 'Файл ' . basename( $_FILES['file_to_upload']['name'] ) . ' успешно загружен.';
+			} else {
+				echo 'При загрузке файла произошла ошибка.';
+			}
+		}
+	}
+}
 
 /*
  * это недоработанная функция сохраниня пользователя
