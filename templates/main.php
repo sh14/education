@@ -25,27 +25,21 @@
                         </div>
                         <div class="modal-body">
                             <form method="post">
-                                <p>Введите Ваше имя</p>
-                                <input type="text" placeholder="First name" required="required">
-                                <br>
-                                <br>
-                                <p>Введите Вашу фамилию</p>
-                                <input type="text" placeholder="Last name" required="required">
-                                <br>
-                                <br>
-                                <p>Введите Ваш ник</p>
-                                <input type="text" placeholder="Nickname" required="required">
-                                <br>
-                                <br>
-                                <p>Введите Ваш email</p>
-                                <input type="email" placeholder="Email" required="required">
-
-                                <p>Введите Ваш пароль</p>
-                                <input type="password" placeholder="Password" required="required">
+                                <label>Введите Ваше имя</label>
+                                <div class="form-group"><input class="form-control" type="text" placeholder="First name" required="required" ></div>
+                                <label>Введите Вашу фамилию</label>
+                                <div class="form-group"><input class="form-control" type="text" placeholder="Last name" required="required" ></div>
+                                <label>Введите Ваш ник</label>
+                                <div class="form-group"><input class="form-control" type="text" placeholder="Nickname" required="required" ></div>
+                                <label>Введите Ваш email</label>
+                                <div class="form-group"><input class="form-control" type="email" placeholder="Email" required="required" ></div>
+                                <label for="password">Введите Ваш пароль</label>
+                                <div class="form-group"><input class="form-control" type="password" placeholder="Password" id="password" name="password" required="required" ></div>
                                 <div class="modal-footer">
                                     <button class="btn btn-primary" type="submit">Зарегистрироваться</button>
                                     <button class="btn btn-danger" type="button" data-dismiss="modal">Да пошло оно все</button>
                                 </div>
+	                            <input type="hidden" name="action" value="registration">
                             </form>
                         </div>
                     </div>

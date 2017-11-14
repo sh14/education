@@ -39,7 +39,7 @@ if ( ! empty( $_GET['event'] ) ) {
         <div class="col-md-9 personal-info">
             <div class="alert alert-info alert-dismissable">
                 <a class="panel-close close" data-dismiss="alert">×</a>
-                <i class="fa fa-coffee"><?php echo $message ?></i>
+                <i class="fa fa-coffee"><?php echo $message; ?></i>
             </div>
             <h3>Личная информация</h3>
 

@@ -12,6 +12,9 @@ if ( empty( $link ) ) {
 	$link = mysqli_connect( HOST, LOGIN, PASSWORD, DATABASE );
 }
 
+//Отладка
+$result = '';
+
 
 function init() {
 	do_action( 'init' );
@@ -25,6 +28,30 @@ function init() {
 
 }
 
+function pr( $data, $debug_backtrace = false ) {
+	if ( $debug_backtrace == true ) {
+		echo '<pre><code>';
+		var_dump( debug_backtrace() );
+		echo '</pre></code><br/>';
+	}
+	switch ( $data ) {
+		case is_bool( $data ):
+			if ( $data === true ) {
+				$data = 'true';
+			} else {
+				$data = 'false';
+			}
+			break;
+		case ( is_array( $data ) || is_object( $data ) ):
+			ob_start();
+			print_r( (array) $data );
+			$data = ob_get_contents();
+			ob_clean();
+			break;
+	}
+
+	echo '<pre><code>' . htmlspecialchars( $data ) . '</pre></code><br/>';
+}
 
 /**
  * Функция, осуществляющая запрос в БД и возвращающая результат запроса
@@ -35,7 +62,9 @@ function init() {
  */
 function do_query( $query ) {
 	global $link;
+
 	mysqli_set_charset( $link, 'utf8' );
+
 	$result = mysqli_query( $link, $query );
 	if ( ! $result ) {
 		die( 'Неверный запрос: ' . mysqli_error( $link ) );
@@ -165,7 +194,7 @@ function profile_edit() {
 	}
 }
 
-add_action( 'init', 'profile_edit' );
+//add_action( 'init', 'profile_edit' );
 
 /**
  * Функция загрузки фотографии пользователя
@@ -212,7 +241,7 @@ function upload_image() {
 	}
 }
 
-add_action( 'init', 'upload_image' );
+//add_action( 'init', 'upload_image' );
 
 /**
  * Функция верификации пользователя
