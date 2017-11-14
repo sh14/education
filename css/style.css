@@ -2,7 +2,7 @@
     background: rgba(220, 220, 220, 0.81);
     height: 100%;
 }
-
+/* кнопки логина и регистрации на main странице*/
 .registration_buttons {
     float: right;
     margin-top: 2px;
@@ -13,10 +13,11 @@
     border-color: #0783ec;
 }
 
-.btn_main:hover {
+.btn_main:hover, .btn_main:focus  {
     background-color: black;
     border-color: black;
 }
+
 
 /* Стили меню сайта */
 .menu ul {
