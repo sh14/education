@@ -33,8 +33,8 @@
                                 <input type="text" placeholder="Last name" required="required">
                                 <br>
                                 <br>
-                                <p>Введите Ваш логин</p>
-                                <input type="text" placeholder="login" required="required">
+                                <p>Введите Ваш ник</p>
+                                <input type="text" placeholder="Nickname" required="required">
                                 <br>
                                 <br>
                                 <p>Введите Ваш email</p>
@@ -64,7 +64,7 @@
                         <div class="modal-body">
                             <div class="login_window">
                                 <form class="login">
-                                    <input class="login_input" placeholder="Логин" required="required"/>
+                                    <input class="login_input" type="email" placeholder="Email" required="required"/>
                                     <input type="password" class="password_input" placeholder="Пароль" required="required"/>
                                     <button class="login btn btn-success" type="submit">Вход</button>
                                     <button type="button" class="btn btn_main btn-success main_registration" data-toggle="modal" data-target="#modal-1" data-dismiss="modal">Регистрация</button>

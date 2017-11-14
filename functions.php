@@ -4,6 +4,14 @@ include 'config.php';
 include 'includes/variables.php';
 include 'includes/hooks.php';
 
+// объявление глобальной переменной
+global $link;
+
+// если $link - пуста
+if ( empty( $link ) ) {
+	$link = mysqli_connect( HOST, LOGIN, PASSWORD, DATABASE );
+}
+
 //Отладка
 $result = '';
 
