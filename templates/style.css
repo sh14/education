@@ -1,3 +1,42 @@
 body {
   background: #eee;
 }
+.personal-info .message {
+  margin-top: 12px;
+}
+.profile .avatar {
+  border-radius: 50%;
+  width: 200px;
+  height: 200px;
+  background-image: url("../images/character-designer.png");
+  background-repeat: no-repeat;
+  background-size: 100% auto;
+  background-position: center;
+  float: left;
+}
+.menu {
+  background: #333;
+  margin-bottom: 20px;
+}
+.menu ul {
+  padding: 0;
+  margin: auto;
+  display: table;
+  list-style: none;
+}
+.menu ul li {
+  float: left;
+}
+.menu ul li a {
+  display: block;
+  padding: 10px 20px;
+  color: #eee;
+  text-decoration: none;
+  transition: all 200ms;
+}
+.menu ul li {
+  color: #eee;
+}
+.menu ul li a:hover {
+  color: #aaa;
+}
