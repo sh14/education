@@ -5,6 +5,9 @@ include 'config.php';
 // объявление глобальной переменной
 global $link;
 
+//Отладка
+$result = '';
+
 // если $link - пуста
 if ( empty( $link ) ) {
 	$link = mysqli_connect( HOST, LOGIN, PASSWORD, DATABASE );
@@ -12,6 +15,7 @@ if ( empty( $link ) ) {
 
 
 function init() {
+	profile_edit();
 
 	if ( ! empty( $_GET['p'] ) ) {
 		$page = $_GET['p'];
@@ -35,6 +39,9 @@ function do_query( $query ) {
 	global $link;
 	mysqli_set_charset( $link, 'utf8' );
 	$result = mysqli_query( $link, $query );
+	if ( ! $result ) {
+		die( 'Неверный запрос: ' . mysqli_error( $link ) );
+	}
 
 	return $result;
 }
@@ -115,7 +122,7 @@ function profile_edit() {
 	list( $url ) = explode( '?', $_SERVER['REQUEST_URI'] );
 	$event = '';
 	if ( ! empty( $_GET['event'] ) && $_GET['event'] == 'edit_user_info' ) {
-		$vars_string       = 'login,email,first_name,last_name';
+		$vars_string       = 'login,email,password,first_name,last_name';
 		$vars              = array_map( 'trim', explode( ',', $vars_string ) );
 		$values            = [];
 		$empty_input_count = 0;
@@ -126,7 +133,7 @@ function profile_edit() {
 			} else {
 				unset( $vars[ $var_key ] );
 				++ $empty_input_count;
-				if ( $empty_input_count == 4 ) {
+				if ( $empty_input_count == 5 ) {
 					$allow_query = 0;
 					break;
 				}
@@ -138,24 +145,22 @@ function profile_edit() {
 			$values[ $i ] = $vars[ $i ] . '=' . $values[ $i ];
 		}
 		$ID = $_POST['ID'];
+		if ( $_POST['access'] == 'denied' ) {
+			$allow_query = 0;
+		}
 
 		if ( $allow_query == 1 ) {
 			$event = 'success';
 
 			$values = implode( ',', $values );
 			$ID     = "WHERE ID = $ID";
-			$query  = "UPDATE posts SET $values $ID";
+			$query  = "UPDATE users SET $values $ID";
 
 			do_query( $query );
 		} else {
 			$event = 'error';
 		}
 	}
-
-	/*if ( ! empty( $_GET['event'] ) && $_GET['event'] == 'edit_user_password' && ! empty( $_POST ) ) {
-
-	}*/
-
 	if ( ! empty( $event ) ) {
 		$event = '?event=' . $event;
 		header( 'location: ' . $url . $event );
