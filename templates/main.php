@@ -39,8 +39,7 @@
                                 <br>
                                 <p>Введите Ваш email</p>
                                 <input type="email" placeholder="Email" required="required">
-                                <br>
-                                <br>
+
                                 <p>Введите Ваш пароль</p>
                                 <input type="password" placeholder="Password" required="required">
                                 <div class="modal-footer">
