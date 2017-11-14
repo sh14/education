@@ -11,5 +11,3 @@ define('HOST','localhost');
 define('LOGIN','root');
 define('PASSWORD','');
 define('DATABASE','shlo');
-// определение корня сайта
-define ('SITE_ROOT', realpath(dirname(__FILE__)));

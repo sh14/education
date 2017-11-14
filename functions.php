@@ -176,7 +176,7 @@ add_action( 'init', 'profile_edit' );
 function upload_image() {
 	if ( ! empty( $_GET['event'] ) && $_GET['event'] == 'upload' ) {
 		$target_dir      = '/images/';
-		$target_file     = SITE_ROOT . $target_dir . basename( $_FILES['file_to_upload']['name'] );
+		$target_file     = get_root_path() . $target_dir . basename( $_FILES['file_to_upload']['name'] );
 		$upload_ok       = 1;
 		$image_file_type = pathinfo( $target_file, PATHINFO_EXTENSION );
 		if ( isset( $_POST['submit'] ) ) {
