@@ -7,9 +7,6 @@ include 'includes/hooks.php';
 // объявление глобальной переменной
 global $link;
 
-//Отладка
-$result = '';
-
 // если $link - пуста
 if ( empty( $link ) ) {
 	$link = mysqli_connect( HOST, LOGIN, PASSWORD, DATABASE );
