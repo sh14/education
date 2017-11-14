@@ -1,6 +1,8 @@
 <?php
 
 include 'config.php';
+include 'includes/variables.php';
+include 'includes/hooks.php';
 
 // объявление глобальной переменной
 global $link;
@@ -15,9 +17,7 @@ if ( empty( $link ) ) {
 
 
 function init() {
-	upload_image();
-	profile_edit();
-
+	do_action( 'init' );
 	if ( ! empty( $_GET['p'] ) ) {
 		$page = $_GET['p'];
 	}
@@ -168,6 +168,8 @@ function profile_edit() {
 	}
 }
 
+add_action( 'init', 'profile_edit' );
+
 /**
  * Функция загрузки фотографии пользователя
  */
@@ -212,6 +214,12 @@ function upload_image() {
 		}
 	}
 }
+
+add_action( 'init', 'upload_image' );
+
+
+
+
 
 /*
  * это недоработанная функция сохраниня пользователя
