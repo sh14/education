@@ -15,7 +15,6 @@ if ( ! empty( $_GET['event'] ) ) {
 		$message = 'Запись добавлена.';
 	}
 }
-echo 'Файл здесь'.__FILE__;//$_SERVER['php_self'];
 ?>
 <div class="container profile">
     <h1>Редактирование профиля</h1>
