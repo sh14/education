@@ -6,12 +6,13 @@
  * Time: 19:46
  */
 ?>
-<div class="row">
-	<div class="col-md-6">
-		<button type="button" class="btn btn-success" data-toggle="modal" data-target="#modal-1">Регистрация\Вход</button>
-	</div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modal-1">Регистрация\Вход</button>
+        </div>
+    </div>
 </div>
-
 <div class="modal" id="modal-1">
 	<div class="modal-dialog">
 		<div class="modal-content">

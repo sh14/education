@@ -1,42 +1,132 @@
 body {
-  background: #eee;
+    background: #eee;
 }
+
 .personal-info .message {
-  margin-top: 12px;
+    margin-top: 12px;
 }
+
 .profile .avatar {
-  border-radius: 50%;
-  width: 200px;
-  height: 200px;
-  background-image: url("../images/character-designer.png");
-  background-repeat: no-repeat;
-  background-size: 100% auto;
-  background-position: center;
-  float: left;
+    border-radius: 50%;
+    width: 200px;
+    height: 200px;
+    background-image: url("../images/character-designer.png");
+    background-repeat: no-repeat;
+    background-size: 100% auto;
+    background-position: center;
+    float: left;
 }
+
 .menu {
-  background: #333;
-  margin-bottom: 20px;
+    background: #333;
+    margin-bottom: 20px;
 }
+
 .menu ul {
-  padding: 0;
-  margin: auto;
-  display: table;
-  list-style: none;
+    padding: 0;
+    margin: auto;
+    display: table;
+    list-style: none;
 }
+
 .menu ul li {
-  float: left;
+    float: left;
 }
+
 .menu ul li a {
-  display: block;
-  padding: 10px 20px;
-  color: #eee;
-  text-decoration: none;
-  transition: all 200ms;
+    display: block;
+    padding: 10px 20px;
+    color: #eee;
+    text-decoration: none;
+    transition: all 200ms;
 }
+
 .menu ul li {
-  color: #eee;
+    color: #eee;
 }
+
 .menu ul li a:hover {
-  color: #aaa;
+    color: #aaa;
+}
+
+.profile .file_upload {
+    position: relative;
+    overflow: hidden;
+    font-size: 1em;
+    line-height: 2em;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.profile .file_upload > button {
+    width: 100%;
+    height: 100%;
+}
+
+.profile .file_upload > div {
+    padding-left: 1em;
+}
+
+.profile .file_upload input[type=file] {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    transform: scale(20);
+    letter-spacing: 10em;
+    -ms-transform: scale(20);
+    opacity: 0;
+    cursor: pointer;
+}
+
+.profile .file_upload.focus {
+    box-shadow: 0 0 5px rgba(0, 30, 255, 0.4)
+}
+
+.profile .file_upload > button {
+    background: #7300df;
+    transition: background 0.2s;
+    border: 1px solid;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+    border-radius: 2px;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2) inset, 0 1px 2px rgba(0, 0, 0, 0.05);
+    color: #fff;
+    text-shadow: #6200bd 0 -1px 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.profile .file_upload:hover > button {
+    background: #6200bd;
+    text-shadow: #5d00b3 0 -1px 0
+}
+
+.profile .file_upload:active > button {
+    background: #5d00b3;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.3) inset
+}
+.avatar {
+    margin-bottom: 20px;
+}
+.file_upload {
+    margin-bottom: 30px;
+}
+@media only screen and ( max-width: 500px ) {
+    .profile .file_upload {
+        display: block;
+    }
+
+    .profile .file_upload > div {
+        display: none;
+    }
+
+    .profile .file_upload > button {
+        width: 100%!important;
+    }
+
+    .profile .file_upload, .personal-info .alert {
+        display: inline-block;
+    }
 }

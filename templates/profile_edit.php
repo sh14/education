@@ -19,18 +19,20 @@ if ( ! empty( $_GET['event'] ) ) {
 <div class="container profile">
     <h1>Редактирование профиля</h1>
     <hr>
-    <div class="row">
-        <!-- Колонка аватара -->
-        <div class="col-md-3">
-            <div class="text-center">
-                <div class="avatar" alt="avatar"></div>
-                <h6>Загрузить фотографию</h6>
 
-                <input type="file" class="form-control">
+    <!-- Колонка аватара -->
+    <div class="row">
+        <div class="text-center col-md-3">
+            <div class="avatar col-md-12 " alt="avatar"></div>
+            <div class="file_upload col-md-12 col-xs-12">
+                <button type="button">Загрузить фотографию</button>
+                <input type="file">
             </div>
         </div>
+    </div>
 
-        <!-- Колонка профиля -->
+    <!-- Колонка профиля -->
+    <div class="row">
         <div class="col-md-9 personal-info">
             <div class="alert alert-info alert-dismissable">
                 <a class="panel-close close" data-dismiss="alert">×</a>
