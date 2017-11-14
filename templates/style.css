@@ -14,3 +14,29 @@ body {
   background-position: center;
   float: left;
 }
+.menu {
+  background: #333;
+  margin-bottom: 20px;
+}
+.menu ul {
+  padding: 0;
+  margin: auto;
+  display: table;
+  list-style: none;
+}
+.menu ul li {
+  float: left;
+}
+.menu ul li a {
+  display: block;
+  padding: 10px 20px;
+  color: #eee;
+  text-decoration: none;
+  transition: all 200ms;
+}
+.menu ul li {
+  color: #eee;
+}
+.menu ul li a:hover {
+  color: #aaa;
+}
