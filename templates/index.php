@@ -1,8 +1,8 @@
 <?php
 global $link;
 get_header();
-
-get_template_part( 'registration' );
+pr('asda');
+get_template_part( 'main' );
 
 $result = do_query('SELECT * FROM message');
 while($row = mysqli_fetch_array($result)){

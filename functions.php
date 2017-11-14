@@ -194,7 +194,7 @@ function profile_edit() {
 	}
 }
 
-add_action( 'init', 'profile_edit' );
+//add_action( 'init', 'profile_edit' );
 
 /**
  * Функция загрузки фотографии пользователя
@@ -241,7 +241,7 @@ function upload_image() {
 	}
 }
 
-add_action( 'init', 'upload_image' );
+//add_action( 'init', 'upload_image' );
 
 /**
  * Функция верификации пользователя
