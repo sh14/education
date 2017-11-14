@@ -13,7 +13,7 @@ function add_default_data() {
 
 	$sql   = [];
 	$sql[] = "INSERT INTO `message`( `id_user`, `datatime`, `title`, `content`, `photo`) 
-	VALUES (1,'2017-11-12 12:00:00','Привет, мир!','Это тестовая публикация!','admin.jpg')";
+	VALUES (1,'2017-11-12 12:00:00','Привет, мир!','Это тестовая публикация!','../images/character-designer.png')";
 	$sql[] = "INSERT INTO `users`( `login`, `email`, `password`, `first_name`, `last_name`) 
 	VALUES ('admin','test@tes.ru','123','Админ','Админов')";
 

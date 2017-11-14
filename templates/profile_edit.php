@@ -26,7 +26,7 @@ if ( ! empty( $_GET['event'] ) ) {
             <div class="avatar col-md-12 " alt="avatar"></div>
             <div class="file_upload col-md-12 col-xs-12">
                 <button type="button">Загрузить фотографию</button>
-                <input type="file">
+                <input type="file" accept="image/*">
             </div>
         </div>
     </div>
