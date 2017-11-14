@@ -6,7 +6,7 @@
  * Time: 19:46
  */
 ?>
-<div class="container">
+<div class="container registration">
     <div class="row">
         <div class="col-md-6">
             <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modal-1">Регистрация\Вход</button>
