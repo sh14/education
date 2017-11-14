@@ -20,7 +20,7 @@
                 <div class="modal-header">
                     <h4 class="modal-title">Регистрация</h4>
                     <button class="close" type="button" data-dismiss="modal">
-                        <i class="fa fa-close"></i>
+                        <i class="fa fa-close"><?php registration(); ?></i>
                     </button>
                 </div>
                 <div class="modal-body">
