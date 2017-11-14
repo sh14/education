@@ -6,9 +6,6 @@
  * Time: 19:43
  */
 
-
-$link = mysqli_connect("localhost", "root", "", "shlo");
-
 if (isset($_POST['']))
 {
     $err = [];
@@ -21,7 +18,7 @@ if (isset($_POST['']))
         $err = "Email не должен быть меньше 7 символов и не больше 255";
     }
 
-    $query = mysqli_query($link, "SELECT count(*) FROM users WHERE email='{$_POST['email']}'");
+    $query = do_query("SELECT count(*) FROM users WHERE email='{$_POST['email']}'");
 
     if (mysqli_num_rows($query) > 0) {
 
@@ -34,7 +31,7 @@ if (isset($_POST['']))
 
         $password = md5(md5(trim($_POST['password'])));
 
-        mysqli_query($link, "INSERT INTO users SET email='".$email."', password='".$password."'");
+        do_query("INSERT INTO users SET email='".$email."', password='".$password."'");
         header("location:". get_root_url());
     }
     else{
