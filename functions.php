@@ -23,8 +23,8 @@ function init() {
 	if ( empty( $page ) ) {
 		$page = 'index';
 	}
-
 	get_template_part( $page );
+
 }
 
 
@@ -166,3 +166,40 @@ function profile_edit() {
 		header( 'location: ' . $url . $event );
 	}
 }
+
+
+/*
+ * это недоработанная функция сохраниня пользователя
+ * function save_profile() {
+    list( $url ) = explode( '?', $_SERVER['REQUEST_URI'] ); вычденияем из url строки елементы
+    $event = ''; здесь создали переменную для опреления положения в url строке
+
+    if(!empty($_GET['event']) && $_GET['event'] == 'save' && !empty($_POST)) {    создаем условие в котором прописываем занесение в базу данных
+                                                                                  информации из инпутов при удачном случае и изменении значения url строки
+        $vars_string = array_map('trim', explode(',', 'first_name, last_name, login, Email, Password'));
+        $values = [];
+        $allow_query       = 1;
+        foreach ($vars_string as $var) {
+            if(empty($_POST[$var])){
+                $allow_query = 0;
+                break;
+            }
+            $values[] = "'$_POST[$var]'";
+        }
+        if ($allow_query == 1) {
+            $event = 'succes';
+            $vars_string = implode(',' , $vars_string);
+            $values = implode(',' , $values);
+            $query = "INSERT INTO users ($vars_string) VALUES ($values)";
+
+            do_query($query);
+        } else {
+            $event = "error";
+        }
+    }
+
+    if ( ! empty( $event ) ) {
+        $event = '?event=' . $event;
+        header( 'location: ' . $url . $event );
+    }
+}*/
