@@ -217,9 +217,77 @@ function upload_image() {
 
 add_action( 'init', 'upload_image' );
 
+/**
+ * Функция верификации пользователя
+ *
+ */
+function verification_user(){
+    global $link;
+    if ( isset( $_COOKIE['RestrictedArea'] ) ) {
+        $data_array = explode( ':', $_COOKIE['RestrictedArea'] );
 
+        /*Проверяем на корректность введенных данных и берем строку из БД, если она существует
+        делаем проверку на совпадение данных из БД и КУКИ*/
 
+        if ( preg_match( "/^[a-zA-Z0-9]{3,30}$/", $data_array[0] ) ) {
+            $user = mysqli_query( $link, "SELECT * FROM users WHERE login='" . $data_array[0] . "'" );
+            $rows = mysqli_num_rows( $user );
+            if ( $rows == 1 ) {
+                $cookies_hash  = $data_array[1];
+                $user_data     = $user->fetch_array();
+                $evaluate_hash =  $user_data['password'];
+                if ( $cookies_hash == $evaluate_hash ) {
+                    $access = true;
+                }
+            }
+        } else {
+            $access = FALSE;
+        }
+    }
+    /*Если данные совпадают подключаем стр с чатом*/
+    if (isset($access) and $access = TRUE) {
+        include "window_chat.php";
+    }
+    /*Если КУКА отсутствует то выводим окно авторизации*/
+    else {
+        include ($_SERVER["DOCUMENT_ROOT"]."/education/login_window.php");
+        exit();
+    }
+}
 
+/**
+ * Функция авторизации пользователя
+ *
+ */
+function autorization_user() {
+
+//Проверяем не пуста ли форма отправки и если нет то сравнив данные с БД записываем их в COOCKIE
+    if ( isset( $_POST['login'] ) && isset( $_POST['password'] ) && $_POST['login'] !== "" && $_POST['password'] !== "" ) {
+        if ( preg_match( "/^[a-zA-Z0-9]{3,30}$/", $_POST['login'] ) ) {
+            global $link;
+            $user = do_query( "SELECT * FROM `users` WHERE `login` = '" . $_POST['login'] . "'" );
+            $rows = mysqli_num_rows( $user );
+            if ( $rows == 1 ) {
+                $user_data    = $user->fetch_array();
+                $pasword_hash = md5( $_POST['password'] );
+                if ( $pasword_hash == $user_data['password'] ) {
+                    $curr_date = time();
+                    setcookie( 'RestrictedArea', $_POST['login'] . ":" . $pasword_hash . ":" . md5( $_SERVER['REMOTE_ADDR'] . ":" . $curr_date ), time() + 60 * 60 * 24 );
+                    header( "Location: " . "index.php" );
+                } else {
+                    echo "<div class='error'><span>Введенный пароль не верный.</span></div>";
+                }
+            } else {
+                echo "<div class='error'><span>Пользователь с таким логином не найден.</span></div>";
+            }
+        } else {
+            echo "<div class='error''><span>Вы ввели некорректный логин.</span></div>";
+        }
+    }else{
+        echo "<div class='error''><span>Введите все данные</span></div>";
+    }
+
+}
 
 /*
  * это недоработанная функция сохраниня пользователя
