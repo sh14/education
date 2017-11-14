@@ -7,7 +7,7 @@
  */
 function registration()
 {
-    if (isset($_GET['event'])&&$_GET['event']=='registration'&&isset($_POST['email'])&&isset($_POST['password']&&isset($_POST['action']))) {
+    if (isset($_GET['event'])&&$_GET['event']=='registration'&&isset($_POST['email'])&&isset($_POST['password'])&&isset($_POST['action'])) {
         $err = [];
         echo 'Функция';
         if (!preg_match("/^[a-zA-Z0-9]+$/", $_POST['email'])) {
