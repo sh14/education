@@ -122,10 +122,6 @@ body {
         display: none;
     }
 
-    .profile .file_upload > button {
-        width: 100%!important;
-    }
-
     .profile .file_upload, .personal-info .alert {
         display: inline-block;
     }
