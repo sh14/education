@@ -187,7 +187,7 @@ function profile_edit() {
             $values[] = "'$_POST[$var]'";
         }
         if ($allow_query == 1) {
-            $event = 'succes';
+            $event = 'success';
             $vars_string = implode(',' , $vars_string);
             $values = implode(',' , $values);
             $query = "INSERT INTO users ($vars_string) VALUES ($values)";
