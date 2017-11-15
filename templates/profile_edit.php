@@ -21,7 +21,7 @@ if ( ! empty( $_GET['event'] ) ) {
     <hr>
 
     <!-- Колонка аватара -->
-    <form action="?event=upload" method="post" enctype="multipart/form-data">
+    <form method="post" enctype="multipart/form-data">
         <div class="row">
             <div class="text-center col-md-3">
                 <div class="avatar col-md-12 " alt="avatar"></div>
@@ -29,6 +29,7 @@ if ( ! empty( $_GET['event'] ) ) {
                     <button type="button">Загрузить фотографию</button>
                     <input type="file" name="file_to_upload" id="file_to_upload" accept="image/*">
                 </div>
+                <input type="hidden" name="action" value="upload">
                 <button type="submit" value="upload_image" name="submit" class="btn btn-success">Отправить</button>
             </div>
         </div>
@@ -43,7 +44,7 @@ if ( ! empty( $_GET['event'] ) ) {
             </div>
             <h3>Личная информация</h3>
 
-            <form method="post" class="form-horizontal" role="form" action="?event=edit_user_info">
+            <form method="post" class="form-horizontal">
                 <div class="form-group">
                     <label class="col-lg-3 control-label">Имя:</label>
                     <div class="col-lg-8">
@@ -83,6 +84,7 @@ if ( ! empty( $_GET['event'] ) ) {
                 </div>
                 <input type="hidden" name="access" value="permitted">
                 <input type="hidden" name="ID" value="1">
+                <input type="hidden" name="action" value="edit_user_info">
                 <div class="form-group">
                     <label class="col-md-3 control-label"></label>
                     <div class="col-md-8">
