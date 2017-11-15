@@ -314,7 +314,7 @@ function autorization_user() {
  * Функция регистрации пользователя
  */
 function registration() {
-	if ( ! empty( $_POST ) && ! empty( $_POST['action'] ) && $_POST['action'] == 'registration' ) {
+	if ( ! empty( $_POST ) && $_POST['action'] == 'registration' ) {
 		$err = [];
 		if ( ! preg_match( "/^[a-zA-Z0-9]+$/", $_POST['email'] ) ) {
 			$err = "Email может состоять только и букв английского языка";
