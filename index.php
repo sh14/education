@@ -5,4 +5,3 @@ require 'functions.php';
 require 'installer.php';
 init();
 add_default_data();
-include 'ferification.php';
