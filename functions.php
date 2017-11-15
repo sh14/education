@@ -144,7 +144,7 @@ function get_stylesheet_directory() {
 function profile_edit() {
 	list( $url ) = explode( '?', $_SERVER['REQUEST_URI'] );
 	$event = '';
-	if ( $_POST['action'] == 'edit_user_info' ) {
+	if ( ! empty( $_POST['action'] ) && $_POST['action'] == 'edit_user_info' ) {
 		$vars_string       = 'login,email,password,first_name,last_name';
 		$vars              = array_map( 'trim', explode( ',', $vars_string ) );
 		$values            = [];
@@ -190,13 +190,13 @@ function profile_edit() {
 	}
 }
 
-//add_action( 'init', 'profile_edit' );
+add_action( 'init', 'profile_edit' );
 
 /**
  * Функция загрузки фотографии пользователя
  */
 function upload_image() {
-	if ( $_POST['action'] == 'upload' ) {
+	if ( ! empty( $_POST['action'] ) && $_POST['action'] == 'upload' ) {
 		$target_dir      = '/images/';
 		$target_file     = get_root_path() . $target_dir . basename( $_FILES['file_to_upload']['name'] );
 		$upload_ok       = 1;
@@ -237,7 +237,7 @@ function upload_image() {
 	}
 }
 
-//add_action( 'init', 'upload_image' );
+add_action( 'init', 'upload_image' );
 
 /**
  * Функция верификации пользователя
@@ -314,7 +314,7 @@ function autorization_user() {
  * Функция регистрации пользователя
  */
 function registration() {
-	if ( ! empty($_POST) && $_POST['action'] == 'registration' ) {
+	if ( ! empty( $_POST ) && ! empty( $_POST['action'] ) && $_POST['action'] == 'registration' ) {
 		$err = [];
 		if ( ! preg_match( "/^[a-zA-Z0-9]+$/", $_POST['email'] ) ) {
 			$err = "Email может состоять только и букв английского языка";
