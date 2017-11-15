@@ -267,7 +267,7 @@ function verification_user() {
 	}
 }
 
-add_action( 'init', 'verification_user' );
+//add_action( 'init', 'verification_user' );
 
 /**
  * Функция авторизации пользователя
