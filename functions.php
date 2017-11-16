@@ -475,7 +475,7 @@ add_action('init','enqueue_scripts');
     $event = '';
 
     if(!empty($_GET['event']) && $_GET['event'] == 'save' && !empty($_POST)) {
-        $vars_string = array_map('trim', explode(',', 'first_name, last_name, login, Email, Password'));
+        $vars_string = array_map('trim', explode(',', 'email, password'));
         $values = [];
         $allow_query       = 1;
         foreach ($vars_string as $var) {
