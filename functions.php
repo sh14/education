@@ -3,6 +3,7 @@
 include 'config.php';
 include 'includes/variables.php';
 include 'includes/hooks.php';
+include 'includes/formatting.php';
 
 // объявление глобальной переменной
 global $link;
