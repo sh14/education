@@ -1,9 +1,9 @@
 <?php
 
 include 'config.php';
-include 'installer.php';
 include 'includes/variables.php';
 include 'includes/hooks.php';
+include 'includes/formatting.php';
 
 // объявление глобальной переменной
 global $link;
@@ -26,8 +26,36 @@ function init() {
 }
 
 /**
- * Вызов инсталлера
+ * Функция добавления данных по умолчанию в базу данных
  */
+function add_default_data() {
+	$sql_check   = [];
+	$sql_check[] = "SELECT * FROM `message`";
+	$sql_check[] = "SELECT * FROM `users`";
+
+	$sql   = [];
+	$sql[] = "INSERT INTO `message`( `id_user`, `datatime`, `title`, `content`, `photo`) 
+	VALUES (1,'2017-11-12 12:00:00','Привет, мир!','Это тестовая публикация!','../images/character-designer.png')";
+	$sql[] = "INSERT INTO `users`( `login`, `email`, `password`, `first_name`, `last_name`) 
+	VALUES ('admin','test@tes.ru','123','Админ','Админов')";
+
+	$sql_reset_id   = [];
+	$sql_reset_id[] = "SET @reset = 0";
+	$sql_reset_id[] = "UPDATE `message` SET id = @reset:= @reset + 1";
+	$sql_reset_id[] = "SET @reset = 0";
+	$sql_reset_id[] = "UPDATE `users` SET ID = @reset:= @reset + 1";
+
+	foreach ( $sql_check as $key => $query ) {
+		$result[ $key ] = do_query( $query );
+		if ( $result[ $key ]->num_rows == 0 ) {
+			do_query( $sql[ $key ] );
+		}
+	}
+
+	foreach ( $sql_reset_id as $key => $query ) {
+		do_query( $sql_reset_id[ $key ] );
+	}
+}
 add_action('init','add_default_data');
 
 function pr( $data, $debug_backtrace = false ) {
@@ -83,9 +111,17 @@ function get_header() {
 }
 
 /**
+ * Функция, выполняемая внутри тега head HTML документа
+ */
+function head() {
+	do_action( 'head' );
+}
+
+/**
  * Функция подключения подвала
  */
 function get_footer() {
+	do_action( 'footer' );
 	get_template_part( 'footer' );
 }
 
@@ -348,6 +384,86 @@ function registration() {
 
 
 add_action( 'init', 'registration' );
+/**
+ * Регистрация скрипта для последующего вывода этого скрипта
+ *
+ * @param       $handle
+ * @param       $src
+ * @param array $deps
+ * @param bool  $ver
+ * @param bool  $in_footer
+ *
+ * @return array
+ */
+function register_script( $handle, $src, $deps = array(), $ver = false, $in_footer = false ) {
+	global $scripts;
+
+	if ( ! empty( $ver ) ) {
+		$ver = '?ver=' . $ver;
+	} else {
+		$ver = '';
+	}
+	$scripts[ $handle ] = [
+		'src'       => $src . $ver,
+		'in_footer' => $in_footer
+	];
+
+	$reordered                 = [];
+	$i                         = 0;
+	$current_script_position   = 0;
+	$dependent_script_position = 0;
+	foreach ( $scripts as $key => $data ) {
+		if ( $handle == $key ) {
+			$current_script_position = $i;
+		}
+		if ( in_array( $key, $deps ) ) {
+			$dependent_script_position = $i;
+		}
+		if ( $dependent_script_position > $current_script_position ) {
+			unset( $reordered[ $key ] );
+		}
+		$reordered[ $key ] = $scripts[ $key ];
+		$i ++;
+	}
+
+	$scripts = $reordered;
+
+	return $scripts;
+}
+
+/**
+ * Вывод скрипта в нужно месте
+ *
+ * @param $handle
+ */
+function enqueue_script( $handle ) {
+	global $scripts;
+
+	if ( ! empty( $scripts[ $handle ] ) ) {
+		$out = '<script src="' . $scripts[ $handle ]['src'] . '"></script>';
+
+		if ( $scripts[ $handle ]['in_footer'] === true ) {
+			$action = 'footer';
+		} else {
+			$action = 'head';
+		}
+		add_action( $action, function () use ( $out ) {
+			echo $out;
+		} );
+
+	}
+}
+
+/**
+ * Регистрация скриптов и их вывод
+ */
+function enqueue_scripts(){
+	register_script('jquery',get_stylesheet_directory().'/js/jquery-3.2.1.min.js');
+	enqueue_script('jquery');
+}
+
+add_action('init','enqueue_scripts');
+
 /*
  * это недоработанная функция сохраниня пользователя
  * function save_profile() {
