@@ -31,11 +31,11 @@ SET time_zone = "+00:00";
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
   `ID` int(20) NOT NULL AUTO_INCREMENT,
-  `login` varchar(255) NOT NULL,
+  `login` varchar(255),
   `email` varchar(255) NOT NULL,
   `password` text NOT NULL,
-  `first_name` text NOT NULL,
-  `last_name` text NOT NULL,
+  `first_name` text,
+  `last_name` text,
   PRIMARY KEY (`ID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 COMMIT;
@@ -72,12 +72,12 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `message` (
-  `id` int(20) NOT NULL,
-  `id_user` text NOT NULL,
-  `datatime` datetime NOT NULL,
+  `ID` int(20) NOT NULL,
+  `id_user` text,
+  `datatime` datetime,
   `title` text NOT NULL,
   `content` text NOT NULL,
-  `foto` text NOT NULL
+  `photo` text
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --

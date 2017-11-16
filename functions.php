@@ -41,7 +41,7 @@ function add_default_data() {
 
 	$sql_reset_id   = [];
 	$sql_reset_id[] = "SET @reset = 0";
-	$sql_reset_id[] = "UPDATE `message` SET id = @reset:= @reset + 1";
+	$sql_reset_id[] = "UPDATE `message` SET ID = @reset:= @reset + 1";
 	$sql_reset_id[] = "SET @reset = 0";
 	$sql_reset_id[] = "UPDATE `users` SET ID = @reset:= @reset + 1";
 
