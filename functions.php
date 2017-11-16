@@ -331,16 +331,18 @@ function autorization_user() {
 /**
  * Функция регистрации пользователя
  */
-function registration() {
-	if ( ! empty( $_POST ) && $_POST['action'] == 'registration' ) {
-		$err = [];
-		if ( ! preg_match( "/^[a-zA-Z0-9]+$/", $_POST['email'] ) ) {
-			$err[] = "Email может состоять только и букв английского языка";
-		}
+function registration()
+{
+    if (!empty($_POST['email']) && !empty($_POST['password']) && !empty($_POST['action'] == 'registration')) {
+        $err = [];
 
-		if ( strlen( $_POST['email'] ) < 7 or strlen( $_POST['email'] ) > 255 ) {
-			$err[] = "Email не должен быть меньше 7 символов и не больше 255";
-		}
+        if (strlen($_POST['email']) < 7 or strlen($_POST['email']) > 255) {
+            $err[] = "Email не должен быть меньше 7 символов и не больше 255";
+        }
+
+        if (strlen($_POST['password']) < 6 or strlen($_POST['password']) > 255) {
+            $err[] = "Password не должен быть меньше 6 символов и не больше 255";
+        }
 
 		$query = do_query( "SELECT count(*) FROM users WHERE email='{$_POST['email']}'" );
 
@@ -483,3 +485,24 @@ add_action( 'init', 'enqueue_scripts' );
         header( 'location: ' . $url . $event );
     }
 }*/
+
+//Функция валидации email
+
+$email = 'Почтовый ящик';
+
+function emailValidation($email)
+{
+    if ($email) {
+        if (preg_match("/[0-9a-z_\.\-]+@[0-9a-z_\.\-]+\.[a-z]{2,4}/i", $email)) {
+            $message = 'Корректный Email';
+        } else {
+            $message = 'Некорректный Email';
+        }
+    } else {
+        $message = 'Email не указан';
+    }
+    return $message;
+}
+
+$message = emailValidation($email);
+echo emailValidation($email);
