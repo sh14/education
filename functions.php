@@ -1,6 +1,7 @@
 <?php
 
 include 'config.php';
+include 'installer.php';
 include 'includes/variables.php';
 include 'includes/hooks.php';
 
@@ -11,10 +12,6 @@ global $link;
 if ( empty( $link ) ) {
 	$link = mysqli_connect( HOST, LOGIN, PASSWORD, DATABASE );
 }
-
-//Отладка
-$result = '';
-
 
 function init() {
 	do_action( 'init' );
@@ -27,6 +24,11 @@ function init() {
 	get_template_part( $page );
 
 }
+
+/**
+ * Вызов инсталлера
+ */
+add_action('init','add_default_data');
 
 function pr( $data, $debug_backtrace = false ) {
 	if ( $debug_backtrace == true ) {
@@ -156,7 +158,7 @@ function get_stylesheet_directory() {
 function profile_edit() {
 	list( $url ) = explode( '?', $_SERVER['REQUEST_URI'] );
 	$event = '';
-	if ( ! empty( $_GET['event'] ) && $_GET['event'] == 'edit_user_info' ) {
+	if ( ! empty( $_POST['action'] ) && $_POST['action'] == 'edit_user_info' ) {
 		$vars_string       = 'login,email,password,first_name,last_name';
 		$vars              = array_map( 'trim', explode( ',', $vars_string ) );
 		$values            = [];
@@ -202,13 +204,13 @@ function profile_edit() {
 	}
 }
 
-//add_action( 'init', 'profile_edit' );
+add_action( 'init', 'profile_edit' );
 
 /**
  * Функция загрузки фотографии пользователя
  */
 function upload_image() {
-	if ( ! empty( $_GET['event'] ) && $_GET['event'] == 'upload' ) {
+	if ( ! empty( $_POST['action'] ) && $_POST['action'] == 'upload' ) {
 		$target_dir      = '/images/';
 		$target_file     = get_root_path() . $target_dir . basename( $_FILES['file_to_upload']['name'] );
 		$upload_ok       = 1;
@@ -249,55 +251,47 @@ function upload_image() {
 	}
 }
 
-//add_action( 'init', 'upload_image' );
+add_action( 'init', 'upload_image' );
 
 /**
  * Функция верификации пользователя
  *
  */
 function verification_user() {
-	global $link;
-	if ( isset( $_COOKIE['RestrictedArea'] ) ) {
-		$data_array = explode( ':', $_COOKIE['RestrictedArea'] );
 
-		/*Проверяем на корректность введенных данных и берем строку из БД, если она существует
-		делаем проверку на совпадение данных из БД и КУКИ*/
-
-		if ( preg_match( "/^[a-zA-Z0-9]{3,30}$/", $data_array[0] ) ) {
-			$user = mysqli_query( $link, "SELECT * FROM users WHERE login='" . $data_array[0] . "'" );
-			$rows = mysqli_num_rows( $user );
-			if ( $rows == 1 ) {
-				$cookies_hash  = $data_array[1];
-				$user_data     = $user->fetch_array();
-				$evaluate_hash = $user_data['password'];
-				if ( $cookies_hash == $evaluate_hash ) {
-					$access = true;
-				}
+	if ( isset( $_COOKIE['email'] ) && isset( $_COOKIE['password'] ) ) {
+		$email = $_COOKIE['email'];
+		$user  = do_query( "SELECT * FROM users WHERE email='" . $email . "'" );
+		$rows  = mysqli_num_rows( $user );
+		if ( $rows == 1 ) {
+			$password      = $_COOKIE['password'];
+			$user_data     = $user->fetch_array();
+			$evaluate_hash = $user_data['password'];
+			if ( $password == $evaluate_hash ) {
+				$access = true;
 			}
-		} else {
-			$access = false;
+			if ( isset( $access ) and $access = true ) {
+				//include "window_chat.php";
+			}
 		}
-	}
-	/*Если данные совпадают подключаем стр с чатом*/
-	if ( isset( $access ) and $access = true ) {
-		include "window_chat.php";
-	} /*Если КУКА отсутствует то выводим окно авторизации*/
-	else {
-		include( $_SERVER["DOCUMENT_ROOT"] . "/education/login_window.php" );
+
+	} else {
+		//include( $_SERVER["DOCUMENT_ROOT"] . "/education/templates/main.php" );
 		exit();
 	}
 }
+
+//add_action( 'init', 'verification_user' );
 
 /**
  * Функция авторизации пользователя
  *
  */
-function autorization_user() {
+/*function autorization_user() {
 
 //Проверяем не пуста ли форма отправки и если нет то сравнив данные с БД записываем их в COOCKIE
 	if ( isset( $_POST['login'] ) && isset( $_POST['password'] ) && $_POST['login'] !== "" && $_POST['password'] !== "" ) {
 		if ( preg_match( "/^[a-zA-Z0-9]{3,30}$/", $_POST['login'] ) ) {
-			global $link;
 			$user = do_query( "SELECT * FROM `users` WHERE `login` = '" . $_POST['login'] . "'" );
 			$rows = mysqli_num_rows( $user );
 			if ( $rows == 1 ) {
@@ -308,20 +302,60 @@ function autorization_user() {
 					setcookie( 'RestrictedArea', $_POST['login'] . ":" . $pasword_hash . ":" . md5( $_SERVER['REMOTE_ADDR'] . ":" . $curr_date ), time() + 60 * 60 * 24 );
 					header( "Location: " . "index.php" );
 				} else {
-					echo "<div class='error'><span>Введенный пароль не верный.</span></div>";
+					echo "<div class='error'><span>four</span></div>";
 				}
 			} else {
-				echo "<div class='error'><span>Пользователь с таким логином не найден.</span></div>";
+				echo "<div class='error'><span>three</span></div>";
 			}
 		} else {
-			echo "<div class='error''><span>Вы ввели некорректный логин.</span></div>";
+			echo "<div class='error''><span>two</span></div>";
 		}
 	} else {
-		echo "<div class='error''><span>Введите все данные</span></div>";
+		echo "<div class='error''><span>one</span></div>";
 	}
 
+}*/
+
+/**
+ * Функция регистрации пользователя
+ */
+function registration() {
+	if ( ! empty( $_POST ) && $_POST['action'] == 'registration' ) {
+		$err = [];
+		if ( ! preg_match( "/^[a-zA-Z0-9]+$/", $_POST['email'] ) ) {
+			$err = "Email может состоять только и букв английского языка";
+		}
+
+		if ( strlen( $_POST['email'] ) < 7 or strlen( $_POST['email'] ) > 255 ) {
+			$err = "Email не должен быть меньше 7 символов и не больше 255";
+		}
+
+		$query = do_query( "SELECT count(*) FROM users WHERE email='{$_POST['email']}'" );
+
+		if ( mysqli_num_rows( $query ) > 0 ) {
+
+			$err[] = "Пользователь с таким email существует";
+		}
+
+		if ( count( $err ) == 0 ) {
+
+			$email = $_POST['email'];
+
+			$password = md5( md5( trim( $_POST['password'] ) ) );
+
+			do_query( "INSERT INTO users SET email='" . $email . "', password='" . $password . "'" );
+			header( "location:" . get_root_url() );
+		} else {
+			echo "<strong>При регистрации произошли следующие ошибки:</strong><br>";
+			foreach ( $err as $error ) {
+				echo $error . "<br>";
+			}
+		}
+	}
 }
 
+
+add_action( 'init', 'registration' );
 /**
  * Регистрация скрипта для последующего вывода этого скрипта
  *
