@@ -312,8 +312,6 @@ function verification_user() {
  *
  */
 function autorization_user() {
-
-//Проверяем не пуста ли форма отправки и если нет то сравнив данные с БД записываем их в COOCKIE
 	if ( isset( $_POST['email'] ) && isset( $_POST['password'] ) && $_POST['email'] !== "" && $_POST['password'] !== ""
 	) {
 		$user = do_query( "SELECT * FROM `users` WHERE `login` = '" . $_POST['login'] . "'" );
@@ -322,7 +320,6 @@ function autorization_user() {
 			$user_data    = $user->fetch_array();
 			$pasword_hash = md5( $_POST['password'] );
 			if ( $pasword_hash == $user_data['password'] ) {
-				$curr_date = time();
 				setcookie( 'email', $_POST['email'], time() +3600 );
 				setcookie( 'password', $_POST['password'], time() +3600 );
 				header( "Location: " . "index.php" );
