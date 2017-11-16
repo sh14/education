@@ -1,6 +1,7 @@
 <?php
 
 include 'config.php';
+include 'installer.php';
 include 'includes/variables.php';
 include 'includes/hooks.php';
 
@@ -23,6 +24,11 @@ function init() {
 	get_template_part( $page );
 
 }
+
+/**
+ * Вызов инсталлера
+ */
+add_action('init','add_default_data');
 
 function pr( $data, $debug_backtrace = false ) {
 	if ( $debug_backtrace == true ) {
