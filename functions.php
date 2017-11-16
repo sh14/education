@@ -314,7 +314,7 @@ function verification_user() {
 function autorization_user() {
 	if ( isset( $_POST['email'] ) && isset( $_POST['password'] ) && $_POST['email'] !== "" && $_POST['password'] !== ""
 	) {
-		$user = do_query( "SELECT * FROM `users` WHERE `login` = '" . $_POST['login'] . "'" );
+		$user = do_query( "SELECT * FROM `users` WHERE `email` = '" . $_POST['email'] . "'" );
 		$rows = mysqli_num_rows( $user );
 		if ( $rows == 1 ) {
 			$user_data    = $user->fetch_array();
