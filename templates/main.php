@@ -50,7 +50,7 @@
                         </div>
                         <div class="modal-body">
                             <div class="login_window">
-                                <form class="login">
+                                <form class="login" method="post">
                                     <label for="email_login">Введите Ваш email</label>
                                     <div class="form-group"><input class="form-control login_input" type="email" name="email_login" id="email_login" placeholder="Email" required="required"/ ></div>
                                     <label for="password_login">Введите Ваш пароль</label>
