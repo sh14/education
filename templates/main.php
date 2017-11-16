@@ -54,7 +54,7 @@
                                     <label for="email_login">Введите Ваш email</label>
                                     <div class="form-group"><input class="form-control login_input" type="email" name="email_login" id="email_login" placeholder="Email" required="required"/ ></div>
                                     <label for="password_login">Введите Ваш пароль</label>
-                                    <div class="form-group"><input class="form-control" type="password" class="password_login" placeholder="Пароль" id="password_login" name="password_login" required="required"/ ></div>
+                                    <div class="form-group"><input class="form-control password_login" type="password" placeholder="Пароль" id="password_login" name="password_login" required="required"/ ></div>
                                     <button class="login btn btn-success" type="submit">Вход</button>
                                     <button type="button" class="btn btn_main btn-success main_registration" data-toggle="modal" data-target="#modal-1" data-dismiss="modal">Регистрация</button>
                                     <input type="hidden" name="action" value="login">

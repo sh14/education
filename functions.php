@@ -335,11 +335,11 @@ function registration() {
 	if ( ! empty( $_POST ) && $_POST['action'] == 'registration' ) {
 		$err = [];
 		if ( ! preg_match( "/^[a-zA-Z0-9]+$/", $_POST['email'] ) ) {
-			$err = "Email может состоять только и букв английского языка";
+			$err[] = "Email может состоять только и букв английского языка";
 		}
 
 		if ( strlen( $_POST['email'] ) < 7 or strlen( $_POST['email'] ) > 255 ) {
-			$err = "Email не должен быть меньше 7 символов и не больше 255";
+			$err[] = "Email не должен быть меньше 7 символов и не больше 255";
 		}
 
 		$query = do_query( "SELECT count(*) FROM users WHERE email='{$_POST['email']}'" );
