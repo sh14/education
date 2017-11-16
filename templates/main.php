@@ -34,7 +34,6 @@
                                     <button class="btn btn-danger" type="button" data-dismiss="modal">Да пошло оно все</button>
                                 </div>
 	                            <input type="hidden" name="action" value="registration">
-                                <input type="hidden" name="action" value="login">
                             </form>
                         </div>
                     </div>
@@ -58,6 +57,7 @@
                                     <div class="form-group"><input class="form-control" type="password" class="password_login" placeholder="Пароль" id="password_login" name="password_login" required="required"/ ></div>
                                     <button class="login btn btn-success" type="submit">Вход</button>
                                     <button type="button" class="btn btn_main btn-success main_registration" data-toggle="modal" data-target="#modal-1" data-dismiss="modal">Регистрация</button>
+                                    <input type="hidden" name="action" value="login">
                                 </form>
                             </div>
                         </div>
