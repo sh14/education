@@ -320,7 +320,7 @@ function verification_user() {
  * Функция регистрации пользователя
  */
 function registration() {
-	if (isset($_POST['email'])&&isset($_POST['password'])&&isset($_POST['action'] =='registration') {
+	if (isset($_POST['email'])&&isset($_POST['password'])&&isset($_POST['action'] =='registration')) {
 		$err = [];
 		if ( ! preg_match( "/^[a-zA-Z0-9]+$/", $_POST['email'] ) ) {
 			$err = "Email может состоять только и букв английского языка";

@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="1aa73dd7-009c-4316-9da1-dd9eae869dd6" name="Default" comment="Оптимизация кода">
+    <list default="true" id="1aa73dd7-009c-4316-9da1-dd9eae869dd6" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/functions.php" afterPath="$PROJECT_DIR$/functions.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/includes/registration.php" afterPath="$PROJECT_DIR$/includes/registration.php" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -32,12 +31,12 @@
         <entry file="file://$PROJECT_DIR$/functions.php">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="181">
-              <caret line="322" column="98" lean-forward="false" selection-start-line="322" selection-start-column="98" selection-end-line="322" selection-end-column="98" />
+              <caret line="322" column="100" lean-forward="false" selection-start-line="322" selection-start-column="100" selection-end-line="322" selection-end-column="100" />
               <folding>
-                <marker date="1510852336428" expanded="true" signature="3917:3942" ph="UPDATE users... " />
-                <marker date="1510852336428" expanded="true" signature="5809:5857" ph="SELECT * FRO... users" />
-                <marker date="1510852336428" expanded="true" signature="8011:8069" ph="SELECT count... users" />
-                <marker date="1510852336428" expanded="true" signature="8308:8382" ph="INSERT INTO users... " />
+                <marker date="1510852424115" expanded="true" signature="3917:3942" ph="UPDATE users... " />
+                <marker date="1510852424115" expanded="true" signature="5809:5857" ph="SELECT * FRO... users" />
+                <marker date="1510852424115" expanded="true" signature="8012:8070" ph="SELECT count... users" />
+                <marker date="1510852424115" expanded="true" signature="8309:8383" ph="INSERT INTO users... " />
               </folding>
             </state>
           </provider>
@@ -271,7 +270,7 @@
       <workItem from="1510681599555" duration="3401000" />
       <workItem from="1510770600229" duration="114000" />
       <workItem from="1510771544490" duration="5487000" />
-      <workItem from="1510850439263" duration="1898000" />
+      <workItem from="1510850439263" duration="1981000" />
     </task>
     <task id="LOCAL-00001" summary="Оптимизация кода">
       <created>1510682526936</created>
@@ -322,11 +321,18 @@
       <option name="project" value="LOCAL" />
       <updated>1510776644230</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="функция регистрации">
+      <created>1510852364664</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1510852364664</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="10900000" />
+    <option name="totallyTimeSpent" value="10983000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-9" y="-9" width="1938" height="1048" extended-state="6" />
@@ -387,7 +393,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Изменения в функции verification_user" />
     <MESSAGE value="Оптимизация кода" />
-    <option name="LAST_COMMIT_MESSAGE" value="Оптимизация кода" />
+    <MESSAGE value="функция регистрации" />
+    <option name="LAST_COMMIT_MESSAGE" value="функция регистрации" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -463,10 +470,10 @@
         <state relative-caret-position="6187">
           <caret line="269" column="2" lean-forward="false" selection-start-line="269" selection-start-column="2" selection-end-line="269" selection-end-column="2" />
           <folding>
-            <marker date="1510852336428" expanded="true" signature="3917:3942" ph="UPDATE users... " />
-            <marker date="1510852336428" expanded="true" signature="5809:5857" ph="SELECT * FRO... users" />
-            <marker date="1510852336428" expanded="true" signature="8011:8069" ph="SELECT count... users" />
-            <marker date="1510852336428" expanded="true" signature="8308:8382" ph="INSERT INTO users... " />
+            <marker date="1510852424115" expanded="true" signature="3917:3942" ph="UPDATE users... " />
+            <marker date="1510852424115" expanded="true" signature="5809:5857" ph="SELECT * FRO... users" />
+            <marker date="1510852424115" expanded="true" signature="8012:8070" ph="SELECT count... users" />
+            <marker date="1510852424115" expanded="true" signature="8309:8383" ph="INSERT INTO users... " />
           </folding>
         </state>
       </provider>
@@ -532,10 +539,10 @@
         <state relative-caret-position="5263">
           <caret line="277" column="40" lean-forward="false" selection-start-line="277" selection-start-column="40" selection-end-line="277" selection-end-column="40" />
           <folding>
-            <marker date="1510852336428" expanded="true" signature="3917:3942" ph="UPDATE users... " />
-            <marker date="1510852336428" expanded="true" signature="5809:5857" ph="SELECT * FRO... users" />
-            <marker date="1510852336428" expanded="true" signature="8011:8069" ph="SELECT count... users" />
-            <marker date="1510852336428" expanded="true" signature="8308:8382" ph="INSERT INTO users... " />
+            <marker date="1510852424115" expanded="true" signature="3917:3942" ph="UPDATE users... " />
+            <marker date="1510852424115" expanded="true" signature="5809:5857" ph="SELECT * FRO... users" />
+            <marker date="1510852424115" expanded="true" signature="8012:8070" ph="SELECT count... users" />
+            <marker date="1510852424115" expanded="true" signature="8309:8383" ph="INSERT INTO users... " />
           </folding>
         </state>
       </provider>
@@ -601,10 +608,10 @@
         <state relative-caret-position="1672">
           <caret line="88" column="15" lean-forward="true" selection-start-line="88" selection-start-column="15" selection-end-line="88" selection-end-column="15" />
           <folding>
-            <marker date="1510852336428" expanded="true" signature="3917:3942" ph="UPDATE users... " />
-            <marker date="1510852336428" expanded="true" signature="5809:5857" ph="SELECT * FRO... users" />
-            <marker date="1510852336428" expanded="true" signature="8011:8069" ph="SELECT count... users" />
-            <marker date="1510852336428" expanded="true" signature="8308:8382" ph="INSERT INTO users... " />
+            <marker date="1510852424115" expanded="true" signature="3917:3942" ph="UPDATE users... " />
+            <marker date="1510852424115" expanded="true" signature="5809:5857" ph="SELECT * FRO... users" />
+            <marker date="1510852424115" expanded="true" signature="8012:8070" ph="SELECT count... users" />
+            <marker date="1510852424115" expanded="true" signature="8309:8383" ph="INSERT INTO users... " />
           </folding>
         </state>
       </provider>
@@ -783,12 +790,12 @@
     <entry file="file://$PROJECT_DIR$/functions.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="181">
-          <caret line="322" column="98" lean-forward="false" selection-start-line="322" selection-start-column="98" selection-end-line="322" selection-end-column="98" />
+          <caret line="322" column="100" lean-forward="false" selection-start-line="322" selection-start-column="100" selection-end-line="322" selection-end-column="100" />
           <folding>
-            <marker date="1510852336428" expanded="true" signature="3917:3942" ph="UPDATE users... " />
-            <marker date="1510852336428" expanded="true" signature="5809:5857" ph="SELECT * FRO... users" />
-            <marker date="1510852336428" expanded="true" signature="8011:8069" ph="SELECT count... users" />
-            <marker date="1510852336428" expanded="true" signature="8308:8382" ph="INSERT INTO users... " />
+            <marker date="1510852424115" expanded="true" signature="3917:3942" ph="UPDATE users... " />
+            <marker date="1510852424115" expanded="true" signature="5809:5857" ph="SELECT * FRO... users" />
+            <marker date="1510852424115" expanded="true" signature="8012:8070" ph="SELECT count... users" />
+            <marker date="1510852424115" expanded="true" signature="8309:8383" ph="INSERT INTO users... " />
           </folding>
         </state>
       </provider>
