@@ -9,7 +9,7 @@ global $link;
 
 // если $link - пуста
 if ( empty( $link ) ) {
-	$link = mysqli_connect( HOST, LOGIN, PASSWORD, DATABASE );
+	$link = mysqli_connect( 'localhost', 'root', '', 'shlo' );
 }
 
 function init() {
@@ -342,14 +342,13 @@ function registration() {
 
 
 add_action( 'init', 'registration' );
-/*
- * это недоработанная функция сохраниня пользователя
- * function save_profile() {
-    list( $url ) = explode( '?', $_SERVER['REQUEST_URI'] ); вычденияем из url строки елементы
-    $event = ''; здесь создали переменную для опреления положения в url строке
 
-    if(!empty($_GET['event']) && $_GET['event'] == 'save' && !empty($_POST)) {    создаем условие в котором прописываем занесение в базу данных
-                                                                                  информации из инпутов при удачном случае и изменении значения url строки
+
+/*function save_profile() {
+    list( $url ) = explode( '?', $_SERVER['REQUEST_URI'] );
+    $event = '';
+
+    if(!empty($_GET['event']) && $_GET['event'] == 'save' && !empty($_POST)) {
         $vars_string = array_map('trim', explode(',', 'first_name, last_name, login, Email, Password'));
         $values = [];
         $allow_query       = 1;
@@ -370,7 +369,12 @@ add_action( 'init', 'registration' );
         } else {
             $event = "error";
         }
-    }
+
+        $query = do_query("SELECT count(*) FROM users WHERE email = '{$_POST['email']}'");
+            if (mysqli_num_rows( $query ) > 0) {
+                $event = "error_user";
+            }
+        }
 
     if ( ! empty( $event ) ) {
         $event = '?event=' . $event;
