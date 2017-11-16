@@ -72,7 +72,7 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `message` (
-  `ID` int(20) NOT NULL,
+  `id` int(20) NOT NULL,
   `id_user` text,
   `datatime` datetime,
   `title` text NOT NULL,
