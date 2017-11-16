@@ -18,3 +18,8 @@ global $global_actions;
 if ( empty( $global_actions ) ) {
 	$global_actions = [];
 }
+
+global $scripts;
+if ( empty( $scripts ) ) {
+	$scripts = [];
+}
