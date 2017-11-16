@@ -56,7 +56,8 @@ function add_default_data() {
 		do_query( $sql_reset_id[ $key ] );
 	}
 }
-add_action('init','add_default_data');
+
+add_action( 'init', 'add_default_data' );
 
 function pr( $data, $debug_backtrace = false ) {
 	if ( $debug_backtrace == true ) {
@@ -296,16 +297,11 @@ function verification_user() {
 			$user_data     = $user->fetch_array();
 			$evaluate_hash = $user_data['password'];
 			if ( $password == $evaluate_hash ) {
-				$access = true;
+				return true;
 			}
-			if ( isset( $access ) and $access = true ) {
-				//include "window_chat.php";
-			}
+
 		}
 
-	} else {
-		//include( $_SERVER["DOCUMENT_ROOT"] . "/education/templates/main.php" );
-		exit();
 	}
 }
 
@@ -315,34 +311,25 @@ function verification_user() {
  * Функция авторизации пользователя
  *
  */
-/*function autorization_user() {
+function autorization_user() {
 
 //Проверяем не пуста ли форма отправки и если нет то сравнив данные с БД записываем их в COOCKIE
-	if ( isset( $_POST['login'] ) && isset( $_POST['password'] ) && $_POST['login'] !== "" && $_POST['password'] !== "" ) {
-		if ( preg_match( "/^[a-zA-Z0-9]{3,30}$/", $_POST['login'] ) ) {
-			$user = do_query( "SELECT * FROM `users` WHERE `login` = '" . $_POST['login'] . "'" );
-			$rows = mysqli_num_rows( $user );
-			if ( $rows == 1 ) {
-				$user_data    = $user->fetch_array();
-				$pasword_hash = md5( $_POST['password'] );
-				if ( $pasword_hash == $user_data['password'] ) {
-					$curr_date = time();
-					setcookie( 'RestrictedArea', $_POST['login'] . ":" . $pasword_hash . ":" . md5( $_SERVER['REMOTE_ADDR'] . ":" . $curr_date ), time() + 60 * 60 * 24 );
-					header( "Location: " . "index.php" );
-				} else {
-					echo "<div class='error'><span>four</span></div>";
-				}
-			} else {
-				echo "<div class='error'><span>three</span></div>";
+	if ( isset( $_POST['email'] ) && isset( $_POST['password'] ) && $_POST['email'] !== "" && $_POST['password'] !== ""
+	) {
+		$user = do_query( "SELECT * FROM `users` WHERE `login` = '" . $_POST['login'] . "'" );
+		$rows = mysqli_num_rows( $user );
+		if ( $rows == 1 ) {
+			$user_data    = $user->fetch_array();
+			$pasword_hash = md5( $_POST['password'] );
+			if ( $pasword_hash == $user_data['password'] ) {
+				$curr_date = time();
+				setcookie( 'email', $_POST['email'], time() +3600 );
+				setcookie( 'password', $_POST['password'], time() +3600 );
+				header( "Location: " . "index.php" );
 			}
-		} else {
-			echo "<div class='error''><span>two</span></div>";
 		}
-	} else {
-		echo "<div class='error''><span>one</span></div>";
 	}
-
-}*/
+}
 
 /**
  * Функция регистрации пользователя
@@ -390,8 +377,8 @@ add_action( 'init', 'registration' );
  * @param       $handle
  * @param       $src
  * @param array $deps
- * @param bool  $ver
- * @param bool  $in_footer
+ * @param bool $ver
+ * @param bool $in_footer
  *
  * @return array
  */
@@ -457,12 +444,12 @@ function enqueue_script( $handle ) {
 /**
  * Регистрация скриптов и их вывод
  */
-function enqueue_scripts(){
-	register_script('jquery',get_stylesheet_directory().'/js/jquery-3.2.1.min.js');
-	enqueue_script('jquery');
+function enqueue_scripts() {
+	register_script( 'jquery', get_stylesheet_directory() . '/js/jquery-3.2.1.min.js' );
+	enqueue_script( 'jquery' );
 }
 
-add_action('init','enqueue_scripts');
+add_action( 'init', 'enqueue_scripts' );
 
 /*
  * это недоработанная функция сохраниня пользователя
