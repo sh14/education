@@ -312,43 +312,44 @@ add_action( 'init', 'verification_user' );
  *
  */
 function autorization_user() {
-	if ( isset( $_POST['email_login'] ) && isset( $_POST['password_login'] )){
-		$user = do_query( "SELECT * FROM `users` WHERE `email` = '" . $_POST['email_login'] . "'" );
-		$rows = mysqli_num_rows( $user );
+	if ( isset( $_POST['email_login'] ) && isset( $_POST['password_login'] ) ) {
+		$email_login    = $_POST['email_login'];
+		$password_login = md5( md5( trim( $_POST['password_login'] ) ) );
+		$user           = do_query( "SELECT * FROM `users` WHERE `email` = '" . $email_login . "'" );
+		$rows           = mysqli_num_rows( $user );
 		if ( $rows == 1 ) {
-			$user_data    = $user->fetch_array();
-			$password_hash = $_POST['password_login'];
-			if ( $password_hash == $user_data['password'] ) {
-				echo 'russ';
-				setcookie( 'email', $_POST['email_login'], time() +3600 );
-				setcookie( 'password', $_POST['password_login'], time() +3600 );
+			echo $password_login;
+			$user_data = $user->fetch_array();
+			if ( $password_login == $user_data['password'] ) {
+				setcookie( 'email', $email_login, time() + 60 * 60 * 24 );
+				setcookie( 'password', $password_login, time() + 60 * 60 * 24 );
 				header( "Location: " . "index.php" );
 			}
 		}
 	}
 }
-if(isset($_POST['login_send'])){
+
+if ( isset( $_POST['login_send'] ) ) {
 	autorization_user();
 }
 /**
  * Функция регистрации пользователя
  */
-function registration()
-{
-    if (!empty($_POST['email']) && !empty($_POST['password']) && !empty($_POST['action'] == 'registration')) {
-        $err = [];
+function registration() {
+	if ( ! empty( $_POST['email'] ) && ! empty( $_POST['password'] ) && ! empty( $_POST['action'] == 'registration' ) ) {
+		$err = [];
 
-        if (strlen($_POST['email']) < 7 or strlen($_POST['email']) > 255) {
-            $err[] = "Email не должен быть меньше 7 символов и не больше 255";
-        }
+		if ( strlen( $_POST['email'] ) < 7 or strlen( $_POST['email'] ) > 255 ) {
+			$err[] = "Email не должен быть меньше 7 символов и не больше 255";
+		}
 
-        if (!preg_match("/[0-9a-z_\.\-]+@[0-9a-z_\.\-]+\.[a-z]{2,4}/i", $_POST['email'])) {
-        	$err[] = "Некорректный Email";
-        }
+		if ( ! preg_match( "/[0-9a-z_\.\-]+@[0-9a-z_\.\-]+\.[a-z]{2,4}/i", $_POST['email'] ) ) {
+			$err[] = "Некорректный Email";
+		}
 
-        if (strlen($_POST['password']) < 6 or strlen($_POST['password']) > 255) {
-            $err[] = "Password не должен быть меньше 6 символов и не больше 255";
-        }
+		if ( strlen( $_POST['password'] ) < 6 or strlen( $_POST['password'] ) > 255 ) {
+			$err[] = "Password не должен быть меньше 6 символов и не больше 255";
+		}
 
 		if ( count( $err ) == 0 ) {
 
@@ -496,10 +497,9 @@ add_action( 'init', 'enqueue_scripts' );
 
 $email = 'Почтовый ящик';
 
-function emailValidation($email)
-{
-	if ($email) {
-		if (preg_match("/[0-9a-z_\.\-]+@[0-9a-z_\.\-]+\.[a-z]{2,4}/i", $email)) {
+function emailValidation( $email ) {
+	if ( $email ) {
+		if ( preg_match( "/[0-9a-z_\.\-]+@[0-9a-z_\.\-]+\.[a-z]{2,4}/i", $email ) ) {
 			$message = 'Корректный Email';
 		} else {
 			$message = 'Некорректный Email';
@@ -507,8 +507,9 @@ function emailValidation($email)
 	} else {
 		$message = 'Email не указан';
 	}
+
 	return $message;
 }
 
-$message = emailValidation($email);
-echo emailValidation($email);
+$message = emailValidation( $email );
+//echo emailValidation($email);
