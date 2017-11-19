@@ -305,29 +305,31 @@ function verification_user() {
 	}
 }
 
-//add_action( 'init', 'verification_user' );
+add_action( 'init', 'verification_user' );
 
 /**
  * Функция авторизации пользователя
  *
  */
 function autorization_user() {
-	if ( isset( $_POST['email'] ) && isset( $_POST['password'] ) && $_POST['email'] !== "" && $_POST['password'] !== ""
-	) {
-		$user = do_query( "SELECT * FROM `users` WHERE `email` = '" . $_POST['email'] . "'" );
+	if ( isset( $_POST['email_login'] ) && isset( $_POST['password_login'] )){
+		$user = do_query( "SELECT * FROM `users` WHERE `email` = '" . $_POST['email_login'] . "'" );
 		$rows = mysqli_num_rows( $user );
 		if ( $rows == 1 ) {
 			$user_data    = $user->fetch_array();
-			$pasword_hash = md5( $_POST['password'] );
-			if ( $pasword_hash == $user_data['password'] ) {
-				setcookie( 'email', $_POST['email'], time() +3600 );
-				setcookie( 'password', $_POST['password'], time() +3600 );
+			$password_hash = $_POST['password_login'];
+			if ( $password_hash == $user_data['password'] ) {
+				echo 'russ';
+				setcookie( 'email', $_POST['email_login'], time() +3600 );
+				setcookie( 'password', $_POST['password_login'], time() +3600 );
 				header( "Location: " . "index.php" );
 			}
 		}
 	}
 }
-
+if(isset($_POST['login_send'])){
+	autorization_user();
+}
 /**
  * Функция регистрации пользователя
  */
