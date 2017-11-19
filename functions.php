@@ -342,16 +342,13 @@ function registration()
             $err[] = "Email не должен быть меньше 7 символов и не больше 255";
         }
 
+        if (!preg_match("/[0-9a-z_\.\-]+@[0-9a-z_\.\-]+\.[a-z]{2,4}/i", $_POST['email'])) {
+        	$err[] = "Некорректный Email";
+        }
+
         if (strlen($_POST['password']) < 6 or strlen($_POST['password']) > 255) {
             $err[] = "Password не должен быть меньше 6 символов и не больше 255";
         }
-
-		$query = do_query( "SELECT count(*) FROM users WHERE email='{$_POST['email']}'" );
-
-		if ( mysqli_num_rows( $query ) > 0 ) {
-
-			$err[] = "Пользователь с таким email существует";
-		}
 
 		if ( count( $err ) == 0 ) {
 
@@ -360,6 +357,11 @@ function registration()
 			$password = md5( md5( trim( $_POST['password'] ) ) );
 
 			do_query( "INSERT INTO users SET email='" . $email . "', password='" . $password . "'" );
+			$query = do_query( "SELECT count(*) FROM users WHERE email='{$_POST['email']}'" );
+
+			if ( mysqli_num_rows( $query ) > 0 ) {
+				$err[] = "Пользователь с таким email существует";
+			}
 			header( "location:" . get_root_url() );
 		} else {
 			echo "<strong>При регистрации произошли следующие ошибки:</strong><br>";
@@ -488,22 +490,24 @@ add_action( 'init', 'enqueue_scripts' );
     }
 }*/
 
-//Функция валидации email
+/**
+ * Функция валидации email
+ */
 
 $email = 'Почтовый ящик';
 
 function emailValidation($email)
 {
-    if ($email) {
-        if (preg_match("/[0-9a-z_\.\-]+@[0-9a-z_\.\-]+\.[a-z]{2,4}/i", $email)) {
-            $message = 'Корректный Email';
-        } else {
-            $message = 'Некорректный Email';
-        }
-    } else {
-        $message = 'Email не указан';
-    }
-    return $message;
+	if ($email) {
+		if (preg_match("/[0-9a-z_\.\-]+@[0-9a-z_\.\-]+\.[a-z]{2,4}/i", $email)) {
+			$message = 'Корректный Email';
+		} else {
+			$message = 'Некорректный Email';
+		}
+	} else {
+		$message = 'Email не указан';
+	}
+	return $message;
 }
 
 $message = emailValidation($email);
