@@ -15,6 +15,7 @@ if ( empty( $link ) ) {
 
 function init() {
 	do_action( 'init' );
+	get_template_part( 'header' );
 	if ( ! empty( $_GET['p'] ) ) {
 		$page = $_GET['p'];
 	}
@@ -22,7 +23,7 @@ function init() {
 		$page = 'index';
 	}
 	get_template_part( $page );
-
+	get_template_part( 'footer' );
 }
 
 /**

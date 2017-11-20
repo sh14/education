@@ -1,6 +1,6 @@
 <?php
 global $link;
-get_header();
+//get_header();
 
 get_template_part( 'main' );
 get_template_part('profile_edit');
@@ -11,4 +11,4 @@ while($row = mysqli_fetch_array($result)){
 	pr($row);
 }
 
-get_footer();
+//get_footer();
