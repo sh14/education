@@ -58,13 +58,15 @@ function add_default_data() {
 		$result[ $key ] = do_query( $query );
 		if ( $result[ $key ]->num_rows == 0 ) {
 			do_query( $sql[ $key ] );
-            foreach ( $sql_reset_id as $reset_key => $reset_query ) {
-                do_query( $sql_reset_id[ $key ] );
-            }
+
 		}
 	}
 
-
+	if ( $result[ $key ]->num_rows == 0 ) {
+		foreach ( $sql_reset_id as $key => $query ) {
+			do_query( $sql_reset_id[ $key ] );
+		}
+	}
 }
 
 add_action( 'init', 'add_default_data' );
