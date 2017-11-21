@@ -551,3 +551,11 @@ function emailValidation( $email ) {
 
 $message = emailValidation( $email );
 //echo emailValidation($email);
+
+//Функция вытягивания и преобразования в асс массив данных из БД
+
+    function get_user_info() {
+        global $current_user;
+        $user_info = do_query( "SELECT * FROM users WHERE email='Jamay.kos@gmail.com'" );
+        $current_user=$user_info ->fetch_array(MYSQLI_ASSOC);
+    }
