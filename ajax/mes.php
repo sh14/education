@@ -7,5 +7,5 @@
  */
 
 echo "<pre>";
-print_r($_POST["your_massage"]);
+    print_r($_POST["your_massage"]);
 echo "</pre>";
