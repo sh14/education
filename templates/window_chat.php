@@ -29,7 +29,7 @@ if ( ! empty( $_GET['event'] ) ) {
             <div class="chat_profile_buttons">
                 <form action="<?php echo $_SERVER["PHP_SELF"]; ?>" method="post">
                     <button type="button" class="btn btn_chat btn-success btn_chat_profile" data-toggle="modal" data-target="#modal-1" >Мой профиль</button>
-                    <input type="submit" class="btn btn-danger btn_chat btn-success chat_logout" name="exit" value="Выход"/>
+	                <a href="<?php echo get_root_url().'?p=logout'; ?>" class="btn btn-danger btn_chat btn-success chat_logout" >Выход</a>
                 </form>
             </div>
             <br>
