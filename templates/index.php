@@ -5,7 +5,7 @@ global $link;
 if ( is_user_logged_in() ) {
 
 	switch ( get_page() ) {
-		case 'profile':
+		case 'profile_edit':
 			get_template_part( 'profile_edit' );
 			break;
 		default:
@@ -18,8 +18,8 @@ if ( is_user_logged_in() ) {
 		case 'error_login':
 			echo '<div class="error_password">Вы ввели неверный пароль!</div>';
 			break;
-		case 'profile':
-			get_template_part( 'profile_edit' );
+		case 'profile_edit':
+			get_template_part( 'main' );
 			break;
 		default:
 			get_template_part( 'main' );
