@@ -30,7 +30,7 @@ function init() {
  * Функция добавления данных по умолчанию в базу данных
  */
 function add_default_data() {
-	$sql_check   = [];
+    $sql_check   = [];
 	$sql_check[] = "SELECT * FROM `message`";
 	$sql_check[] = "SELECT * FROM `users`";
 
@@ -364,7 +364,7 @@ if ( isset( $_POST['login_send'] ) ) {
 
 				$password = md5( md5( trim( $_POST['password'] ) ) );
 
-				do_query( "INSERT INTO users SET email='" . $email . "', password='" . $password . "'" );
+				do_query( "REPLACE INTO users SET email='" . $email . "', password='" . $password . "'" );
 				$query = do_query( "SELECT count(*) FROM users WHERE email='{$_POST['email']}'" );
 
 				if ( mysqli_num_rows( $query ) > 0 ) {
