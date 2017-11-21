@@ -23,3 +23,8 @@ global $scripts;
 if ( empty( $scripts ) ) {
 	$scripts = [];
 }
+
+global $current_user;
+if ( empty( $current_user ) ) {
+    $current_user = [];
+}
