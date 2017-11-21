@@ -366,11 +366,18 @@
       <option name="project" value="LOCAL" />
       <updated>1510856240852</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="Добавлена функция валидации email">
+      <created>1511290817559</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1511290817559</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="14123000" />
+    <option name="totallyTimeSpent" value="14128000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="423" y="11" width="1400" height="1000" extended-state="0" />
