@@ -240,19 +240,19 @@ add_action( 'init', 'profile_edit' );
  * Функция загрузки фотографии пользователя
  */
 function upload_image() {
-	if ( ! empty( $_POST['action'] ) && $_POST['action'] == 'upload' ) {
-		$target_dir      = '/images/';
-		$target_file     = get_root_path() . $target_dir . basename( $_FILES['file_to_upload']['name'] );
-		$upload_ok       = 1;
-		$image_file_type = pathinfo( $target_file, PATHINFO_EXTENSION );
-		if ( isset( $_POST['submit'] ) ) {
-			$check = getimagesize( $_FILES['file_to_upload']['tmp_name'] );
-			if ( $check !== false ) {
-				echo 'Файл ' . $check['mime'] . ' является изображением.';
+	if ( ! empty( $_POST['action'] ) . ' является изображением.'
 				$upload_ok = 1;
 			} else {
 				echo 'Файл не является изображением.';
-				$upload_ok = 0;
+				$upload_ok = 0;&& $_POST['action'] == 'upload' ) {
+                    $target_dir      = '/images/';
+                    $target_file     = get_root_path() . $target_dir . basename( $_FILES['file_to_upload']['name'] );
+                    $upload_ok       = 1;
+                    $image_file_type = pathinfo( $target_file, PATHINFO_EXTENSION );
+                    if ( isset( $_POST['submit'] ) ) {
+                        $check = getimagesize( $_FILES['file_to_upload']['tmp_name'] );
+                        if ( $check !== false ) {
+                            echo 'Файл ' . $check[
 			}
 		}
 
@@ -375,11 +375,11 @@ if ( isset( $_POST['login_send'] ) ) {
 				echo "<strong>При регистрации произошли следующие ошибки:</strong><br>";
 				foreach ( $err as $error ) {
 					echo $error . "<br>";
+
 				}
 			}
 		}
 	}
-
 
 	add_action( 'init', 'registration' );
 	/**
@@ -519,3 +519,11 @@ if ( isset( $_POST['login_send'] ) ) {
 
 	$message = emailValidation( $email );
 //echo emailValidation($email);
+
+
+//Функция вытягивания данных авторизованного пользователя и запихивания в переменную
+    function get_user_info() {
+        $user_info = do_query( "SELECT count(*) FROM users WHERE email='{$_POST['email']}'" );
+        $user_info ->fetch_array(MYSQLI_ASSOC);
+        pr($user_info);
+    }
