@@ -8,7 +8,7 @@
 
 	<link rel="stylesheet" href="<?php echo get_stylesheet_directory(); ?>/bootstrap/css/bootstrap.min.css">
 	<link rel="stylesheet" href="<?php echo get_stylesheet_directory(); ?>/style.css">
-    <title>Blog</title>
+    <title>Chat</title>
 	<?php
 	head();
 	?>
