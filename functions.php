@@ -3,32 +3,142 @@
 include 'config.php';
 include 'includes/variables.php';
 include 'includes/hooks.php';
+include 'includes/formatting.php';
 
 // объявление глобальной переменной
 global $link;
 
 // если $link - пуста
 if ( empty( $link ) ) {
-	$link = mysqli_connect( HOST, LOGIN, PASSWORD, DATABASE );
+	$link = mysqli_connect( HOST, LOGIN, PASSWORD, DATABASE )
+	or die( 'Ошибка при подключении к серверу MySQL: ' . mysqli_error() );
 }
-
-//Отладка
-$result = '';
-
 
 function init() {
 	do_action( 'init' );
+	get_template_part( 'header' );
+	get_template_part( 'index' );
+	get_template_part( 'footer' );
+}
+
+/**
+ * Функция определения запрошенной страницы
+ *
+ * @return string
+ */
+function get_page() {
+	$page = '';
 	if ( ! empty( $_GET['p'] ) ) {
 		$page = $_GET['p'];
 	}
-	if ( empty( $page ) ) {
-		$page = 'index';
-	}
-	get_template_part( $page );
 
+	return $page;
+}
+
+/**
+ * Функция добавления данных по умолчанию в базу данных
+ */
+function add_default_data() {
+	//$sql_check_database    = "SHOW TABLES FROM " . DATABASE;
+	//$result = do_query( $sql_check_database );
+	//echo 'Проверка базы'.pr(check_database());
+	/*if(!check_database()) {
+		insert_tables();
+	}*/
+
+	/*$sql_check_database = [];
+	$sql_check_database[] = "SHOW TABLES LIKE `message`";
+	$sql_check_database[] = "SHOW TABLES LIKE `users`";*/
+
+	$sql_check_tables   = [];
+	$sql_check_tables[] = "SELECT * FROM `message`";
+	$sql_check_tables[] = "SELECT * FROM `users`";
+
+	$sql   = [];
+	$sql[] = "INSERT INTO `message`( `id_user`, `datatime`, `title`, `content`, `photo`) 
+	VALUES (1,'2017-11-12 12:00:00','Привет, мир!','Это тестовая публикация!','../images/character-designer.png')";
+	$sql[] = "INSERT INTO `users`( `login`, `email`, `password`, `first_name`, `last_name`) 
+	VALUES ('admin','test@tes.ru','123','Админ','Админов')";
+
+	$sql_set_id     = [];
+	$sql_reset_id   = [];
+	$sql_set_id[]   = "SET @reset = 0";
+	$sql_set_id[]   = "SET @reset = 0";
+	$sql_reset_id[] = "UPDATE `message` SET id = @reset:= @reset + 1";
+	$sql_reset_id[] = "UPDATE `users` SET ID = @reset:= @reset + 1";
+
+	/*foreach ($sql_check_database as $key => $query) {
+		$result[ $key ] = do_query( $query );
+		if ($result[$key]->num_rows == 0) {
+
+			echo 'Таблиц не сущестует';
+		}
+	}*/
+
+	foreach ( $sql_check_tables as $key => $query ) {
+		$result[ $key ] = do_query( $query );
+		if ( $result[ $key ]->num_rows == 0 ) {
+			do_query( $sql[ $key ] );
+			do_query( $sql_set_id[ $key ] );
+			do_query( $sql_reset_id[ $key ] );
+		}
+	}
+}
+
+add_action( 'init', 'add_default_data' );
+
+/**
+ * Функция проверки таблиц
+ */
+
+function check_database() {
+	$sql    = "SHOW TABLES FROM " . DATABASE;
+	$result = do_query( $sql );
+	pr($result);
+	if ( ! $result ) {
+		echo "Ошибка базы данных, невозможно вывести таблицы\n";
+		echo 'Ошибка MySQL: ' . mysqli_error();
+		exit;
+	}
+
+	while ( $row = mysqli_fetch_row( $result ) ) {
+		echo "Таблица: {$row[0]}\n";
+	}
+
+	mysqli_free_result( $result );
+}
+
+//add_action( 'init', 'check_database' );
+
+/**
+ * Функция добавления таблицы
+ */
+
+function insert_tables() {
+	global $link;
+	$filename = 'shlo.sql';
+	//$link     = mysqli_connect( HOST, LOGIN, PASSWORD ) or die('Ошибка при подключении к серверу MySQL: ' . mysqli_error());
+
+	//mysqli_select_db( $link, 'dump' ) or die( 'Ошибка при выборе базы данных MySQL: ' . mysqli_error($link) );
+	$templine = '';
+	$lines    = file( $filename );
+	//echo 'Лайнес ' . pr( $lines );
+	foreach ( $lines as $line ) {
+		if ( substr( $line, 0, 2 ) == '--' || $line == '' ) {
+			continue;
+		}
+		$templine .= $line;
+		if ( substr( trim( $line ), - 1, 1 ) == ';' ) {
+			do_query($templine)/*mysqli_query( $link, $templine )*/ or print( 'Ошибка при осуществлении запроса \'<strong>' . $templine . '\': ' . mysqli_error($link) . '<br /><br />' );
+			//echo 'Темплайн ' . pr( $templine );
+			$templine = '';
+		}
+	}
+	echo "Таблицы успешно импортированы";
 }
 
 function pr( $data, $debug_backtrace = false ) {
+
 	if ( $debug_backtrace == true ) {
 		echo '<pre><code>';
 		var_dump( debug_backtrace() );
@@ -81,9 +191,17 @@ function get_header() {
 }
 
 /**
+ * Функция, выполняемая внутри тега head HTML документа
+ */
+function head() {
+	do_action( 'head' );
+}
+
+/**
  * Функция подключения подвала
  */
 function get_footer() {
+	do_action( 'footer' );
 	get_template_part( 'footer' );
 }
 
@@ -148,7 +266,7 @@ function get_stylesheet_directory() {
 function profile_edit() {
 	list( $url ) = explode( '?', $_SERVER['REQUEST_URI'] );
 	$event = '';
-	if ( ! empty( $_GET['event'] ) && $_GET['event'] == 'edit_user_info' ) {
+	if ( ! empty( $_POST['action'] ) && $_POST['action'] == 'edit_user_info' ) {
 		$vars_string       = 'login,email,password,first_name,last_name';
 		$vars              = array_map( 'trim', explode( ',', $vars_string ) );
 		$values            = [];
@@ -194,13 +312,13 @@ function profile_edit() {
 	}
 }
 
-//add_action( 'init', 'profile_edit' );
+add_action( 'init', 'profile_edit' );
 
 /**
  * Функция загрузки фотографии пользователя
  */
 function upload_image() {
-	if ( ! empty( $_GET['event'] ) && $_GET['event'] == 'upload' ) {
+	if ( ! empty( $_POST['action'] ) && $_POST['action'] == 'upload' ) {
 		$target_dir      = '/images/';
 		$target_file     = get_root_path() . $target_dir . basename( $_FILES['file_to_upload']['name'] );
 		$upload_ok       = 1;
@@ -241,44 +359,30 @@ function upload_image() {
 	}
 }
 
-//add_action( 'init', 'upload_image' );
+add_action( 'init', 'upload_image' );
 
 /**
- * Функция верификации пользователя
+ * Функция проверки - авторизирован ли пользователь
  *
  */
-function verification_user(){
-    global $link;
-    if ( isset( $_COOKIE['RestrictedArea'] ) ) {
-        $data_array = explode( ':', $_COOKIE['RestrictedArea'] );
+function is_user_logged_in() {
 
-        /*Проверяем на корректность введенных данных и берем строку из БД, если она существует
-        делаем проверку на совпадение данных из БД и КУКИ*/
+	if ( ! empty( $_COOKIE['shlo_chat'] ) ) {
 
-        if ( preg_match( "/^[a-zA-Z0-9]{3,30}$/", $data_array[0] ) ) {
-            $user = mysqli_query( $link, "SELECT * FROM users WHERE login='" . $data_array[0] . "'" );
-            $rows = mysqli_num_rows( $user );
-            if ( $rows == 1 ) {
-                $cookies_hash  = $data_array[1];
-                $user_data     = $user->fetch_array();
-                $evaluate_hash =  $user_data['password'];
-                if ( $cookies_hash == $evaluate_hash ) {
-                    $access = true;
-                }
-            }
-        } else {
-            $access = FALSE;
-        }
-    }
-    /*Если данные совпадают подключаем стр с чатом*/
-    if (isset($access) and $access = TRUE) {
-        include "window_chat.php";
-    }
-    /*Если КУКА отсутствует то выводим окно авторизации*/
-    else {
-        include ($_SERVER["DOCUMENT_ROOT"]."/education/login_window.php");
-        exit();
-    }
+		list( $email, $password ) = explode( ';', esc_sql( $_COOKIE['shlo_chat'] ) );
+
+		if ( ! empty( $email ) && ! empty( $password ) ) {
+			$sql    = "SELECT COUNT(*) FROM users WHERE email='{$email}' AND password='{$password}'";
+			$result = do_query( $sql );
+			$rows   = $result->fetch_row();
+
+			if ( $rows[0] == 1 ) {
+				return true;
+			}
+		}
+	}
+
+	return false;
 }
 
 /**
@@ -286,67 +390,241 @@ function verification_user(){
  *
  */
 function autorization_user() {
+	if ( isset( $_POST['email_login'] ) && isset( $_POST['password_login'] ) ) {
 
-//Проверяем не пуста ли форма отправки и если нет то сравнив данные с БД записываем их в COOCKIE
-    if ( isset( $_POST['login'] ) && isset( $_POST['password'] ) && $_POST['login'] !== "" && $_POST['password'] !== "" ) {
-        if ( preg_match( "/^[a-zA-Z0-9]{3,30}$/", $_POST['login'] ) ) {
-            global $link;
-            $user = do_query( "SELECT * FROM `users` WHERE `login` = '" . $_POST['login'] . "'" );
-            $rows = mysqli_num_rows( $user );
-            if ( $rows == 1 ) {
-                $user_data    = $user->fetch_array();
-                $pasword_hash = md5( $_POST['password'] );
-                if ( $pasword_hash == $user_data['password'] ) {
-                    $curr_date = time();
-                    setcookie( 'RestrictedArea', $_POST['login'] . ":" . $pasword_hash . ":" . md5( $_SERVER['REMOTE_ADDR'] . ":" . $curr_date ), time() + 60 * 60 * 24 );
-                    header( "Location: " . "index.php" );
-                } else {
-                    echo "<div class='error'><span>Введенный пароль не верный.</span></div>";
-                }
-            } else {
-                echo "<div class='error'><span>Пользователь с таким логином не найден.</span></div>";
-            }
-        } else {
-            echo "<div class='error''><span>Вы ввели некорректный логин.</span></div>";
-        }
-    }else{
-        echo "<div class='error''><span>Введите все данные</span></div>";
-    }
+		$email    = $_POST['email_login'];
+		$password = md5( md5( trim( $_POST['password_login'] ) ) );
+		$sql      = "SELECT COUNT(*) FROM users WHERE email='{$email}' AND password='{$password}'";
+		$result   = do_query( $sql );
+		$rows     = $result->fetch_row();
 
+		if ( $rows[0] == 1 ) {
+			setcookie( 'shlo_chat', implode( ';', [ $email, $password ] ), time() + 60 * 60 * 24 );
+			$url = get_root_url();
+		} else {
+			$url = 'p=error_login';
+			user_logout( $url );
+		}
+		header( "Location: " . $url );
+		die();
+	}
 }
+
+add_action( 'init', 'autorization_user' );
+
+/**
+ * Функция логаута
+ *
+ * @param $args
+ */
+function user_logout( $args = '' ) {
+	setcookie( 'shlo_chat', '', time() - 60 * 60 * 24 );
+	if ( ! empty( $args ) && is_array( $args ) ) {
+		$args = '?' . implode( '&', $args );
+	}
+	$url = get_root_url() . $args;
+
+	header( "Location: " . $url );
+	die();
+}
+
+/**
+ * Функция разлогинивания
+ */
+function logout() {
+	if ( get_page() == 'logout' ) {
+		user_logout();
+	}
+}
+
+add_action( 'init', 'logout' );
+
+/**
+ * Функция регистрации пользователя
+ */
+function registration() {
+	if ( ! empty( $_POST['email'] ) && ! empty( $_POST['password'] ) && ! empty( $_POST['action'] == 'registration' ) ) {
+		$err = [];
+
+		if ( strlen( $_POST['email'] ) < 7 or strlen( $_POST['email'] ) > 255 ) {
+			$err[] = "Email не должен быть меньше 7 символов и не больше 255";
+		}
+
+		if ( ! preg_match( "/[0-9a-z_\.\-]+@[0-9a-z_\.\-]+\.[a-z]{2,4}/i", $_POST['email'] ) ) {
+			$err[] = "Некорректный Email";
+		}
+
+		if ( strlen( $_POST['password'] ) < 6 or strlen( $_POST['password'] ) > 255 ) {
+			$err[] = "Password не должен быть меньше 6 символов и не больше 255";
+		}
+
+		if ( count( $err ) == 0 ) {
+
+			$email = $_POST['email'];
+
+			$password = md5( md5( trim( $_POST['password'] ) ) );
+
+			do_query( "INSERT INTO users SET email='" . $email . "', password='" . $password . "'" );
+			$query = do_query( "SELECT count(*) FROM users WHERE email='{$_POST['email']}'" );
+
+			if ( mysqli_num_rows( $query ) > 0 ) {
+				$err[] = "Пользователь с таким email существует";
+			}
+			header( "location:" . get_root_url() );
+		} else {
+			echo "<strong>При регистрации произошли следующие ошибки:</strong><br>";
+			foreach ( $err as $error ) {
+				echo $error . "<br>";
+			}
+		}
+	}
+}
+
+
+add_action( 'init', 'registration' );
+/**
+ * Регистрация скрипта для последующего вывода этого скрипта
+ *
+ * @param       $handle
+ * @param       $src
+ * @param array $deps
+ * @param bool $ver
+ * @param bool $in_footer
+ *
+ * @return array
+ */
+function register_script( $handle, $src, $deps = array(), $ver = false, $in_footer = false ) {
+	global $scripts;
+
+	if ( ! empty( $ver ) ) {
+		$ver = '?ver=' . $ver;
+	} else {
+		$ver = '';
+	}
+	$scripts[ $handle ] = [
+		'src'       => $src . $ver,
+		'in_footer' => $in_footer
+	];
+
+	$reordered                 = [];
+	$i                         = 0;
+	$current_script_position   = 0;
+	$dependent_script_position = 0;
+	foreach ( $scripts as $key => $data ) {
+		if ( $handle == $key ) {
+			$current_script_position = $i;
+		}
+		if ( in_array( $key, $deps ) ) {
+			$dependent_script_position = $i;
+		}
+		if ( $dependent_script_position > $current_script_position ) {
+			unset( $reordered[ $key ] );
+		}
+		$reordered[ $key ] = $scripts[ $key ];
+		$i ++;
+	}
+
+	$scripts = $reordered;
+
+	return $scripts;
+}
+
+/**
+ * Вывод скрипта в нужно месте
+ *
+ * @param $handle
+ */
+function enqueue_script( $handle ) {
+	global $scripts;
+
+	if ( ! empty( $scripts[ $handle ] ) ) {
+		$out = '<script src="' . $scripts[ $handle ]['src'] . '"></script>';
+
+		if ( $scripts[ $handle ]['in_footer'] === true ) {
+			$action = 'footer';
+		} else {
+			$action = 'head';
+		}
+		add_action( $action, function () use ( $out ) {
+			echo $out;
+		} );
+
+	}
+}
+
+/**
+ * Регистрация скриптов и их вывод
+ */
+function enqueue_scripts() {
+	register_script( 'jquery', get_stylesheet_directory() . '/js/jquery-3.2.1.min.js' );
+	enqueue_script( 'jquery' );
+}
+
+add_action( 'init', 'enqueue_scripts' );
 
 /*
  * это недоработанная функция сохраниня пользователя
  * function save_profile() {
-    list( $url ) = explode( '?', $_SERVER['REQUEST_URI'] ); вычденияем из url строки елементы
-    $event = ''; здесь создали переменную для опреления положения в url строке
+	list( $url ) = explode( '?', $_SERVER['REQUEST_URI'] ); вычденияем из url строки елементы
+	$event = ''; здесь создали переменную для опреления положения в url строке
 
-    if(!empty($_GET['event']) && $_GET['event'] == 'save' && !empty($_POST)) {    создаем условие в котором прописываем занесение в базу данных
-                                                                                  информации из инпутов при удачном случае и изменении значения url строки
-        $vars_string = array_map('trim', explode(',', 'first_name, last_name, login, Email, Password'));
-        $values = [];
-        $allow_query       = 1;
-        foreach ($vars_string as $var) {
-            if(empty($_POST[$var])){
-                $allow_query = 0;
-                break;
-            }
-            $values[] = "'$_POST[$var]'";
-        }
-        if ($allow_query == 1) {
-            $event = 'success';
-            $vars_string = implode(',' , $vars_string);
-            $values = implode(',' , $values);
-            $query = "INSERT INTO users ($vars_string) VALUES ($values)";
+	if(!empty($_GET['event']) && $_GET['event'] == 'save' && !empty($_POST)) {    создаем условие в котором прописываем занесение в базу данных
+																				  информации из инпутов при удачном случае и изменении значения url строки
+		$vars_string = array_map('trim', explode(',', 'first_name, last_name, login, Email, Password'));
+		$values = [];
+		$allow_query       = 1;
+		foreach ($vars_string as $var) {
+			if(empty($_POST[$var])){
+				$allow_query = 0;
+				break;
+			}
+			$values[] = "'$_POST[$var]'";
+		}
+		if ($allow_query == 1) {
+			$event = 'success';
+			$vars_string = implode(',' , $vars_string);
+			$values = implode(',' , $values);
+			$query = "INSERT INTO users ($vars_string) VALUES ($values)";
 
-            do_query($query);
-        } else {
-            $event = "error";
-        }
-    }
+			do_query($query);
+		} else {
+			$event = "error";
+		}
+	}
 
-    if ( ! empty( $event ) ) {
-        $event = '?event=' . $event;
-        header( 'location: ' . $url . $event );
-    }
+	if ( ! empty( $event ) ) {
+		$event = '?event=' . $event;
+		header( 'location: ' . $url . $event );
+	}
 }*/
+
+/**
+ * Функция валидации email
+ */
+
+$email = 'Почтовый ящик';
+
+function emailValidation( $email ) {
+	if ( $email ) {
+		if ( preg_match( "/[0-9a-z_\.\-]+@[0-9a-z_\.\-]+\.[a-z]{2,4}/i", $email ) ) {
+			$message = 'Корректный Email';
+		} else {
+			$message = 'Некорректный Email';
+		}
+	} else {
+		$message = 'Email не указан';
+	}
+
+	return $message;
+}
+
+$message = emailValidation( $email );
+//echo emailValidation($email);
+
+//Функция вытягивания и преобразования в асс массив данных из БД
+
+function get_user_info() {
+	global $current_user;
+	$user_info    = do_query( "SELECT * FROM users WHERE email='Jamay.kos@gmail.com'" );
+	$current_user = $user_info->fetch_array( MYSQLI_ASSOC );
+}

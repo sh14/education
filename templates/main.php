@@ -11,6 +11,7 @@
             <div class="registration_buttons">
                 <button type="button" class="btn btn_main btn-success main_registration" data-toggle="modal" data-target="#modal-1" >Регистрация</button>
                 <button type="button" class="btn btn_main btn-success main_login" data-toggle="modal" data-target="#modal-2">Вход</button>
+                <button type="button" class="btn btn_main btn-success main_login" data-toggle="modal" data-target="">Выход</button>
             </div>
             <br>
             <br>
@@ -24,15 +25,9 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <form method="post">
-                                <label>Введите Ваше имя</label>
-                                <div class="form-group"><input class="form-control" type="text" placeholder="First name" required="required" ></div>
-                                <label>Введите Вашу фамилию</label>
-                                <div class="form-group"><input class="form-control" type="text" placeholder="Last name" required="required" ></div>
-                                <label>Введите Ваш ник</label>
-                                <div class="form-group"><input class="form-control" type="text" placeholder="Nickname" required="required" ></div>
-                                <label>Введите Ваш email</label>
-                                <div class="form-group"><input class="form-control" type="email" placeholder="Email" required="required" ></div>
+                         <form method="post">
+                                <label for="email">Введите Ваш email</label>
+                                <div class="form-group"><input class="form-control" type="email" name="email" id="email" placeholder="Email" required="required" ></div>
                                 <label for="password">Введите Ваш пароль</label>
                                 <div class="form-group"><input class="form-control" type="password" placeholder="Password" id="password" name="password" required="required" ></div>
                                 <div class="modal-footer">
@@ -56,10 +51,12 @@
                         </div>
                         <div class="modal-body">
                             <div class="login_window">
-                                <form class="login">
-                                    <input class="login_input" type="email" placeholder="Email" required="required"/>
-                                    <input type="password" class="password_input" placeholder="Пароль" required="required"/>
-                                    <button class="login btn btn-success" type="submit">Вход</button>
+                                <form class="login" action="" method="post">
+                                    <label for="email_login">Введите Ваш email</label>
+                                    <div class="form-group"><input class="form-control login_input" type="email" name="email_login" id="email_login" placeholder="Email" required="required"/ ></div>
+                                    <label for="password_login">Введите Ваш пароль</label>
+                                    <div class="form-group"><input class="form-control password_login" type="password" placeholder="Пароль" id="password_login" name="password_login" required="required"/ ></div>
+                                    <input class="login btn btn-success" type="submit" name="login_send" value="Вход">
                                     <button type="button" class="btn btn_main btn-success main_registration" data-toggle="modal" data-target="#modal-1" data-dismiss="modal">Регистрация</button>
                                 </form>
                             </div>
