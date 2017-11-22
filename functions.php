@@ -10,7 +10,8 @@ global $link;
 
 // если $link - пуста
 if ( empty( $link ) ) {
-	$link = mysqli_connect( HOST, LOGIN, PASSWORD, DATABASE );
+	$link = mysqli_connect( HOST, LOGIN, PASSWORD, DATABASE )
+	or die( 'Ошибка при подключении к серверу MySQL: ' . mysqli_error() );
 }
 
 function init() {
@@ -38,9 +39,20 @@ function get_page() {
  * Функция добавления данных по умолчанию в базу данных
  */
 function add_default_data() {
-	$sql_check   = [];
-	$sql_check[] = "SELECT * FROM `message`";
-	$sql_check[] = "SELECT * FROM `users`";
+	//$sql_check_database    = "SHOW TABLES FROM " . DATABASE;
+	//$result = do_query( $sql_check_database );
+	//echo 'Проверка базы'.pr(check_database());
+	/*if(!check_database()) {
+		insert_tables();
+	}*/
+
+	/*$sql_check_database = [];
+	$sql_check_database[] = "SHOW TABLES LIKE `message`";
+	$sql_check_database[] = "SHOW TABLES LIKE `users`";*/
+
+	$sql_check_tables   = [];
+	$sql_check_tables[] = "SELECT * FROM `message`";
+	$sql_check_tables[] = "SELECT * FROM `users`";
 
 	$sql   = [];
 	$sql[] = "INSERT INTO `message`( `id_user`, `datatime`, `title`, `content`, `photo`) 
@@ -48,28 +60,82 @@ function add_default_data() {
 	$sql[] = "INSERT INTO `users`( `login`, `email`, `password`, `first_name`, `last_name`) 
 	VALUES ('admin','test@tes.ru','123','Админ','Админов')";
 
+	$sql_set_id     = [];
 	$sql_reset_id   = [];
-	$sql_reset_id[] = "SET @reset = 0";
+	$sql_set_id[]   = "SET @reset = 0";
+	$sql_set_id[]   = "SET @reset = 0";
 	$sql_reset_id[] = "UPDATE `message` SET id = @reset:= @reset + 1";
-	$sql_reset_id[] = "SET @reset = 0";
 	$sql_reset_id[] = "UPDATE `users` SET ID = @reset:= @reset + 1";
 
-	foreach ( $sql_check as $key => $query ) {
+	/*foreach ($sql_check_database as $key => $query) {
+		$result[ $key ] = do_query( $query );
+		if ($result[$key]->num_rows == 0) {
+
+			echo 'Таблиц не сущестует';
+		}
+	}*/
+
+	foreach ( $sql_check_tables as $key => $query ) {
 		$result[ $key ] = do_query( $query );
 		if ( $result[ $key ]->num_rows == 0 ) {
 			do_query( $sql[ $key ] );
-
-		}
-	}
-
-	if ( $result[ $key ]->num_rows == 0 ) {
-		foreach ( $sql_reset_id as $key => $query ) {
+			do_query( $sql_set_id[ $key ] );
 			do_query( $sql_reset_id[ $key ] );
 		}
 	}
 }
 
 add_action( 'init', 'add_default_data' );
+
+/**
+ * Функция проверки таблиц
+ */
+
+function check_database() {
+	$sql    = "SHOW TABLES FROM " . DATABASE;
+	$result = do_query( $sql );
+	pr($result);
+	if ( ! $result ) {
+		echo "Ошибка базы данных, невозможно вывести таблицы\n";
+		echo 'Ошибка MySQL: ' . mysqli_error();
+		exit;
+	}
+
+	while ( $row = mysqli_fetch_row( $result ) ) {
+		echo "Таблица: {$row[0]}\n";
+	}
+
+	mysqli_free_result( $result );
+}
+
+//add_action( 'init', 'check_database' );
+
+/**
+ * Функция добавления таблицы
+ */
+
+function insert_tables() {
+	global $link;
+	$filename = 'shlo.sql';
+	//$link     = mysqli_connect( HOST, LOGIN, PASSWORD ) or die('Ошибка при подключении к серверу MySQL: ' . mysqli_error());
+
+	//mysqli_select_db( $link, 'dump' ) or die( 'Ошибка при выборе базы данных MySQL: ' . mysqli_error($link) );
+	$templine = '';
+	$lines    = file( $filename );
+	//echo 'Лайнес ' . pr( $lines );
+	foreach ( $lines as $line ) {
+		if ( substr( $line, 0, 2 ) == '--' || $line == '' ) {
+			continue;
+		}
+		$templine .= $line;
+		if ( substr( trim( $line ), - 1, 1 ) == ';' ) {
+			do_query($templine)/*mysqli_query( $link, $templine )*/ or print( 'Ошибка при осуществлении запроса \'<strong>' . $templine . '\': ' . mysqli_error($link) . '<br /><br />' );
+			//echo 'Темплайн ' . pr( $templine );
+			$templine = '';
+		}
+	}
+	echo "Таблицы успешно импортированы";
+}
 
 function pr( $data, $debug_backtrace = false ) {
 
@@ -351,13 +417,13 @@ add_action( 'init', 'autorization_user' );
  *
  * @param $args
  */
-function user_logout( $args='' ) {
+function user_logout( $args = '' ) {
 	setcookie( 'shlo_chat', '', time() - 60 * 60 * 24 );
 	if ( ! empty( $args ) && is_array( $args ) ) {
 		$args = '?' . implode( '&', $args );
 	}
 	$url = get_root_url() . $args;
-	
+
 	header( "Location: " . $url );
 	die();
 }
@@ -422,8 +488,8 @@ add_action( 'init', 'registration' );
  * @param       $handle
  * @param       $src
  * @param array $deps
- * @param bool  $ver
- * @param bool  $in_footer
+ * @param bool $ver
+ * @param bool $in_footer
  *
  * @return array
  */
@@ -557,8 +623,8 @@ $message = emailValidation( $email );
 
 //Функция вытягивания и преобразования в асс массив данных из БД
 
-    function get_user_info() {
-        global $current_user;
-        $user_info = do_query( "SELECT * FROM users WHERE email='Jamay.kos@gmail.com'" );
-        $current_user=$user_info ->fetch_array(MYSQLI_ASSOC);
-    }
+function get_user_info() {
+	global $current_user;
+	$user_info    = do_query( "SELECT * FROM users WHERE email='Jamay.kos@gmail.com'" );
+	$current_user = $user_info->fetch_array( MYSQLI_ASSOC );
+}
