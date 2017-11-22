@@ -23,6 +23,29 @@ if ( ! empty( $_GET['event'] ) ) {
     }
 }
 ?>
+<style>
+    .chat_window_wall, .chat_window_avatar {
+        border: 1px solid black;
+        height: 100%;
+        background: snow;
+    }
+    .chat_window_wall {
+        overflow: auto;
+        border-right: none;
+    }
+    .chat_window_avatar_img {
+        height: 70%;
+        background-image: url("https://skin-challenges.com/wp-content/uploads/2017/08/profile_unknown.png");
+    }
+    .chat_window_avatar_signature {
+        height: 20%;
+        text-align: center;
+        font-size: 30px;
+    }
+    .chat_window {
+        height: 300px;
+    }
+</style>
 <div class="chat_container container">
     <div class="row">
         <div class="registrate col-sm-12">
@@ -109,8 +132,21 @@ if ( ! empty( $_GET['event'] ) ) {
                 </div>
             </div>
             <h1>Окно чата</h1>
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12 chat_window">
+                    <div class="col-md-9 col-sm-9 col-xs-9 chat_window_wall">
+                        </div>
+                        <div class="col-md-3 col-sm-3 col-xs-3 chat_window_avatar">
+                            <div class="chat_window_avatar_img">
+                            </div>
+                            <div class="chat_window_avatar_signature">
+                                Антон и Ко
+                            </div>
+                        </div>
+                </div>
+            </div>
             <div class="row row-centered post_form">
-                <div class="col-md-6">
+                <div class="col-md-6 col-sm-12">
                     <form action="" method="post">
                         <input type="text" class="form-control" placeholder="Тема сообщения" name="title" id="title">
                         <textarea class="form-control" rows="5" placeholder="Текст сообщения" name="message_input" id="message_input" ></textarea>
