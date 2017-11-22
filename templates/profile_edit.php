@@ -83,7 +83,6 @@ if ( ! empty( $_GET['event'] ) ) {
                     <div class="message col-md-8 col-md-offset-3"></div>
                 </div>
                 <input type="hidden" name="access" value="permitted">
-                <input type="hidden" name="ID" value="1">
                 <input type="hidden" name="action" value="edit_user_info">
                 <div class="form-group">
                     <label class="col-md-3 control-label"></label>

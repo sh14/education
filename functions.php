@@ -39,8 +39,13 @@ function get_page() {
  * Функция добавления данных по умолчанию в базу данных
  */
 function add_default_data() {
-	//$sql_check_database    = "SHOW TABLES FROM " . DATABASE;
-	//$result = do_query( $sql_check_database );
+    $sql_check_database    = "SHOW TABLES FROM " . DATABASE;
+	$result_db = do_query( $sql_check_database );
+	//pr($result_db);
+	$rows = $result_db->num_rows;
+	if($rows == 0) {
+        insert_tables();
+    }
 	//echo 'Проверка базы'.pr(check_database());
 	/*if(!check_database()) {
 		insert_tables();

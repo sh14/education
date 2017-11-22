@@ -34,7 +34,7 @@ if ( ! empty( $_GET['event'] ) ) {
             </div>
             <br>
             <br>
-            <div class="modal" id="modal-1">
+            <div class="modal profile" id="modal-1">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -44,66 +44,81 @@ if ( ! empty( $_GET['event'] ) ) {
                             </button>
                         </div>
                         <div class="modal-body">
-                            <form method="post">
-                                <!-- Колонка аватара -->
-                                <form action="?event=upload" method="post" enctype="multipart/form-data">
-                                    <div class="row">
-                                        <div class="text-center col-md-3">
-                                            <div class="avatar col-md-12 "></div>
-                                            <div class="file_upload col-md-12 col-xs-12">
-                                                <input type="file" name="file_to_upload" id="file_to_upload" accept="image/*">
-                                                <button type="button">Загрузить</button>
-                                            </div>
-                                            <button type="submit" value="upload_image" name="submit" class="btn btn-success">Отправить</button>
-                                        </div>
-                                    </div>
-                                </form>
-                                <!-- Колонка профиля -->
+                            <!-- Колонка аватара -->
+                            <form method="post" enctype="multipart/form-data">
                                 <div class="row">
-                                    <div class="col-md-9 personal-info">
-                                        <h3>Личная информация</h3>
-                                        <form method="post" class="form-horizontal" action="?event=edit_user_info">
-                                            <div class="form-group">
-                                                <div class="col-lg-8">
-                                                    <label for="first_name">Имя:</label>
-                                                    <input class="form-control" type="text" name="first_name" id="first_name">
-                                                </div>
-                                                <div class="col-lg-8">
-                                                    <label for="last_name">Фамилия:</label>
-                                                    <input class="form-control" type="text" name="last_name" id="last_name">
-                                                </div>
-                                                <div class="col-lg-8">
-                                                    <label for="email_profile_edit">Email:</label>
-                                                    <input class="form-control" type="email" name="email_profile_edit" id="email_profile_edit">
-                                                </div>
-                                                <div class="col-md-8">
-                                                    <label for="login_profile_edit">Логин:</label>
-                                                    <input class="form-control" type="text" name="login_profile_edit" id="login_profile_edit">
-                                                </div>
-                                                <div class="col-md-8">
-                                                    <label for="password_profile_edit">Пароль:</label>
-                                                    <input class="form-control password" type="password" name="password_profile_edit" id="password_profile_edit">
-                                                </div>
-                                                <div class="col-md-8">
-                                                    <label for="password_profile_edit_confirm">Подтвердите пароль:</label>
-                                                    <input class="form-control password_profile_edit_confirm" type="password" name="password_profile_edit_confirm" id="password_profile_edit_confirm">
-                                                </div>
-                                            </div>
-                                            <input type="hidden" name="access" value="permitted">
-                                            <input type="hidden" name="ID" value="1">
-                                            <div class="alert alert-info alert-dismissable">
-                                                <a class="panel-close close" data-dismiss="alert">×</a>
-                                                <i class="fa fa-coffee"><?php echo $message ?></i>
-                                            </div>
-
-                                                <label class="col-md-3 control-label"></label>
-                                                <div class="col-md-8">
-                                                    <input type="submit" class="btn btn-primary" value="Сохранить изменения">
-                                                </div>
-                                            </div>
-                                        </form>
+                                    <div class="text-center col-md-3">
+                                        <div class="avatar col-md-12 " alt="avatar"></div>
+                                        <div class="file_upload col-md-12 col-xs-12">
+                                            <button type="button">Загрузить фотографию</button>
+                                            <input type="file" name="file_to_upload" id="file_to_upload" accept="image/*">
+                                        </div>
+                                        <input type="hidden" name="action" value="upload">
+                                        <button type="submit" value="upload_image" name="submit" class="btn btn-success">Отправить</button>
                                     </div>
                                 </div>
+                            </form>
+                            <!-- Колонка профиля -->
+                            <div class="row">
+                                <div class="col-md-9 personal-info">
+
+                                    <h3>Личная информация</h3>
+
+                                    <form method="post" class="form-horizontal">
+                                        <div class="form-group">
+                                            <label class="col-lg-3 control-label">Имя:</label>
+                                            <div class="col-lg-8">
+                                                <input class="form-control" type="text" name="first_name">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-lg-3 control-label">Фамилия:</label>
+                                            <div class="col-lg-8">
+                                                <input class="form-control" type="text" name="last_name">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-lg-3 control-label">Email:</label>
+                                            <div class="col-lg-8">
+                                                <input class="form-control" type="email" name="email">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">Имя пользователя:</label>
+                                            <div class="col-md-8">
+                                                <input class="form-control" type="text" name="login">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">Пароль:</label>
+                                            <div class="col-md-8">
+                                                <input class="form-control password" type="password" name="password">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">Подтвердите пароль:</label>
+                                            <div class="col-md-8">
+                                                <input class="form-control confirm_password" type="password">
+                                            </div>
+                                            <div class="message col-md-8 col-md-offset-3"></div>
+                                        </div>
+                                        <input type="hidden" name="access" value="permitted">
+                                        <input type="hidden" name="action" value="edit_user_info">
+                                        <div class="alert alert-info alert-dismissable">
+                                            <a class="panel-close close" data-dismiss="alert">×</a>
+                                            <i class="fa fa-coffee"><?php echo $message; ?></i>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label"></label>
+                                            <div class="col-md-8">
+                                                <input type="submit" class="btn btn-primary" value="Сохранить изменения">
+                                                <span></span>
+                                                <input type="reset" class="btn btn-default" value="Очистить данные формы">
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
