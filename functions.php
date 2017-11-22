@@ -39,8 +39,13 @@ function get_page() {
  * Функция добавления данных по умолчанию в базу данных
  */
 function add_default_data() {
-	//$sql_check_database    = "SHOW TABLES FROM " . DATABASE;
-	//$result = do_query( $sql_check_database );
+    $sql_check_database    = "SHOW TABLES FROM " . DATABASE;
+	$result_db = do_query( $sql_check_database );
+	//pr($result_db);
+	$rows = $result_db->num_rows;
+	if($rows == 0) {
+        insert_tables();
+    }
 	//echo 'Проверка базы'.pr(check_database());
 	/*if(!check_database()) {
 		insert_tables();
@@ -289,7 +294,8 @@ function profile_edit() {
 		for ( $i = 0; $i < count( $values ); $i ++ ) {
 			$values[ $i ] = $vars[ $i ] . '=' . $values[ $i ];
 		}
-		$ID = $_POST['ID'];
+		$user_info = get_user_info();
+		$ID = $user_info['ID'];
 		if ( $_POST['access'] == 'denied' ) {
 			$allow_query = 0;
 		}
@@ -623,8 +629,20 @@ $message = emailValidation( $email );
 
 //Функция вытягивания и преобразования в асс массив данных из БД
 
-function get_user_info() {
-	global $current_user;
-	$user_info    = do_query( "SELECT * FROM users WHERE email='Jamay.kos@gmail.com'" );
-	$current_user = $user_info->fetch_array( MYSQLI_ASSOC );
+function get_user_info()
+{
+    global $current_user;
+    if (!empty($_COOKIE['shlo_chat'])&& empty($current_user) && is_user_logged_in()) {
+
+        list($email, $password) = explode(';', esc_sql($_COOKIE['shlo_chat']));
+
+        if (!empty($email) && !empty($password)) {
+            $sql = "SELECT * FROM users WHERE email='{$email}' AND password='{$password}'";
+            $result = do_query($sql);
+            $current_user = $result->fetch_array(MYSQLI_ASSOC);
+
+        }
+    }
+    return $current_user;
 }
+add_action('init', 'get_user_info');
