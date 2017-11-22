@@ -58,7 +58,7 @@ if ( ! empty( $_GET['event'] ) ) {
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-lg-3 control-label">Email:</label>
+                    <label class="col-lg-3 control-label">Почта:</label>
                     <div class="col-lg-8">
                         <input class="form-control" type="email" name="email">
                     </div>
@@ -66,7 +66,7 @@ if ( ! empty( $_GET['event'] ) ) {
                 <div class="form-group">
                     <label class="col-md-3 control-label">Имя пользователя:</label>
                     <div class="col-md-8">
-                        <input class="form-control" type="text" name="login">
+                        <input class="form-control" type="text" name="nickname">
                     </div>
                 </div>
                 <div class="form-group">

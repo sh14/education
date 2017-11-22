@@ -61,7 +61,10 @@ if ( ! empty( $_GET['event'] ) ) {
                             <!-- Колонка профиля -->
                             <div class="row">
                                 <div class="col-md-9 personal-info">
-
+                                    <div class="alert alert-info alert-dismissable">
+                                        <a class="panel-close close" data-dismiss="alert">×</a>
+                                        <i class="fa fa-coffee"><?php echo $message; ?></i>
+                                    </div>
                                     <h3>Личная информация</h3>
 
                                     <form method="post" class="form-horizontal">
@@ -78,15 +81,15 @@ if ( ! empty( $_GET['event'] ) ) {
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-lg-3 control-label">Email:</label>
+                                            <label class="col-lg-3 control-label">Почта:</label>
                                             <div class="col-lg-8">
                                                 <input class="form-control" type="email" name="email">
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-md-3 control-label">Имя пользователя:</label>
+                                            <label class="col-md-3 control-label">Никнейм</label>
                                             <div class="col-md-8">
-                                                <input class="form-control" type="text" name="login">
+                                                <input class="form-control" type="text" name="nickname">
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -104,10 +107,6 @@ if ( ! empty( $_GET['event'] ) ) {
                                         </div>
                                         <input type="hidden" name="access" value="permitted">
                                         <input type="hidden" name="action" value="edit_user_info">
-                                        <div class="alert alert-info alert-dismissable">
-                                            <a class="panel-close close" data-dismiss="alert">×</a>
-                                            <i class="fa fa-coffee"><?php echo $message; ?></i>
-                                        </div>
                                         <div class="form-group">
                                             <label class="col-md-3 control-label"></label>
                                             <div class="col-md-8">
