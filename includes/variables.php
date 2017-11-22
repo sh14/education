@@ -11,7 +11,8 @@ global $link;
 
 // если $link - пуста
 if ( empty( $link ) ) {
-	$link = mysqli_connect( HOST, LOGIN, PASSWORD, DATABASE );
+	$link = mysqli_connect( HOST, LOGIN, PASSWORD, DATABASE )
+	or die('Ошибка при подключении к серверу MySQL: ' . mysqli_error());
 }
 
 global $global_actions;
