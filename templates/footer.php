@@ -20,16 +20,16 @@
     });
     /*Кнопка выхода*/
     function preparePage() {
-      document.getElementById('one').onclick = function () {
-        if (document.getElementById('one')) {
-            document.getElementById('two').style.display = "block";
-            document.getElementById('three').style.display = "none";
-            document.getElementById('one').style.display = "none";
+      document.getElementById('enter').onclick = function () {
+        if (document.getElementById('enter')) {
+            document.getElementById('exit').style.display = "block";
+            document.getElementById('reg').style.display = "none";
+            document.getElementById('enter').style.display = "none";
       } else {
-        document.getElementById('two').style.display = "none";
+        document.getElementById('exit').style.display = "none";
       }
     };
-    document.getElementById('two').style.display = "none";
+    document.getElementById('exit').style.display = "none";
   }
   window.onload = function() {
     preparePage();
