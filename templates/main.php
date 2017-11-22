@@ -11,8 +11,7 @@
         <div class="registrate col-sm-12">
             <div class="registration_buttons">
                 <button type="button" class="btn btn_main btn-success main_registration" data-toggle="modal" data-target="#modal-1" >Регистрация</button>
-                <button type="button"  class="btn btn_main btn-success main_login" data-toggle="modal" data-target="#modal-2">Вход</button>
-                
+                <button type="button"  class="btn btn_main btn-success main_login" data-toggle="modal" data-target="#modal-2">Вход</button>                
             </div>
             <br>
             <br>
