@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="1aa73dd7-009c-4316-9da1-dd9eae869dd6" name="Default" comment="">
+    <list default="true" id="1aa73dd7-009c-4316-9da1-dd9eae869dd6" name="Default" comment="Добавлена глобальная переменная current_user&#10;Добавления функция get_user_info вытягивания данных из БД и преобразованиях их в ассоциативный массив b оклажа его в current_user">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/functions.php" afterPath="$PROJECT_DIR$/functions.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/index.php" afterPath="$PROJECT_DIR$/templates/index.php" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -18,21 +17,21 @@
       <file leaf-file-name="functions.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/functions.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="647">
-              <caret line="641" column="36" lean-forward="false" selection-start-line="641" selection-start-column="36" selection-end-line="641" selection-end-column="36" />
+            <state relative-caret-position="306">
+              <caret line="285" column="9" lean-forward="true" selection-start-line="285" selection-start-column="9" selection-end-line="285" selection-end-column="9" />
               <folding>
-                <marker date="1511368778024" expanded="true" signature="1171:1194" ph="SELECT * FRO... message" />
-                <marker date="1511368778024" expanded="true" signature="1221:1242" ph="SELECT * FRO... users" />
-                <marker date="1511368778024" expanded="true" signature="1271:1457" ph="INSERT INTO `message`... " />
-                <marker date="1511368778024" expanded="true" signature="1471:1605" ph="INSERT INTO `users`... " />
-                <marker date="1511368778024" expanded="true" signature="1749:1794" ph="UPDATE `mess... " />
-                <marker date="1511368778024" expanded="true" signature="1817:1860" ph="UPDATE `user... " />
-                <marker date="1511368778024" expanded="true" signature="7051:7076" ph="UPDATE users... " />
-                <marker date="1511368778024" expanded="true" signature="9029:9105" ph="SELECT COUNT... users" />
-                <marker date="1511368778024" expanded="true" signature="9520:9596" ph="SELECT COUNT... users" />
-                <marker date="1511368778024" expanded="true" signature="11191:11265" ph="INSERT INTO users... " />
-                <marker date="1511368778024" expanded="true" signature="11293:11351" ph="SELECT count... users" />
-                <marker date="1511368778024" expanded="true" signature="15267:15336" ph="SELECT * FRO... users" />
+                <marker date="1511372531082" expanded="true" signature="1171:1194" ph="SELECT * FRO... message" />
+                <marker date="1511372531082" expanded="true" signature="1221:1242" ph="SELECT * FRO... users" />
+                <marker date="1511372531082" expanded="true" signature="1271:1457" ph="INSERT INTO `message`... " />
+                <marker date="1511372531082" expanded="true" signature="1471:1605" ph="INSERT INTO `users`... " />
+                <marker date="1511372531082" expanded="true" signature="1749:1794" ph="UPDATE `mess... " />
+                <marker date="1511372531082" expanded="true" signature="1817:1860" ph="UPDATE `user... " />
+                <marker date="1511372531082" expanded="true" signature="7087:7112" ph="UPDATE users... " />
+                <marker date="1511372531082" expanded="true" signature="9065:9141" ph="SELECT COUNT... users" />
+                <marker date="1511372531082" expanded="true" signature="9556:9632" ph="SELECT COUNT... users" />
+                <marker date="1511372531082" expanded="true" signature="11227:11301" ph="INSERT INTO users... " />
+                <marker date="1511372531082" expanded="true" signature="11329:11387" ph="SELECT count... users" />
+                <marker date="1511372531082" expanded="true" signature="15303:15372" ph="SELECT * FRO... users" />
               </folding>
             </state>
           </provider>
@@ -71,6 +70,7 @@
       <find>auto</find>
       <find>is_curre</find>
       <find>is</find>
+      <find>edit</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -89,9 +89,9 @@
         <option value="$PROJECT_DIR$/login_window.php" />
         <option value="$PROJECT_DIR$/index.php" />
         <option value="$PROJECT_DIR$/includes/registration.php" />
-        <option value="$PROJECT_DIR$/functions.php" />
         <option value="$PROJECT_DIR$/templates/index.php" />
         <option value="$PROJECT_DIR$/includes/variables.php" />
+        <option value="$PROJECT_DIR$/functions.php" />
       </list>
     </option>
   </component>
@@ -167,9 +167,6 @@
           <option name="mySupportsDeletion" value="false" />
           <option name="myCanBeAbsent" value="false" />
           <option name="myId" value="UPDATED" />
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/functions.php</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/includes/variables.php</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/templates/footer.php</PATH>
           <PATH vcs="Git" revision="">$PROJECT_DIR$/templates/main.php</PATH>
         </FILE-GROUP>
         <FILE-GROUP>
@@ -296,7 +293,7 @@
       <workItem from="1511280962022" duration="247000" />
       <workItem from="1511281231410" duration="306000" />
       <workItem from="1511281637924" duration="5247000" />
-      <workItem from="1511287505130" duration="7201000" />
+      <workItem from="1511287505130" duration="10034000" />
     </task>
     <task id="LOCAL-00001" summary="Оптимизация кода">
       <created>1510682526936</created>
@@ -410,11 +407,18 @@
       <option name="project" value="LOCAL" />
       <updated>1511288544065</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="Добавлена глобальная переменная current_user&#10;Добавления функция get_user_info вытягивания данных из БД и преобразованиях их в ассоциативный массив b оклажа его в current_user">
+      <created>1511369675666</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1511369675666</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="30700000" />
+    <option name="totallyTimeSpent" value="33533000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-9" y="-9" width="1938" height="1048" extended-state="6" />
@@ -492,7 +496,7 @@
         <state relative-caret-position="1357">
           <caret line="59" column="119" lean-forward="false" selection-start-line="59" selection-start-column="114" selection-end-line="59" selection-end-column="119" />
           <folding>
-            <marker date="1511366694336" expanded="true" signature="2975:3940" ph="..." />
+            <marker date="1511370524724" expanded="true" signature="2861:3826" ph="..." />
           </folding>
         </state>
       </provider>
@@ -558,18 +562,18 @@
         <state relative-caret-position="6187">
           <caret line="269" column="2" lean-forward="false" selection-start-line="269" selection-start-column="2" selection-end-line="269" selection-end-column="2" />
           <folding>
-            <marker date="1511368778024" expanded="true" signature="1171:1194" ph="SELECT * FRO... message" />
-            <marker date="1511368778024" expanded="true" signature="1221:1242" ph="SELECT * FRO... users" />
-            <marker date="1511368778024" expanded="true" signature="1271:1457" ph="INSERT INTO `message`... " />
-            <marker date="1511368778024" expanded="true" signature="1471:1605" ph="INSERT INTO `users`... " />
-            <marker date="1511368778024" expanded="true" signature="1749:1794" ph="UPDATE `mess... " />
-            <marker date="1511368778024" expanded="true" signature="1817:1860" ph="UPDATE `user... " />
-            <marker date="1511368778024" expanded="true" signature="7051:7076" ph="UPDATE users... " />
-            <marker date="1511368778024" expanded="true" signature="9029:9105" ph="SELECT COUNT... users" />
-            <marker date="1511368778024" expanded="true" signature="9520:9596" ph="SELECT COUNT... users" />
-            <marker date="1511368778024" expanded="true" signature="11191:11265" ph="INSERT INTO users... " />
-            <marker date="1511368778024" expanded="true" signature="11293:11351" ph="SELECT count... users" />
-            <marker date="1511368778024" expanded="true" signature="15267:15336" ph="SELECT * FRO... users" />
+            <marker date="1511372531082" expanded="true" signature="1171:1194" ph="SELECT * FRO... message" />
+            <marker date="1511372531082" expanded="true" signature="1221:1242" ph="SELECT * FRO... users" />
+            <marker date="1511372531082" expanded="true" signature="1271:1457" ph="INSERT INTO `message`... " />
+            <marker date="1511372531082" expanded="true" signature="1471:1605" ph="INSERT INTO `users`... " />
+            <marker date="1511372531082" expanded="true" signature="1749:1794" ph="UPDATE `mess... " />
+            <marker date="1511372531082" expanded="true" signature="1817:1860" ph="UPDATE `user... " />
+            <marker date="1511372531082" expanded="true" signature="7087:7112" ph="UPDATE users... " />
+            <marker date="1511372531082" expanded="true" signature="9065:9141" ph="SELECT COUNT... users" />
+            <marker date="1511372531082" expanded="true" signature="9556:9632" ph="SELECT COUNT... users" />
+            <marker date="1511372531082" expanded="true" signature="11227:11301" ph="INSERT INTO users... " />
+            <marker date="1511372531082" expanded="true" signature="11329:11387" ph="SELECT count... users" />
+            <marker date="1511372531082" expanded="true" signature="15303:15372" ph="SELECT * FRO... users" />
           </folding>
         </state>
       </provider>
@@ -637,18 +641,18 @@
         <state relative-caret-position="5263">
           <caret line="277" column="40" lean-forward="false" selection-start-line="277" selection-start-column="40" selection-end-line="277" selection-end-column="40" />
           <folding>
-            <marker date="1511368778024" expanded="true" signature="1171:1194" ph="SELECT * FRO... message" />
-            <marker date="1511368778024" expanded="true" signature="1221:1242" ph="SELECT * FRO... users" />
-            <marker date="1511368778024" expanded="true" signature="1271:1457" ph="INSERT INTO `message`... " />
-            <marker date="1511368778024" expanded="true" signature="1471:1605" ph="INSERT INTO `users`... " />
-            <marker date="1511368778024" expanded="true" signature="1749:1794" ph="UPDATE `mess... " />
-            <marker date="1511368778024" expanded="true" signature="1817:1860" ph="UPDATE `user... " />
-            <marker date="1511368778024" expanded="true" signature="7051:7076" ph="UPDATE users... " />
-            <marker date="1511368778024" expanded="true" signature="9029:9105" ph="SELECT COUNT... users" />
-            <marker date="1511368778024" expanded="true" signature="9520:9596" ph="SELECT COUNT... users" />
-            <marker date="1511368778024" expanded="true" signature="11191:11265" ph="INSERT INTO users... " />
-            <marker date="1511368778024" expanded="true" signature="11293:11351" ph="SELECT count... users" />
-            <marker date="1511368778024" expanded="true" signature="15267:15336" ph="SELECT * FRO... users" />
+            <marker date="1511372531082" expanded="true" signature="1171:1194" ph="SELECT * FRO... message" />
+            <marker date="1511372531082" expanded="true" signature="1221:1242" ph="SELECT * FRO... users" />
+            <marker date="1511372531082" expanded="true" signature="1271:1457" ph="INSERT INTO `message`... " />
+            <marker date="1511372531082" expanded="true" signature="1471:1605" ph="INSERT INTO `users`... " />
+            <marker date="1511372531082" expanded="true" signature="1749:1794" ph="UPDATE `mess... " />
+            <marker date="1511372531082" expanded="true" signature="1817:1860" ph="UPDATE `user... " />
+            <marker date="1511372531082" expanded="true" signature="7087:7112" ph="UPDATE users... " />
+            <marker date="1511372531082" expanded="true" signature="9065:9141" ph="SELECT COUNT... users" />
+            <marker date="1511372531082" expanded="true" signature="9556:9632" ph="SELECT COUNT... users" />
+            <marker date="1511372531082" expanded="true" signature="11227:11301" ph="INSERT INTO users... " />
+            <marker date="1511372531082" expanded="true" signature="11329:11387" ph="SELECT count... users" />
+            <marker date="1511372531082" expanded="true" signature="15303:15372" ph="SELECT * FRO... users" />
           </folding>
         </state>
       </provider>
@@ -716,18 +720,18 @@
         <state relative-caret-position="1672">
           <caret line="88" column="15" lean-forward="true" selection-start-line="88" selection-start-column="15" selection-end-line="88" selection-end-column="15" />
           <folding>
-            <marker date="1511368778024" expanded="true" signature="1171:1194" ph="SELECT * FRO... message" />
-            <marker date="1511368778024" expanded="true" signature="1221:1242" ph="SELECT * FRO... users" />
-            <marker date="1511368778024" expanded="true" signature="1271:1457" ph="INSERT INTO `message`... " />
-            <marker date="1511368778024" expanded="true" signature="1471:1605" ph="INSERT INTO `users`... " />
-            <marker date="1511368778024" expanded="true" signature="1749:1794" ph="UPDATE `mess... " />
-            <marker date="1511368778024" expanded="true" signature="1817:1860" ph="UPDATE `user... " />
-            <marker date="1511368778024" expanded="true" signature="7051:7076" ph="UPDATE users... " />
-            <marker date="1511368778024" expanded="true" signature="9029:9105" ph="SELECT COUNT... users" />
-            <marker date="1511368778024" expanded="true" signature="9520:9596" ph="SELECT COUNT... users" />
-            <marker date="1511368778024" expanded="true" signature="11191:11265" ph="INSERT INTO users... " />
-            <marker date="1511368778024" expanded="true" signature="11293:11351" ph="SELECT count... users" />
-            <marker date="1511368778024" expanded="true" signature="15267:15336" ph="SELECT * FRO... users" />
+            <marker date="1511372531082" expanded="true" signature="1171:1194" ph="SELECT * FRO... message" />
+            <marker date="1511372531082" expanded="true" signature="1221:1242" ph="SELECT * FRO... users" />
+            <marker date="1511372531082" expanded="true" signature="1271:1457" ph="INSERT INTO `message`... " />
+            <marker date="1511372531082" expanded="true" signature="1471:1605" ph="INSERT INTO `users`... " />
+            <marker date="1511372531082" expanded="true" signature="1749:1794" ph="UPDATE `mess... " />
+            <marker date="1511372531082" expanded="true" signature="1817:1860" ph="UPDATE `user... " />
+            <marker date="1511372531082" expanded="true" signature="7087:7112" ph="UPDATE users... " />
+            <marker date="1511372531082" expanded="true" signature="9065:9141" ph="SELECT COUNT... users" />
+            <marker date="1511372531082" expanded="true" signature="9556:9632" ph="SELECT COUNT... users" />
+            <marker date="1511372531082" expanded="true" signature="11227:11301" ph="INSERT INTO users... " />
+            <marker date="1511372531082" expanded="true" signature="11329:11387" ph="SELECT count... users" />
+            <marker date="1511372531082" expanded="true" signature="15303:15372" ph="SELECT * FRO... users" />
           </folding>
         </state>
       </provider>
@@ -757,14 +761,6 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/character-designer.png" />
     <entry file="file://$PROJECT_DIR$/login_window.php" />
-    <entry file="file://$PROJECT_DIR$/templates/footer.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/wall.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -863,16 +859,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/main.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="774">
-          <caret line="68" column="1" lean-forward="false" selection-start-line="68" selection-start-column="1" selection-end-line="68" selection-end-column="1" />
-          <folding>
-            <marker date="1511366694336" expanded="true" signature="2975:3940" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/templates/content.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -899,6 +885,24 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/templates/footer.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/main.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="595">
+          <caret line="68" column="1" lean-forward="false" selection-start-line="68" selection-start-column="1" selection-end-line="68" selection-end-column="1" />
+          <folding>
+            <marker date="1511370524724" expanded="true" signature="2861:3826" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/includes/variables.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="552">
@@ -909,21 +913,21 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/functions.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="647">
-          <caret line="641" column="36" lean-forward="false" selection-start-line="641" selection-start-column="36" selection-end-line="641" selection-end-column="36" />
+        <state relative-caret-position="306">
+          <caret line="285" column="9" lean-forward="true" selection-start-line="285" selection-start-column="9" selection-end-line="285" selection-end-column="9" />
           <folding>
-            <marker date="1511368778024" expanded="true" signature="1171:1194" ph="SELECT * FRO... message" />
-            <marker date="1511368778024" expanded="true" signature="1221:1242" ph="SELECT * FRO... users" />
-            <marker date="1511368778024" expanded="true" signature="1271:1457" ph="INSERT INTO `message`... " />
-            <marker date="1511368778024" expanded="true" signature="1471:1605" ph="INSERT INTO `users`... " />
-            <marker date="1511368778024" expanded="true" signature="1749:1794" ph="UPDATE `mess... " />
-            <marker date="1511368778024" expanded="true" signature="1817:1860" ph="UPDATE `user... " />
-            <marker date="1511368778024" expanded="true" signature="7051:7076" ph="UPDATE users... " />
-            <marker date="1511368778024" expanded="true" signature="9029:9105" ph="SELECT COUNT... users" />
-            <marker date="1511368778024" expanded="true" signature="9520:9596" ph="SELECT COUNT... users" />
-            <marker date="1511368778024" expanded="true" signature="11191:11265" ph="INSERT INTO users... " />
-            <marker date="1511368778024" expanded="true" signature="11293:11351" ph="SELECT count... users" />
-            <marker date="1511368778024" expanded="true" signature="15267:15336" ph="SELECT * FRO... users" />
+            <marker date="1511372531082" expanded="true" signature="1171:1194" ph="SELECT * FRO... message" />
+            <marker date="1511372531082" expanded="true" signature="1221:1242" ph="SELECT * FRO... users" />
+            <marker date="1511372531082" expanded="true" signature="1271:1457" ph="INSERT INTO `message`... " />
+            <marker date="1511372531082" expanded="true" signature="1471:1605" ph="INSERT INTO `users`... " />
+            <marker date="1511372531082" expanded="true" signature="1749:1794" ph="UPDATE `mess... " />
+            <marker date="1511372531082" expanded="true" signature="1817:1860" ph="UPDATE `user... " />
+            <marker date="1511372531082" expanded="true" signature="7087:7112" ph="UPDATE users... " />
+            <marker date="1511372531082" expanded="true" signature="9065:9141" ph="SELECT COUNT... users" />
+            <marker date="1511372531082" expanded="true" signature="9556:9632" ph="SELECT COUNT... users" />
+            <marker date="1511372531082" expanded="true" signature="11227:11301" ph="INSERT INTO users... " />
+            <marker date="1511372531082" expanded="true" signature="11329:11387" ph="SELECT count... users" />
+            <marker date="1511372531082" expanded="true" signature="15303:15372" ph="SELECT * FRO... users" />
           </folding>
         </state>
       </provider>
