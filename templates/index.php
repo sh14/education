@@ -31,3 +31,4 @@ $result = do_query( 'SELECT * FROM message' );
 while ( $row = mysqli_fetch_array( $result ) ) {
 	pr( $row );
 }
+ pr(get_user_info());
