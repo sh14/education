@@ -623,8 +623,20 @@ $message = emailValidation( $email );
 
 //Функция вытягивания и преобразования в асс массив данных из БД
 
-function get_user_info() {
-	global $current_user;
-	$user_info    = do_query( "SELECT * FROM users WHERE email='Jamay.kos@gmail.com'" );
-	$current_user = $user_info->fetch_array( MYSQLI_ASSOC );
+function get_user_info()
+{
+    global $current_user;
+    if (!empty($_COOKIE['shlo_chat'])&& empty($current_user) && is_user_logged_in()) {
+
+        list($email, $password) = explode(';', esc_sql($_COOKIE['shlo_chat']));
+
+        if (!empty($email) && !empty($password)) {
+            $sql = "SELECT * FROM users WHERE email='{$email}' AND password='{$password}'";
+            $result = do_query($sql);
+            $current_user = $result->fetch_array(MYSQLI_ASSOC);
+
+        }
+    }
+    return $current_user;
 }
+add_action('init', 'get_user_info');
