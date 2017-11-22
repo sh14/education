@@ -7,8 +7,9 @@
  */
 function registration()
 {
-    if (isset($_GET['event']) && $_GET['event'] == 'registration' && isset($_POST['email']) && isset($_POST['password']) && isset($_POST['action'])) {
+    if (isset($_POST['email'])&&isset($_POST['password'])&&isset($_POST['action'] =='registration')) {
         $err = [];
+
         if (!preg_match("/^[a-zA-Z0-9]+$/", $_POST['email'])) {
             $err = "Email может состоять только и букв английского языка";
         }
@@ -33,12 +34,11 @@ function registration()
             do_query("INSERT INTO users SET email='" . $email . "', password='" . $password . "'");
             header("location:" . get_root_url());
         } else {
-            echo "<strong>При регистрации произошли следующие ошибки:</strong><br>";
+            print "<strong>При регистрации произошли следующие ошибки:</strong><br>";
             foreach ($err as $error) {
-                echo $error . "<br>";
+                print $error . "<br>";
             }
         }
     }
 }
-
 add_action('init', 'registration');

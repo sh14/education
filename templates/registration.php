@@ -14,7 +14,7 @@
     </div>
 </div>
 <div class="modal registration_template" id="modal-1">
-    <form method="post" action="?event=registration">
+    <form method="post">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -38,14 +38,13 @@
                     <br>
                     <p>Введите ваш пароль</p>
                     <input type="password" placeholder="password" required="required">
+                    <input type="hidden" name="action" value="registration">
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-primary" type="button">Зарегистрироваться</button>
                     <button class="btn btn-danger" type="button" data-dismiss="modal">Пошло оно все нахер</button>
-
                 </div>
             </div>
         </div>
     </form>
-
 </div>
