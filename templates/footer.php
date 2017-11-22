@@ -18,6 +18,22 @@
             }
         });
     });
+    /*Кнопка выхода*/
+    function preparePage() {
+      document.getElementById('enter').onclick = function () {
+        if (document.getElementById('enter')) {
+            document.getElementById('exit').style.display = "block";
+            document.getElementById('reg').style.display = "none";
+            document.getElementById('enter').style.display = "none";
+      } else {
+        document.getElementById('exit').style.display = "none";
+      }
+    };
+    document.getElementById('exit').style.display = "none";
+  }
+  window.onload = function() {
+    preparePage();
+  }
 </script>
 <script type="text/javascript" src="<?php echo get_stylesheet_directory(); ?>/bootstrap/js/bootstrap.min.js"></script>
 </body>
