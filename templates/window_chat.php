@@ -47,7 +47,7 @@ if ( ! empty( $_GET['event'] ) ) {
                             <!-- Колонка аватара -->
                             <form method="post" enctype="multipart/form-data">
                                 <div class="row">
-                                    <div class="text-center col-md-3">
+                                    <div class="text-center col-md-6">
                                         <div class="avatar col-md-12 " alt="avatar"></div>
                                         <div class="file_upload col-md-12 col-xs-12">
                                             <button type="button">Загрузить фотографию</button>
@@ -112,8 +112,6 @@ if ( ! empty( $_GET['event'] ) ) {
                                             <label class="col-md-3 control-label"></label>
                                             <div class="col-md-8">
                                                 <input type="submit" class="btn btn-primary" value="Сохранить изменения">
-                                                <span></span>
-                                                <input type="reset" class="btn btn-default" value="Очистить данные формы">
                                             </div>
                                         </div>
                                     </form>
