@@ -289,7 +289,8 @@ function profile_edit() {
 		for ( $i = 0; $i < count( $values ); $i ++ ) {
 			$values[ $i ] = $vars[ $i ] . '=' . $values[ $i ];
 		}
-		$ID = $_POST['ID'];
+		$user_info = get_user_info();
+		$ID = $user_info['ID'];
 		if ( $_POST['access'] == 'denied' ) {
 			$allow_query = 0;
 		}
