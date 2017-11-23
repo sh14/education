@@ -4,15 +4,13 @@
  * User: Student
  * Date: 07.11.2017
  * Time: 21:52
- *
  */?>
 <div class="main_container container">
     <div class="row">
         <div class="registrate col-sm-12">
             <div class="registration_buttons">
                 <button type="button" class="btn btn_main btn-success main_registration" data-toggle="modal" data-target="#modal-1" >Регистрация</button>
-                <button type="button" class="btn btn_main btn-success main_login" data-toggle="modal" data-target="#modal-2">Вход</button>
-                <button type="button" class="btn btn_main btn-success main_login" data-toggle="modal" data-target="">Выход</button>
+                <button type="button"  class="btn btn_main btn-success main_login" data-toggle="modal" data-target="#modal-2">Вход</button>                
             </div>
             <br>
             <br>
@@ -59,7 +57,6 @@
                                     <div class="form-group"><input class="form-control password_login" type="password" placeholder="Пароль" id="password_login" name="password_login" required="required"/ ></div>
                                     <input class="login btn btn-success" type="submit" name="login_send" value="Вход">
                                     <button type="button" class="btn btn_main btn-success main_registration" data-toggle="modal" data-target="#modal-1" data-dismiss="modal">Регистрация</button>
-
                                 </form>
                             </div>
                         </div>

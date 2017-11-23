@@ -31,7 +31,7 @@ SET time_zone = "+00:00";
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
   `ID` int(20) NOT NULL AUTO_INCREMENT,
-  `login` varchar(255),
+  `nickname` varchar(255),
   `email` varchar(255) NOT NULL,
   `password` text NOT NULL,
   `first_name` text,

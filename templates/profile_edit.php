@@ -58,15 +58,15 @@ if ( ! empty( $_GET['event'] ) ) {
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-lg-3 control-label">Email:</label>
+                    <label class="col-lg-3 control-label">Почта:</label>
                     <div class="col-lg-8">
                         <input class="form-control" type="email" name="email">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-md-3 control-label">Имя пользователя:</label>
+                    <label class="col-md-3 control-label">Никнейм:</label>
                     <div class="col-md-8">
-                        <input class="form-control" type="text" name="login">
+                        <input class="form-control" type="text" name="nickname">
                     </div>
                 </div>
                 <div class="form-group">
@@ -83,7 +83,6 @@ if ( ! empty( $_GET['event'] ) ) {
                     <div class="message col-md-8 col-md-offset-3"></div>
                 </div>
                 <input type="hidden" name="access" value="permitted">
-                <input type="hidden" name="ID" value="1">
                 <input type="hidden" name="action" value="edit_user_info">
                 <div class="form-group">
                     <label class="col-md-3 control-label"></label>
