@@ -78,7 +78,7 @@ CREATE TABLE `message` (
   `title` text NOT NULL,
   `content` text NOT NULL,
   `photo` text
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
 -- Индексы сохранённых таблиц

@@ -41,19 +41,10 @@ function get_page() {
 function add_default_data() {
     $sql_check_database    = "SHOW TABLES FROM " . DATABASE;
 	$result_db = do_query( $sql_check_database );
-	//pr($result_db);
 	$rows = $result_db->num_rows;
 	if($rows == 0) {
         insert_tables();
     }
-	//echo 'Проверка базы'.pr(check_database());
-	/*if(!check_database()) {
-		insert_tables();
-	}*/
-
-	/*$sql_check_database = [];
-	$sql_check_database[] = "SHOW TABLES LIKE `message`";
-	$sql_check_database[] = "SHOW TABLES LIKE `users`";*/
 
 	$sql_check_tables   = [];
 	$sql_check_tables[] = "SELECT * FROM `message`";
@@ -62,7 +53,7 @@ function add_default_data() {
 	$sql   = [];
 	$sql[] = "INSERT INTO `message`( `id_user`, `datatime`, `title`, `content`, `photo`) 
 	VALUES (1,'2017-11-12 12:00:00','Привет, мир!','Это тестовая публикация!','../images/character-designer.png')";
-	$sql[] = "INSERT INTO `users`( `nickname`, `email`, `password`, `first_name`, `last_name`) 
+	$sql[] = "INSERT INTO `users`( `nickname`, `email`, `password`, `first_name`, `last_name`)
 	VALUES ('admin','test@tes.ru','123','Админ','Админов')";
 
 	$sql_set_id     = [];
@@ -71,14 +62,6 @@ function add_default_data() {
 	$sql_set_id[]   = "SET @reset = 0";
 	$sql_reset_id[] = "UPDATE `message` SET id = @reset:= @reset + 1";
 	$sql_reset_id[] = "UPDATE `users` SET ID = @reset:= @reset + 1";
-
-	/*foreach ($sql_check_database as $key => $query) {
-		$result[ $key ] = do_query( $query );
-		if ($result[$key]->num_rows == 0) {
-
-			echo 'Таблиц не сущестует';
-		}
-	}*/
 
 	foreach ( $sql_check_tables as $key => $query ) {
 		$result[ $key ] = do_query( $query );
@@ -576,7 +559,7 @@ add_action( 'init', 'enqueue_scripts' );
 
 	if(!empty($_GET['event']) && $_GET['event'] == 'save' && !empty($_POST)) {    создаем условие в котором прописываем занесение в базу данных
 																				  информации из инпутов при удачном случае и изменении значения url строки
-		$vars_string = array_map('trim', explode(',', 'first_name, last_name, login, Email, Password'));
+		$vars_string = array_map('trim', explode(',', 'first_name, last_name, nickname, Email, Password'));
 		$values = [];
 		$allow_query       = 1;
 		foreach ($vars_string as $var) {
