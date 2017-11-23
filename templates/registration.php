@@ -31,7 +31,7 @@
                     <input type="text" placeholder="last_name" required="required">
                     <br>
                     <p>Введите ваше погоняло</p>
-                    <input type="text" placeholder="login" required="required">
+                    <input type="text" placeholder="nickname" required="required">
                     <br>
                     <p>Введите ваш email</p>
                     <input type="email" placeholder="email" required="required">
