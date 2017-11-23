@@ -39,12 +39,12 @@ function get_page() {
  * Функция добавления данных по умолчанию в базу данных
  */
 function add_default_data() {
-    $sql_check_database    = "SHOW TABLES FROM " . DATABASE;
-	$result_db = do_query( $sql_check_database );
-	$rows = $result_db->num_rows;
-	if($rows == 0) {
-        insert_tables();
-    }
+	$sql_check_database = "SHOW TABLES FROM " . DATABASE;
+	$result_db          = do_query( $sql_check_database );
+	$rows               = $result_db->num_rows;
+	if ( $rows == 0 ) {
+		insert_tables();
+	}
 
 	$sql_check_tables   = [];
 	$sql_check_tables[] = "SELECT * FROM `message`";
@@ -82,7 +82,7 @@ add_action( 'init', 'add_default_data' );
 function check_database() {
 	$sql    = "SHOW TABLES FROM " . DATABASE;
 	$result = do_query( $sql );
-	pr($result);
+	pr( $result );
 	if ( ! $result ) {
 		echo "Ошибка базы данных, невозможно вывести таблицы\n";
 		echo 'Ошибка MySQL: ' . mysqli_error();
@@ -117,7 +117,7 @@ function insert_tables() {
 		}
 		$templine .= $line;
 		if ( substr( trim( $line ), - 1, 1 ) == ';' ) {
-			do_query($templine)/*mysqli_query( $link, $templine )*/ or print( 'Ошибка при осуществлении запроса \'<strong>' . $templine . '\': ' . mysqli_error($link) . '<br /><br />' );
+			do_query( $templine )/*mysqli_query( $link, $templine )*/ or print( 'Ошибка при осуществлении запроса \'<strong>' . $templine . '\': ' . mysqli_error( $link ) . '<br /><br />' );
 			//echo 'Темплайн ' . pr( $templine );
 			$templine = '';
 		}
@@ -254,7 +254,7 @@ function get_stylesheet_directory() {
 function profile_edit() {
 	list( $url ) = explode( '?', $_SERVER['REQUEST_URI'] );
 	$event = '';
-	if ( ! empty( $_POST['action'] ) && $_POST['action'] == 'edit_user_info' ) {
+	if ( ! empty( $_POST['action'] ) && $_POST['action'] == 'edit_user_info' && $_POST['password'] === $_POST['confirm_password'] ) {
 		$vars_string       = 'nickname,email,password,first_name,last_name';
 		$vars              = array_map( 'trim', explode( ',', $vars_string ) );
 		$values            = [];
@@ -262,7 +262,12 @@ function profile_edit() {
 		$allow_query       = 1;
 		foreach ( $vars as $var_key => $var_value ) {
 			if ( ! empty( $_POST[ $var_value ] ) ) {
-				$values[] = "'$_POST[$var_value]'";
+				if ($var_value == 'password') {
+					$password = md5( md5( trim( $_POST['password'] ) ) );
+					$values[] = "'$password'";
+				} else {
+					$values[] = "'$_POST[$var_value]'";
+				}
 			} else {
 				unset( $vars[ $var_key ] );
 				++ $empty_input_count;
@@ -278,10 +283,7 @@ function profile_edit() {
 			$values[ $i ] = $vars[ $i ] . '=' . $values[ $i ];
 		}
 		$user_info = get_user_info();
-		$ID = $user_info['ID'];
-		if ( $_POST['access'] == 'denied' ) {
-			$allow_query = 0;
-		}
+		$ID        = $user_info['ID'];
 
 		if ( $allow_query == 1 ) {
 			$event = 'success';
@@ -383,9 +385,9 @@ function autorization_user() {
 
 		$email    = $_POST['email_login'];
 		$password = md5( md5( trim( $_POST['password_login'] ) ) );
-		$sql      = "SELECT COUNT(*) FROM users WHERE email='{$email}' AND password='{$password}'";
-		$result   = do_query( $sql );
-		$rows     = $result->fetch_row();
+		$sql    = "SELECT COUNT(*) FROM users WHERE email='{$email}' AND password='{$password}'";
+		$result = do_query( $sql );
+		$rows   = $result->fetch_row();
 
 		if ( $rows[0] == 1 ) {
 			setcookie( 'shlo_chat', implode( ';', [ $email, $password ] ), time() + 60 * 60 * 24 );
@@ -612,20 +614,21 @@ $message = emailValidation( $email );
 
 //Функция вытягивания и преобразования в асс массив данных из БД
 
-function get_user_info()
-{
-    global $current_user;
-    if (!empty($_COOKIE['shlo_chat'])&& empty($current_user) && is_user_logged_in()) {
+function get_user_info() {
+	global $current_user;
+	if ( ! empty( $_COOKIE['shlo_chat'] ) && empty( $current_user ) && is_user_logged_in() ) {
 
-        list($email, $password) = explode(';', esc_sql($_COOKIE['shlo_chat']));
+		list( $email, $password ) = explode( ';', esc_sql( $_COOKIE['shlo_chat'] ) );
 
-        if (!empty($email) && !empty($password)) {
-            $sql = "SELECT * FROM users WHERE email='{$email}' AND password='{$password}'";
-            $result = do_query($sql);
-            $current_user = $result->fetch_array(MYSQLI_ASSOC);
+		if ( ! empty( $email ) && ! empty( $password ) ) {
+			$sql          = "SELECT * FROM users WHERE email='{$email}' AND password='{$password}'";
+			$result       = do_query( $sql );
+			$current_user = $result->fetch_array( MYSQLI_ASSOC );
 
-        }
-    }
-    return $current_user;
+		}
+	}
+
+	return $current_user;
 }
-add_action('init', 'get_user_info');
+
+add_action( 'init', 'get_user_info' );

@@ -77,11 +77,10 @@ if ( ! empty( $_GET['event'] ) ) {
                 <div class="form-group">
                     <label class="col-md-3 control-label">Подтвердите пароль:</label>
                     <div class="col-md-8">
-                        <input class="form-control confirm_password" type="password">
+                        <input class="form-control confirm_password" type="password" name="confirm_password">
                     </div>
                     <div class="message col-md-8 col-md-offset-3"></div>
                 </div>
-                <input type="hidden" name="access" value="permitted">
                 <input type="hidden" name="action" value="edit_user_info">
                 <div class="form-group">
                     <label class="col-md-3 control-label"></label>
