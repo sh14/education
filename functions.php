@@ -57,7 +57,7 @@ function add_default_data() {
 	$sql   = [];
 	$sql[] = "INSERT INTO `message`( `id_user`, `datatime`, `title`, `content`, `photo`) 
 	VALUES (1,'2017-11-12 12:00:00','Привет, мир!','Это тестовая публикация!','../images/character-designer.png')";
-	$sql[] = "INSERT INTO `users`( `login`, `email`, `password`, `first_name`, `last_name`) 
+	$sql[] = "INSERT INTO `users`( `nickname`, `email`, `password`, `first_name`, `last_name`) 
 	VALUES ('admin','test@tes.ru','123','Админ','Админов')";
 
 	$sql_set_id     = [];
@@ -267,7 +267,7 @@ function profile_edit() {
 	list( $url ) = explode( '?', $_SERVER['REQUEST_URI'] );
 	$event = '';
 	if ( ! empty( $_POST['action'] ) && $_POST['action'] == 'edit_user_info' ) {
-		$vars_string       = 'login,email,password,first_name,last_name';
+		$vars_string       = 'nickname,email,password,first_name,last_name';
 		$vars              = array_map( 'trim', explode( ',', $vars_string ) );
 		$values            = [];
 		$empty_input_count = 0;
