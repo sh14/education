@@ -1,7 +1,7 @@
 <div id="installer"></div>
 <script type="text/javascript">
     $(document).ready(function() {
-        /* Валидация формы */
+        /* Информирование пользователя о том, что пароли совпадают или не совпадают */
         $('.password, .confirm_password').on('keyup', function() {
             if ($('.password').val() === $('.confirm_password').val()) {
                 if ($('.password, .confirm_password').val() != '') {
