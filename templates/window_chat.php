@@ -68,16 +68,15 @@ if ( ! empty( $_GET['event'] ) ) {
                         </div>
                         <div class="modal-body">
                             <!-- Колонка аватара -->
-                            <form method="post" enctype="multipart/form-data">
+                            <form class="form-avatar" method="post" enctype="multipart/form-data">
                                 <div class="row">
                                     <div class="text-center col-md-6">
                                         <div class="avatar col-md-12 " alt="avatar"></div>
                                         <div class="file_upload col-md-12 col-xs-12">
                                             <button type="button">Загрузить фотографию</button>
-                                            <input type="file" name="file_to_upload" id="file_to_upload" accept="image/*">
+                                            <input class="file-avatar" type="file" name="file_to_upload" id="file_to_upload" accept="image/*">
                                         </div>
                                         <input type="hidden" name="action" value="upload">
-                                        <button type="submit" value="upload_image" name="submit" class="btn btn-success">Отправить</button>
                                     </div>
                                 </div>
                             </form>

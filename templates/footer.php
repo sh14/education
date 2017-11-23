@@ -17,6 +17,10 @@
                 $('input[name="access"]').val('denied');
             }
         });
+
+        $('.file-avatar').on('change',function() {
+            $('.form-avatar').submit();
+        });
     });
     
 </script>
