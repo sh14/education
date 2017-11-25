@@ -103,14 +103,14 @@ button[value=upload_image] {
   margin-bottom: 30px;
 }
 @media only screen and ( max-width: 500px ) {
-  .profile .file_upload {
-    display: block;
+  .profile {
+    .file_upload {
+      display: block;
+      & > div {
+        display: none;
+      }
+    }
   }
-
-  .profile .file_upload > div {
-    display: none;
-  }
-
   .profile .file_upload, .personal-info .alert {
     display: inline-block;
   }
