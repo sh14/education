@@ -105,20 +105,15 @@ function check_database() {
 function insert_tables() {
 	global $link;
 	$filename = 'shlo.sql';
-	//$link     = mysqli_connect( HOST, LOGIN, PASSWORD ) or die('Ошибка при подключении к серверу MySQL: ' . mysqli_error());
-
-	//mysqli_select_db( $link, 'dump' ) or die( 'Ошибка при выборе базы данных MySQL: ' . mysqli_error($link) );
 	$templine = '';
 	$lines    = file( $filename );
-	//echo 'Лайнес ' . pr( $lines );
 	foreach ( $lines as $line ) {
 		if ( substr( $line, 0, 2 ) == '--' || $line == '' ) {
 			continue;
 		}
 		$templine .= $line;
 		if ( substr( trim( $line ), - 1, 1 ) == ';' ) {
-			do_query( $templine )/*mysqli_query( $link, $templine )*/ or print( 'Ошибка при осуществлении запроса \'<strong>' . $templine . '\': ' . mysqli_error( $link ) . '<br /><br />' );
-			//echo 'Темплайн ' . pr( $templine );
+			do_query( $templine ) or print( 'Ошибка при осуществлении запроса \'<strong>' . $templine . '\': ' . mysqli_error( $link ) . '<br /><br />' );
 			$templine = '';
 		}
 	}
