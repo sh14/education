@@ -70,7 +70,7 @@ if ( ! empty( $_GET['event'] ) ) {
                             <!-- Колонка аватара -->
                             <form class="form-avatar" method="post" enctype="multipart/form-data">
                                 <div class="row">
-                                    <div class="text-center col-md-6">
+                                    <div class="text-center col-md-5">
                                         <div class="avatar col-md-12 " alt="avatar"></div>
                                         <label class="file_upload col-md-12 col-xs-12">
                                             <span class="button">Загрузить фотографию</span>
