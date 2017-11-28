@@ -44,7 +44,7 @@ if ( ! empty( $_GET['event'] ) ) {
         height: 20%;
         text-align: center;
         font-size: 30px;
-	    overflow: hidden;
+	    overflow: visible;
     }
     .chat_window {
         height: 300px;
@@ -111,23 +111,23 @@ if ( ! empty( $_GET['event'] ) ) {
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label for="nickname" class="col-md-3 control-label">Никнейм:</label>
-                                            <div class="col-md-8">
+                                            <label for="nickname" class="col-lg-3 control-label">Никнейм:</label>
+                                            <div class="col-lg-8">
                                                 <input class="form-control" type="text" name="nickname" id="nickname">
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label for="password" class="col-md-3 control-label">Пароль:</label>
-                                            <div class="col-md-8">
+                                            <label for="password" class="col-lg-3 control-label">Пароль:</label>
+                                            <div class="col-lg-8">
                                                 <input class="form-control password" type="password" name="password" id="password">
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label for="confirm_password" class="col-md-3 control-label">Подтвердите пароль:</label>
-                                            <div class="col-md-8">
+                                            <label for="confirm_password" class="col-lg-3 control-label">Подтвердите пароль:</label>
+                                            <div class="col-lg-8">
                                                 <input class="form-control confirm_password" type="password" name="confirm_password" id="confirm_password">
                                             </div>
-                                            <div class="message col-md-8 col-md-offset-3"></div>
+                                            <div class="message col-lg-8 col-md-offset-3"></div>
                                         </div>
                                         <input type="hidden" name="action" value="edit_user_info">
                                         <div class="form-group profile_button">
@@ -165,4 +165,6 @@ if ( ! empty( $_GET['event'] ) ) {
                     </form>
                 </div>
             </div>
+        </div>
+    </div>
 </div>
