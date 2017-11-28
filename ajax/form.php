@@ -19,9 +19,17 @@
 
 <form method="POST" id="message" action="?123">
     <label for="your_massage">Your Message</label>
-    <input type="text" name="your_massage" value="" id="your_massage">
+    <input type="text" name="your_massage" value="" id="your_massage" placeholder="Напишите сообщение...">
     <input value="Send Message" type="submit" data-event="btn_message">
 </form>
+
+<script id="message-template" type="text/x-handlebars-template">
+		<div class="chat-message">
+            {{#each message}}
+            <textarea class="text-message" type="textarea" name="<%=textarea%>" placeholder="Напишите сообщение..." maxlength="2250">{{text-message}}</textarea>
+            {{/each}}
+		</div>
+</script>
 
 <div id="results_message"></div>
 
@@ -31,7 +39,6 @@
     var results_message = document.getElementById("results_message");
     var p = document.createElement('p');
     var flag = 0;
-    var user = "faxitos" + ":";
     var now = new Date;
 
 
@@ -42,12 +49,23 @@
 
     btn_message.addEventListener("click", cl);
 
+
+   /* tmpl( jQuery( '#' + project_image_template ).html(), {
+        file : file,
+        icon : FU.icon,
+        name : space_image_name,
+        alt : '',
+        textarea : space_image_textarea
+    } );*/
+
+
+
     //ниже функция нажатия на клавишу и вызова функций
     function cl(event) {
         event.preventDefault();
         if (flag == 0) {
             flag = 1;
-            //see_message();
+            see_message();
             show_message();
         }
         return flag = 0;
@@ -66,28 +84,32 @@
     //ниже функция отправки и получения сообщения в поле
     function show_message() {
         if (flag == 1 && your_message.value != "") {
-            p.innerHTML = "Пользователь - " + user + " " + your_message.value + " Время отправки сообщения - " + curent();
+            p.innerHTML = your_message.value;
             results_message.innerHTML += "";
-            results_message.appendChild(p);
         }
         your_message.value = "";
     }
 
+    $.ajax({
+
+    });
 
     //ниже ajax запрос на сообщения из сервера
     function see_message() {
+        if(your_message.value != "") {
             var mes = $('#message').serialize();
             $.ajax({
                 type: 'POST',
                 url: 'mes.php',
                 data: mes,
                 success: function (data) {
-                    $('#results_message').html(data);
+                    $('#results_message').append(data);
                 },
                 error: function (xhr, str) {
                     alert('Возникла ошибка: ' + xhr.responseCode);
                 }
             });
+        }
     }
 
 //запрос ajax
