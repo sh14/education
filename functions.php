@@ -539,6 +539,18 @@ function enqueue_script( $handle ) {
 }
 
 /**
+ * Вывод сообщений на дисплей
+ *
+ */
+function display_message() {
+	$sql = "SELECT * FROM `message`";
+	$result = do_query($sql);
+	$message_data = $result->fetch_array( MYSQLI_ASSOC );
+	print_r($message_data);
+}
+add_action( 'init', 'display_message' );
+
+/**
  * Регистрация скриптов и их вывод
  */
 function enqueue_scripts() {
