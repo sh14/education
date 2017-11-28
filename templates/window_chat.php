@@ -91,7 +91,6 @@ if ( ! empty( $_GET['event'] ) ) {
                             <div class="row">
                                 <div class="col-md-12 personal-info">
                                     <h3>Личная информация</h3>
-
                                     <form method="post" class="form-horizontal">
                                         <div class="form-group">
                                             <label for="first_name" class="col-lg-3 control-label">Имя:</label>
