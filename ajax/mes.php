@@ -6,6 +6,9 @@
  * Time: 19:07
  */
 
-echo "<pre>";
+echo "<p>";
     print_r($_POST["your_massage"]);
-echo "</pre>";
+echo "</p>";
+
+
+
