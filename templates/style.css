@@ -103,8 +103,7 @@ body {
   .profile .file_upload > div {
     display: none;
   }
-  .profile .file_upload,
-  .personal-info .alert {
+  .profile .file_upload {
     display: inline-block;
   }
 }
