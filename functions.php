@@ -462,8 +462,11 @@ function display_message() {
 	global $message_data;
 	$sql = "SELECT * FROM `message`";
 	$result = do_query($sql);
-	$message_data = $result->fetch_array( MYSQLI_ASSOC );
-	return $message_data;
+	$message_data = array();
+	while ($rows = mysqli_fetch_array($result)){
+		$message_data[] = array_values($rows);
+	}
+	print_r($message_data);
 }
 add_action( 'init', 'display_message' );
 
