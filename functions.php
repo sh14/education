@@ -459,10 +459,11 @@ function enqueue_script( $handle ) {
  *
  */
 function display_message() {
+	global $message_data;
 	$sql = "SELECT * FROM `message`";
 	$result = do_query($sql);
 	$message_data = $result->fetch_array( MYSQLI_ASSOC );
-	print_r($message_data);
+	return $message_data;
 }
 add_action( 'init', 'display_message' );
 

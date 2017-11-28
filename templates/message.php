@@ -6,13 +6,13 @@
             </div>
             <div class="adapchat-text">
                 <div class="subject_matter">
-	                <?php $message_data['title'];?>
+	                <?php echo $message_data['title'];?>
                 </div>
                 <div class="adapchat-message">
-	                <?php $message_data['content'];?>
+	                <?php echo $message_data['content'];?>
                 </div>
                 <div class="adapchat-date">
-		            <?php $message_data['datatime'];?>
+		            <?php echo $message_data['datatime'];?>
                 </div>
             </div>
         </div>
