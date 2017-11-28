@@ -36,15 +36,22 @@ if ( ! empty( $_GET['event'] ) ) {
     .chat_window_avatar_img {
         height: 70%;
         background-image: url("https://skin-challenges.com/wp-content/uploads/2017/08/profile_unknown.png");
+	    background-repeat: no-repeat;
+	    background-size: contain;
+	    background-position: center;
     }
     .chat_window_avatar_signature {
         height: 20%;
         text-align: center;
         font-size: 30px;
+	    overflow: hidden;
     }
     .chat_window {
         height: 300px;
     }
+	.profile_button {
+		text-align: center;
+	}
 </style>
 <div class="chat_container container">
     <div class="row">
@@ -71,7 +78,7 @@ if ( ! empty( $_GET['event'] ) ) {
                             <form class="form-avatar" method="post" enctype="multipart/form-data">
                                 <div class="row">
                                     <div class="text-center col-md-5">
-                                        <div class="avatar col-md-12 " alt="avatar"></div>
+                                        <div class="avatar col-md-12"></div>
                                         <label class="file_upload col-md-12 col-xs-12">
                                             <span class="button">Загрузить фотографию</span>
                                             <input class="file-avatar" type="file" name="file_to_upload" id="file_to_upload" accept="image/*">
@@ -128,9 +135,8 @@ if ( ! empty( $_GET['event'] ) ) {
                                             <div class="message col-md-8 col-md-offset-3"></div>
                                         </div>
                                         <input type="hidden" name="action" value="edit_user_info">
-                                        <div class="form-group">
-                                            <label class="col-md-3 control-label"></label>
-                                            <div class="col-md-8">
+                                        <div class="form-group profile_button">
+                                            <div class="col-md-12">
                                                 <input type="submit" class="btn btn-primary" value="Сохранить изменения">
                                             </div>
                                         </div>
