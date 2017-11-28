@@ -83,10 +83,6 @@ if ( ! empty( $_GET['event'] ) ) {
                             <!-- Колонка профиля -->
                             <div class="row">
                                 <div class="col-md-12 personal-info">
-                                    <div class="alert alert-info alert-dismissable">
-                                        <a class="panel-close close" data-dismiss="alert">×</a>
-                                        <i class="fa fa-coffee"><?php echo $message; ?></i>
-                                    </div>
                                     <h3>Личная информация</h3>
 
                                     <form method="post" class="form-horizontal">
