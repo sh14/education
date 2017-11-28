@@ -23,15 +23,16 @@
     <input value="Send Message" type="submit" data-event="btn_message">
 </form>
 
-<script id="message-template" type="text/x-handlebars-template">
-		<div class="chat-message">
-            {{#each message}}
-            <textarea class="text-message" type="textarea" name="<%=textarea%>" placeholder="Напишите сообщение..." maxlength="2250">{{text-message}}</textarea>
-            {{/each}}
+<script id="message-template" type="text/ejs">
+		<div class="project-image">
+				<div class="project-image__description">
+
+					<textarea class="input-text profi_padbot" type="textarea" name="<%=textarea%>" placeholder="Напишите сообщение..." maxlength="2250"></textarea>
+				</div>
 		</div>
 </script>
 
-<div id="results_message"></div>
+<div id="results_message"><!-- текст сообщений --></div>
 
 <script>
     var your_message = document.getElementById("your_massage");
@@ -50,14 +51,45 @@
     btn_message.addEventListener("click", cl);
 
 
-   /* tmpl( jQuery( '#' + project_image_template ).html(), {
-        file : file,
-        icon : FU.icon,
-        name : space_image_name,
-        alt : '',
-        textarea : space_image_textarea
-    } );*/
+    (function () {
+	    var cache = {};
 
+	    this.tmpl = function tmpl( str, data ) {
+		    // Figure out if we're getting a template, or if we need to
+		    // load the template - and be sure to cache the result.
+		    var fn = !/\W/.test( str ) ?
+			    cache[ str ] = cache[ str ] ||
+				    tmpl( document.getElementById( str ).innerHTML ) :
+
+			    // Generate a reusable function that will serve as a template
+			    // generator (and which will be cached).
+			    new Function( "obj",
+				    "var p=[],print=function(){p.push.apply(p,arguments);};" +
+
+				    // Introduce the data as local variables using with(){}
+				    "with(obj){p.push('" +
+
+				    // Convert the template into pure JavaScript
+				    str
+					    .replace( /[\r\t\n]/g, " " )
+					    .split( "<%" ).join( "\t" )
+					    .replace( /((^|%>)[^\t]*)'/g, "$1\r" )
+					    .replace( /\t=(.*?)%>/g, "',$1,'" )
+					    .split( "\t" ).join( "');" )
+					    .split( "%>" ).join( "p.push('" )
+					    .split( "\r" ).join( "\\'" )
+				    + "');}return p.join('');" );
+		    // Provide some basic currying to the user
+		    return data ? fn( data ) : fn;
+	    };
+    })();
+
+
+    var template = tmpl( jQuery( '#message-template').html(), {
+	    textarea : "value_mes"
+    } );
+
+    jQuery('#results_message').append(template);
 
 
     //ниже функция нажатия на клавишу и вызова функций
@@ -72,14 +104,14 @@
     }
 
     //ниже функция шаблона отображения времени отправки сообщения
-    function curent(){
+    /*function curent(){
         var H = now.getHours();
         var M = now.getMinutes();
         var S = now.getSeconds();
         if(H < 10){H = "0" + H;} if(M < 10){M = "0" + M;}  if(S < 10){S = "0" + S;}
         var time = H + ":" + M + ":" + S ;
         return time;
-    }
+    }*/
 
     //ниже функция отправки и получения сообщения в поле
     function show_message() {
@@ -90,9 +122,6 @@
         your_message.value = "";
     }
 
-    $.ajax({
-
-    });
 
     //ниже ajax запрос на сообщения из сервера
     function see_message() {
@@ -111,6 +140,9 @@
             });
         }
     }
+
+
+
 
 //запрос ajax
     btn_auth.addEventListener("click", auth);
