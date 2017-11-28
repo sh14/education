@@ -161,7 +161,6 @@ function get_stylesheet_directory() {
 /**
  *  Функция редактирования профиля пользователя
  */
-
 function profile_edit() {
 	list( $url ) = explode( '?', $_SERVER['REQUEST_URI'] );
 	$event = '';
