@@ -93,7 +93,7 @@ if ( ! empty( $_GET['event'] ) ) {
                                     <h3>Личная информация</h3>
                                     <form method="post" class="form-horizontal">
                                         <div class="form-group">
-                                            <label for="first_name" class="col-lg-3 control-label">Name:</label>
+                                            <label for="first_name" class="col-lg-3 control-label">Имя:</label>
                                             <div class="col-lg-8">
                                                 <input class="form-control" type="text" name="first_name" id="first_name">
                                             </div>
