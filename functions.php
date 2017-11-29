@@ -96,7 +96,7 @@ function check_database() {
 	mysqli_free_result( $result );
 }
 
-//add_action( 'init', 'check_database' );
+//add_action( 'init', 'check_database' )А;
 
 /**
  * Функция добавления таблицы
@@ -257,7 +257,7 @@ function profile_edit() {
 		$allow_query       = 1;
 		foreach ( $vars as $var_key => $var_value ) {
 			if ( ! empty( $_POST[ $var_value ] ) ) {
-				if ($var_value == 'password') {
+				if ( $var_value == 'password' ) {
 					$password = md5( md5( trim( $_POST['password'] ) ) );
 					$values[] = "'$password'";
 				} else {
@@ -380,9 +380,9 @@ function autorization_user() {
 
 		$email    = $_POST['email_login'];
 		$password = md5( md5( trim( $_POST['password_login'] ) ) );
-		$sql    = "SELECT COUNT(*) FROM users WHERE email='{$email}' AND password='{$password}'";
-		$result = do_query( $sql );
-		$rows   = $result->fetch_row();
+		$sql      = "SELECT COUNT(*) FROM users WHERE email='{$email}' AND password='{$password}'";
+		$result   = do_query( $sql );
+		$rows     = $result->fetch_row();
 
 		if ( $rows[0] == 1 ) {
 			setcookie( 'shlo_chat', implode( ';', [ $email, $password ] ), time() + 60 * 60 * 24 );
@@ -474,8 +474,8 @@ add_action( 'init', 'registration' );
  * @param       $handle
  * @param       $src
  * @param array $deps
- * @param bool $ver
- * @param bool $in_footer
+ * @param bool  $ver
+ * @param bool  $in_footer
  *
  * @return array
  */
@@ -627,3 +627,18 @@ function get_user_info() {
 }
 
 add_action( 'init', 'get_user_info' );
+
+//Функция добавления сообщений в БД
+
+function message_add() {
+
+	if ( is_user_logged_in() && ! empty( $_POST['content'] ) && ! empty( $_POST['action'] ) && $_POST['action'] == 'message_add' ) {
+
+		if ( ! empty( $_POST['content'] ) ) {
+			do_query( "INSERT INTO `message` ( `id_user`, `content` ) VALUES (2, '{$_POST['content']}' )" );
+		}
+
+	}
+}
+
+add_action( 'init', 'message_add' );

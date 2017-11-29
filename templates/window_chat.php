@@ -158,9 +158,10 @@ if ( ! empty( $_GET['event'] ) ) {
             <div class="row row-centered post_form">
                 <div class="col-md-6 col-sm-12">
                     <form action="" method="post">
-                        <input type="text" class="form-control" placeholder="Тема сообщения" name="title" id="title">
-                        <textarea class="form-control" rows="5" placeholder="Текст сообщения" name="message_input" id="message_input" ></textarea>
-                        <input class="btn btn-info" type="button" value="Отправить">
+                        <input type="text" class="form-control" placeholder="Тема сообщения" name="title" id="title" value="">
+                        <textarea class="form-control" rows="5" placeholder="Текст сообщения" name="content" id="content" ></textarea>
+                        <input class="btn btn-info" type="submit" value="Отправить" name="">
+	                    <input type="hidden" name="action" value="message_add">
                     </form>
                 </div>
             </div>
