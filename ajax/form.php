@@ -47,44 +47,8 @@
     var flag = 0;
     var now = new Date;
 
-
-    var btn_auth = document.querySelector('[data-event="auth"]');
-
     btn_message.addEventListener("click", cl);
 
-
-    (function () {
-	    var cache = {};
-
-	    this.tmpl = function tmpl( str, data ) {
-		    // Figure out if we're getting a template, or if we need to
-		    // load the template - and be sure to cache the result.
-		    var fn = !/\W/.test( str ) ?
-			    cache[ str ] = cache[ str ] ||
-				    tmpl( document.getElementById( str ).innerHTML ) :
-
-			    // Generate a reusable function that will serve as a template
-			    // generator (and which will be cached).
-			    new Function( "obj",
-				    "var p=[],print=function(){p.push.apply(p,arguments);};" +
-
-				    // Introduce the data as local variables using with(){}
-				    "with(obj){p.push('" +
-
-				    // Convert the template into pure JavaScript
-				    str
-					    .replace( /[\r\t\n]/g, " " )
-					    .split( "<%" ).join( "\t" )
-					    .replace( /((^|%>)[^\t]*)'/g, "$1\r" )
-					    .replace( /\t=(.*?)%>/g, "',$1,'" )
-					    .split( "\t" ).join( "');" )
-					    .split( "%>" ).join( "p.push('" )
-					    .split( "\r" ).join( "\\'" )
-				    + "');}return p.join('');" );
-		    // Provide some basic currying to the user
-		    return data ? fn( data ) : fn;
-	    };
-    })();
 
     //ниже функция нажатия на клавишу и вызова функций
     function cl(event) {
@@ -100,10 +64,12 @@
     //ниже функция отправки и получения сообщения в поле
     function show_message() {
         if (flag == 1 && your_message.value != "") {
-            p.innerHTML = your_message.value;
-            results_message.append(p);
-            results_message.innerHTML += "";
+            var vall = document.getElementById("your_massage").value;
+            var template = tmpl( jQuery( '#message-template').html(), {
+                message : vall
+            } );
 
+            jQuery('#results_message').append(template);
         }
         your_message.value = "";
     }
@@ -127,13 +93,49 @@
         }
     }
 
+    (function () {
+        var cache = {};
+
+        this.tmpl = function tmpl( str, data ) {
+            // Figure out if we're getting a template, or if we need to
+            // load the template - and be sure to cache the result.
+            var fn = !/\W/.test( str ) ?
+                cache[ str ] = cache[ str ] ||
+                    tmpl( document.getElementById( str ).innerHTML ) :
+
+                // Generate a reusable function that will serve as a template
+                // generator (and which will be cached).
+                new Function( "obj",
+                    "var p=[],print=function(){p.push.apply(p,arguments);};" +
+
+                    // Introduce the data as local variables using with(){}
+                    "with(obj){p.push('" +
+
+                    // Convert the template into pure JavaScript
+                    str
+                        .replace( /[\r\t\n]/g, " " )
+                        .split( "<%" ).join( "\t" )
+                        .replace( /((^|%>)[^\t]*)'/g, "$1\r" )
+                        .replace( /\t=(.*?)%>/g, "',$1,'" )
+                        .split( "\t" ).join( "');" )
+                        .split( "%>" ).join( "p.push('" )
+                        .split( "\r" ).join( "\\'" )
+                    + "');}return p.join('');" );
+            // Provide some basic currying to the user
+            return data ? fn( data ) : fn;
+        };
+    })();
 
 
-    var template = tmpl( jQuery( '#message-template').html(), {
-        message : cl
-    } );
 
-    jQuery('#results_message').append(template);
+
+
+
+
+
+
+
+
 
 
 
@@ -151,6 +153,9 @@
 
 
 //запрос ajax
+
+    var btn_auth = document.querySelector('[data-event="auth"]');
+
     btn_auth.addEventListener("click", auth);
     //btn_message.addEventListener("click", see_message);
 
