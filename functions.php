@@ -316,7 +316,7 @@ function autorization_user() {
 			setcookie( 'shlo_chat', implode( ';', [ $email, $password ] ), time() + 60 * 60 * 24 );
 			$url = get_root_url();
 		} else {
-			$url = 'p=error_login';
+			$url = '?p=error_login';
 			user_logout( $url );
 		}
 		header( "Location: " . $url );
