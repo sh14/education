@@ -36,6 +36,53 @@ function get_page() {
 	return $page;
 }
 
+
+
+/**
+ * Функция проверки таблиц
+ */
+
+function check_database() {
+	$sql    = "SHOW TABLES FROM " . DATABASE;
+	$result = do_query( $sql );
+	pr( $result );
+	if ( ! $result ) {
+		echo "Ошибка базы данных, невозможно вывести таблицы\n";
+		echo 'Ошибка MySQL: ' . mysqli_error();
+		exit;
+	}
+
+	while ( $row = mysqli_fetch_row( $result ) ) {
+		echo "Таблица: {$row[0]}\n";
+	}
+
+	mysqli_free_result( $result );
+}
+
+//add_action( 'init', 'check_database' )А;
+
+/**
+ * Функция добавления таблицы
+ */
+
+function insert_tables() {
+	global $link;
+	$filename = 'shlo.sql';
+	$templine = '';
+	$lines    = file( $filename );
+	foreach ( $lines as $line ) {
+		if ( substr( $line, 0, 2 ) == '--' || $line == '' ) {
+			continue;
+		}
+		$templine .= $line;
+		if ( substr( trim( $line ), - 1, 1 ) == ';' ) {
+			do_query( $templine ) or print( 'Ошибка при осуществлении запроса \'<strong>' . $templine . '\': ' . mysqli_error( $link ) . '<br /><br />' );
+			$templine = '';
+		}
+	}
+	echo "Таблицы успешно импортированы";
+}
+
 function pr( $data, $debug_backtrace = false ) {
 
 	if ( $debug_backtrace == true ) {
@@ -159,9 +206,21 @@ function get_stylesheet_directory() {
 }
 
 /**
+ * Функция шифрования пароля
+ *
+ * @param $password
+ *
+ * @return string
+ */
+function encript_password($password){
+	$password = md5( md5( trim( $password ) ) );
+
+	return $password;
+}
+
+/**
  *  Функция редактирования профиля пользователя
  */
-
 function profile_edit() {
 	list( $url ) = explode( '?', $_SERVER['REQUEST_URI'] );
 	$event = '';
@@ -173,8 +232,8 @@ function profile_edit() {
 		$allow_query       = 1;
 		foreach ( $vars as $var_key => $var_value ) {
 			if ( ! empty( $_POST[ $var_value ] ) ) {
-				if ($var_value == 'password') {
-					$password = md5( md5( trim( $_POST['password'] ) ) );
+				if ( $var_value == 'password' ) {
+					$password = encript_password($_POST['password']);
 					$values[] = "'$password'";
 				} else {
 					$values[] = "'$_POST[$var_value]'";
@@ -295,16 +354,20 @@ function autorization_user() {
 	if ( isset( $_POST['email_login'] ) && isset( $_POST['password_login'] ) ) {
 
 		$email    = $_POST['email_login'];
+		$password = encript_password($_POST['password_login']);
+		$sql      = "SELECT COUNT(*) FROM users WHERE email='{$email}' AND password='{$password}'";
+		$result   = do_query( $sql );
+		$rows     = $result->fetch_row();
 		$password = md5( md5( trim( $_POST['password_login'] ) ) );
-		$sql    = "SELECT COUNT(*) FROM users WHERE email='{$email}' AND password='{$password}'";
-		$result = do_query( $sql );
-		$rows   = $result->fetch_row();
+		$sql      = "SELECT COUNT(*) FROM users WHERE email='{$email}' AND password='{$password}'";
+		$result   = do_query( $sql );
+		$rows     = $result->fetch_row();
 
 		if ( $rows[0] == 1 ) {
 			setcookie( 'shlo_chat', implode( ';', [ $email, $password ] ), time() + 60 * 60 * 24 );
 			$url = get_root_url();
 		} else {
-			$url = 'p=error_login';
+			$url = '?p=error_login';
 			user_logout( $url );
 		}
 		header( "Location: " . $url );
@@ -364,7 +427,7 @@ function registration() {
 
 			$email = $_POST['email'];
 
-			$password = md5( md5( trim( $_POST['password'] ) ) );
+			$password = encript_password($_POST['password']);
 
 			do_query( "INSERT INTO users SET email='" . $email . "', password='" . $password . "'" );
 			$query = do_query( "SELECT count(*) FROM users WHERE email='{$_POST['email']}'" );
@@ -390,8 +453,8 @@ add_action( 'init', 'registration' );
  * @param       $handle
  * @param       $src
  * @param array $deps
- * @param bool $ver
- * @param bool $in_footer
+ * @param bool  $ver
+ * @param bool  $in_footer
  *
  * @return array
  */
@@ -460,14 +523,15 @@ function enqueue_script( $handle ) {
  */
 function display_message() {
 	global $message_data;
-	$sql = "SELECT * FROM `message`";
-	$result = do_query($sql);
+	$sql          = "SELECT * FROM `message`";
+	$result       = do_query( $sql );
 	$message_data = array();
-	while ($rows = mysqli_fetch_array($result)){
-		$message_data[] = array_values($rows);
+	while ( $rows = mysqli_fetch_array( $result ) ) {
+		$message_data[] = array_values( $rows );
 	}
-	print_r($message_data);
+	print_r( $message_data );
 }
+
 add_action( 'init', 'display_message' );
 
 /**
@@ -539,23 +603,62 @@ function emailValidation( $email ) {
 $message = emailValidation( $email );
 //echo emailValidation($email);
 
-//Функция вытягивания и преобразования в асс массив данных из БД
-
+/**
+ * Функция получения данных текущего пользователя
+ *
+ * @return mixed
+ */
 function get_user_info() {
 	global $current_user;
-	if ( ! empty( $_COOKIE['shlo_chat'] ) && empty( $current_user ) && is_user_logged_in() ) {
 
-		list( $email, $password ) = explode( ';', esc_sql( $_COOKIE['shlo_chat'] ) );
+	$user = $current_user;
 
-		if ( ! empty( $email ) && ! empty( $password ) ) {
-			$sql          = "SELECT * FROM users WHERE email='{$email}' AND password='{$password}'";
-			$result       = do_query( $sql );
-			$current_user = $result->fetch_array( MYSQLI_ASSOC );
+	if ( is_user_logged_in() ) {
 
+		if ( empty( $current_user ) ) {
+			list( $email, $password ) = explode( ';', esc_sql( $_COOKIE['shlo_chat'] ) );
+
+			if ( ! empty( $email ) && ! empty( $password ) ) {
+				$sql          = "SELECT * FROM users WHERE email='{$email}' AND password='{$password}'";
+				$result       = do_query( $sql );
+				$user         = $result->fetch_array( MYSQLI_ASSOC );
+				$current_user = $user
+
+	if ( is_user_logged_in() && ! empty( $_POST['content'] ) && ! empty( $_POST['action'] ) && $_POST['action'] == 'message_add' ) {
+		;
+			}
 		}
 	}
 
-	return $current_user;
+	return $user;
 }
 
 add_action( 'init', 'get_user_info' );
+
+//Функция добавления сообщений в БД
+
+function message_add() {
+		if ( ! empty( $_POST['content'] ) ) {
+			do_query( "INSERT INTO `message` ( `id_user`, `content` ) VALUES (2, '{$_POST['content']}' )" );
+		}
+
+	}
+}
+
+add_action( 'init', 'message_add' );
+
+
+/**
+ * Получение текущего ID пользователя
+ *
+ * @return int
+ */
+function get_current_user_id() {
+	global $current_user;
+
+	if ( ! empty( $current_user['ID'] ) ) {
+		return intval( $current_user['ID'] );
+	}
+
+	return 0;
+}

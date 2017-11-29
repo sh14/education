@@ -47,29 +47,6 @@ function add_default_data() {
 add_action( 'init', 'add_default_data' );
 
 /**
- * Функция проверки таблиц
- */
-
-function check_database() {
-	$sql    = "SHOW TABLES FROM " . DATABASE;
-	$result = do_query( $sql );
-	pr( $result );
-	if ( ! $result ) {
-		echo "Ошибка базы данных, невозможно вывести таблицы\n";
-		echo 'Ошибка MySQL: ' . mysqli_error();
-		exit;
-	}
-
-	while ( $row = mysqli_fetch_row( $result ) ) {
-		echo "Таблица: {$row[0]}\n";
-	}
-
-	mysqli_free_result( $result );
-}
-
-//add_action( 'init', 'check_database' );
-
-/**
  * Функция добавления таблицы
  */
 
@@ -89,4 +66,8 @@ function insert_tables() {
 		}
 	}
 	echo "Таблицы успешно импортированы";
+}
+
+function insert_configuration_data() {
+
 }
