@@ -36,6 +36,53 @@ function get_page() {
 	return $page;
 }
 
+
+
+/**
+ * Функция проверки таблиц
+ */
+
+function check_database() {
+	$sql    = "SHOW TABLES FROM " . DATABASE;
+	$result = do_query( $sql );
+	pr( $result );
+	if ( ! $result ) {
+		echo "Ошибка базы данных, невозможно вывести таблицы\n";
+		echo 'Ошибка MySQL: ' . mysqli_error();
+		exit;
+	}
+
+	while ( $row = mysqli_fetch_row( $result ) ) {
+		echo "Таблица: {$row[0]}\n";
+	}
+
+	mysqli_free_result( $result );
+}
+
+//add_action( 'init', 'check_database' )А;
+
+/**
+ * Функция добавления таблицы
+ */
+
+function insert_tables() {
+	global $link;
+	$filename = 'shlo.sql';
+	$templine = '';
+	$lines    = file( $filename );
+	foreach ( $lines as $line ) {
+		if ( substr( $line, 0, 2 ) == '--' || $line == '' ) {
+			continue;
+		}
+		$templine .= $line;
+		if ( substr( trim( $line ), - 1, 1 ) == ';' ) {
+			do_query( $templine ) or print( 'Ошибка при осуществлении запроса \'<strong>' . $templine . '\': ' . mysqli_error( $link ) . '<br /><br />' );
+			$templine = '';
+		}
+	}
+	echo "Таблицы успешно импортированы";
+}
+
 function pr( $data, $debug_backtrace = false ) {
 
 	if ( $debug_backtrace == true ) {
@@ -311,6 +358,10 @@ function autorization_user() {
 		$sql      = "SELECT COUNT(*) FROM users WHERE email='{$email}' AND password='{$password}'";
 		$result   = do_query( $sql );
 		$rows     = $result->fetch_row();
+		$password = md5( md5( trim( $_POST['password_login'] ) ) );
+		$sql      = "SELECT COUNT(*) FROM users WHERE email='{$email}' AND password='{$password}'";
+		$result   = do_query( $sql );
+		$rows     = $result->fetch_row();
 
 		if ( $rows[0] == 1 ) {
 			setcookie( 'shlo_chat', implode( ';', [ $email, $password ] ), time() + 60 * 60 * 24 );
@@ -571,7 +622,10 @@ function get_user_info() {
 				$sql          = "SELECT * FROM users WHERE email='{$email}' AND password='{$password}'";
 				$result       = do_query( $sql );
 				$user         = $result->fetch_array( MYSQLI_ASSOC );
-				$current_user = $user;
+				$current_user = $user
+
+	if ( is_user_logged_in() && ! empty( $_POST['content'] ) && ! empty( $_POST['action'] ) && $_POST['action'] == 'message_add' ) {
+		;
 			}
 		}
 	}
@@ -580,6 +634,19 @@ function get_user_info() {
 }
 
 add_action( 'init', 'get_user_info' );
+
+//Функция добавления сообщений в БД
+
+function message_add() {
+		if ( ! empty( $_POST['content'] ) ) {
+			do_query( "INSERT INTO `message` ( `id_user`, `content` ) VALUES (2, '{$_POST['content']}' )" );
+		}
+
+	}
+}
+
+add_action( 'init', 'message_add' );
+
 
 /**
  * Получение текущего ID пользователя
