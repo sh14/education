@@ -3,6 +3,7 @@
 include 'config.php';
 include 'includes/variables.php';
 include 'includes/hooks.php';
+include 'includes/installer.php';
 include 'includes/formatting.php';
 
 // объявление глобальной переменной
@@ -243,9 +244,21 @@ function get_stylesheet_directory() {
 }
 
 /**
+ * Функция шифрования пароля
+ *
+ * @param $password
+ *
+ * @return string
+ */
+function encript_password($password){
+	$password = md5( md5( trim( $password ) ) );
+
+	return $password;
+}
+
+/**
  *  Функция редактирования профиля пользователя
  */
-
 function profile_edit() {
 	list( $url ) = explode( '?', $_SERVER['REQUEST_URI'] );
 	$event = '';
@@ -258,7 +271,7 @@ function profile_edit() {
 		foreach ( $vars as $var_key => $var_value ) {
 			if ( ! empty( $_POST[ $var_value ] ) ) {
 				if ( $var_value == 'password' ) {
-					$password = md5( md5( trim( $_POST['password'] ) ) );
+					$password = encript_password($_POST['password']);
 					$values[] = "'$password'";
 				} else {
 					$values[] = "'$_POST[$var_value]'";
@@ -379,6 +392,10 @@ function autorization_user() {
 	if ( isset( $_POST['email_login'] ) && isset( $_POST['password_login'] ) ) {
 
 		$email    = $_POST['email_login'];
+		$password = encript_password($_POST['password_login']);
+		$sql      = "SELECT COUNT(*) FROM users WHERE email='{$email}' AND password='{$password}'";
+		$result   = do_query( $sql );
+		$rows     = $result->fetch_row();
 		$password = md5( md5( trim( $_POST['password_login'] ) ) );
 		$sql      = "SELECT COUNT(*) FROM users WHERE email='{$email}' AND password='{$password}'";
 		$result   = do_query( $sql );
@@ -388,7 +405,7 @@ function autorization_user() {
 			setcookie( 'shlo_chat', implode( ';', [ $email, $password ] ), time() + 60 * 60 * 24 );
 			$url = get_root_url();
 		} else {
-			$url = 'p=error_login';
+			$url = '?p=error_login';
 			user_logout( $url );
 		}
 		header( "Location: " . $url );
@@ -448,7 +465,7 @@ function registration() {
 
 			$email = $_POST['email'];
 
-			$password = md5( md5( trim( $_POST['password'] ) ) );
+			$password = encript_password($_POST['password']);
 
 			do_query( "INSERT INTO users SET email='" . $email . "', password='" . $password . "'" );
 			$query = do_query( "SELECT count(*) FROM users WHERE email='{$_POST['email']}'" );
@@ -539,6 +556,23 @@ function enqueue_script( $handle ) {
 }
 
 /**
+ * Вывод сообщений на дисплей
+ *
+ */
+function display_message() {
+	global $message_data;
+	$sql          = "SELECT * FROM `message`";
+	$result       = do_query( $sql );
+	$message_data = array();
+	while ( $rows = mysqli_fetch_array( $result ) ) {
+		$message_data[] = array_values( $rows );
+	}
+	print_r( $message_data );
+}
+
+add_action( 'init', 'display_message' );
+
+/**
  * Регистрация скриптов и их вывод
  */
 function enqueue_scripts() {
@@ -607,23 +641,31 @@ function emailValidation( $email ) {
 $message = emailValidation( $email );
 //echo emailValidation($email);
 
-//Функция вытягивания и преобразования в асс массив данных из БД
-
+/**
+ * Функция получения данных текущего пользователя
+ *
+ * @return mixed
+ */
 function get_user_info() {
 	global $current_user;
-	if ( ! empty( $_COOKIE['shlo_chat'] ) && empty( $current_user ) && is_user_logged_in() ) {
 
-		list( $email, $password ) = explode( ';', esc_sql( $_COOKIE['shlo_chat'] ) );
+	$user = $current_user;
 
-		if ( ! empty( $email ) && ! empty( $password ) ) {
-			$sql          = "SELECT * FROM users WHERE email='{$email}' AND password='{$password}'";
-			$result       = do_query( $sql );
-			$current_user = $result->fetch_array( MYSQLI_ASSOC );
+	if ( is_user_logged_in() ) {
 
+		if ( empty( $current_user ) ) {
+			list( $email, $password ) = explode( ';', esc_sql( $_COOKIE['shlo_chat'] ) );
+
+			if ( ! empty( $email ) && ! empty( $password ) ) {
+				$sql          = "SELECT * FROM users WHERE email='{$email}' AND password='{$password}'";
+				$result       = do_query( $sql );
+				$user         = $result->fetch_array( MYSQLI_ASSOC );
+				$current_user = $user;
+			}
 		}
 	}
 
-	return $current_user;
+	return $user;
 }
 
 add_action( 'init', 'get_user_info' );
@@ -642,3 +684,19 @@ function message_add() {
 }
 
 add_action( 'init', 'message_add' );
+
+
+/**
+ * Получение текущего ID пользователя
+ *
+ * @return int
+ */
+function get_current_user_id() {
+	global $current_user;
+
+	if ( ! empty( $current_user['ID'] ) ) {
+		return intval( $current_user['ID'] );
+	}
+
+	return 0;
+}
