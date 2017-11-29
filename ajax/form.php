@@ -35,7 +35,8 @@
 
 
 
-<!--получить данные из конкретного инпута определить переменную темплате и вызвать функцию.
+<!--получить данные из конкретного инпута
+определить переменную темплате и вызвать функцию.
 и в массив этой функции вставить данные полученные из инпута
 и вставить данные переменной темплате в блок в которой находятся все сообщдения-->
 <script>
@@ -47,10 +48,7 @@
     var now = new Date;
 
 
-
-
     var btn_auth = document.querySelector('[data-event="auth"]');
-
 
     btn_message.addEventListener("click", cl);
 
@@ -93,7 +91,7 @@
         event.preventDefault();
         if (flag == 0) {
             flag = 1;
-            see_message();
+            //see_message();
             show_message();
         }
         return flag = 0;
@@ -103,8 +101,9 @@
     function show_message() {
         if (flag == 1 && your_message.value != "") {
             p.innerHTML = your_message.value;
-            results_message.innerHTML += "";
             results_message.append(p);
+            results_message.innerHTML += "";
+
         }
         your_message.value = "";
     }
