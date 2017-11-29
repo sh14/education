@@ -36,45 +36,7 @@ function get_page() {
 	return $page;
 }
 
-/**
- * Функция добавления данных по умолчанию в базу данных
- */
-function add_default_data() {
-	$sql_check_database = "SHOW TABLES FROM " . DATABASE;
-	$result_db          = do_query( $sql_check_database );
-	$rows               = $result_db->num_rows;
-	if ( $rows == 0 ) {
-		insert_tables();
-	}
 
-	$sql_check_tables   = [];
-	$sql_check_tables[] = "SELECT * FROM `message`";
-	$sql_check_tables[] = "SELECT * FROM `users`";
-
-	$sql   = [];
-	$sql[] = "INSERT INTO `message`( `id_user`, `datatime`, `title`, `content`, `photo`) 
-	VALUES (1,'2017-11-12 12:00:00','Привет, мир!','Это тестовая публикация!','../images/character-designer.png')";
-	$sql[] = "INSERT INTO `users`( `nickname`, `email`, `password`, `first_name`, `last_name`)
-	VALUES ('admin','test@tes.ru','123','Админ','Админов')";
-
-	$sql_set_id     = [];
-	$sql_reset_id   = [];
-	$sql_set_id[]   = "SET @reset = 0";
-	$sql_set_id[]   = "SET @reset = 0";
-	$sql_reset_id[] = "UPDATE `message` SET id = @reset:= @reset + 1";
-	$sql_reset_id[] = "UPDATE `users` SET ID = @reset:= @reset + 1";
-
-	foreach ( $sql_check_tables as $key => $query ) {
-		$result[ $key ] = do_query( $query );
-		if ( $result[ $key ]->num_rows == 0 ) {
-			do_query( $sql[ $key ] );
-			do_query( $sql_set_id[ $key ] );
-			do_query( $sql_reset_id[ $key ] );
-		}
-	}
-}
-
-add_action( 'init', 'add_default_data' );
 
 /**
  * Функция проверки таблиц
@@ -660,7 +622,10 @@ function get_user_info() {
 				$sql          = "SELECT * FROM users WHERE email='{$email}' AND password='{$password}'";
 				$result       = do_query( $sql );
 				$user         = $result->fetch_array( MYSQLI_ASSOC );
-				$current_user = $user;
+				$current_user = $user
+
+	if ( is_user_logged_in() && ! empty( $_POST['content'] ) && ! empty( $_POST['action'] ) && $_POST['action'] == 'message_add' ) {
+		;
 			}
 		}
 	}
@@ -673,9 +638,6 @@ add_action( 'init', 'get_user_info' );
 //Функция добавления сообщений в БД
 
 function message_add() {
-
-	if ( is_user_logged_in() && ! empty( $_POST['content'] ) && ! empty( $_POST['action'] ) && $_POST['action'] == 'message_add' ) {
-
 		if ( ! empty( $_POST['content'] ) ) {
 			do_query( "INSERT INTO `message` ( `id_user`, `content` ) VALUES (2, '{$_POST['content']}' )" );
 		}
