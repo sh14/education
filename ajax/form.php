@@ -19,21 +19,25 @@
 
 <form method="POST" id="message" action="?123">
     <label for="your_massage">Your Message</label>
-    <input type="text" name="your_massage" value="" id="your_massage" placeholder="Напишите сообщение...">
+    <input type="text" name="your_massage" id="your_massage" placeholder="Напишите сообщение...">
     <input value="Send Message" type="submit" data-event="btn_message">
 </form>
 
 <script id="message-template" type="text/ejs">
-		<div class="project-image">
-				<div class="project-image__description">
-
-					<textarea class="input-text profi_padbot" type="textarea" name="<%=textarea%>" placeholder="Напишите сообщение..." maxlength="2250"></textarea>
-				</div>
+		<div class="message">
+			<img src="#" class="photo-user" name="<%=p%>"><p class="head-message"></p>
+			<p class="text-message"><%=message%></p>
 		</div>
 </script>
 
 <div id="results_message"><!-- текст сообщений --></div>
 
+
+
+
+<!--получить данные из конкретного инпута определить переменную темплате и вызвать функцию.
+и в массив этой функции вставить данные полученные из инпута
+и вставить данные переменной темплате в блок в которой находятся все сообщдения-->
 <script>
     var your_message = document.getElementById("your_massage");
     var btn_message = document.querySelector('[data-event="btn_message"]');
@@ -84,14 +88,6 @@
 	    };
     })();
 
-
-    var template = tmpl( jQuery( '#message-template').html(), {
-	    textarea : "value_mes"
-    } );
-
-    jQuery('#results_message').append(template);
-
-
     //ниже функция нажатия на клавишу и вызова функций
     function cl(event) {
         event.preventDefault();
@@ -103,21 +99,12 @@
         return flag = 0;
     }
 
-    //ниже функция шаблона отображения времени отправки сообщения
-    /*function curent(){
-        var H = now.getHours();
-        var M = now.getMinutes();
-        var S = now.getSeconds();
-        if(H < 10){H = "0" + H;} if(M < 10){M = "0" + M;}  if(S < 10){S = "0" + S;}
-        var time = H + ":" + M + ":" + S ;
-        return time;
-    }*/
-
     //ниже функция отправки и получения сообщения в поле
     function show_message() {
         if (flag == 1 && your_message.value != "") {
             p.innerHTML = your_message.value;
             results_message.innerHTML += "";
+            results_message.append(p);
         }
         your_message.value = "";
     }
@@ -141,6 +128,26 @@
         }
     }
 
+
+
+    var template = tmpl( jQuery( '#message-template').html(), {
+        message : cl
+    } );
+
+    jQuery('#results_message').append(template);
+
+
+
+
+    //ниже функция шаблона отображения времени отправки сообщения
+    /*function curent(){
+        var H = now.getHours();
+        var M = now.getMinutes();
+        var S = now.getSeconds();
+        if(H < 10){H = "0" + H;} if(M < 10){M = "0" + M;}  if(S < 10){S = "0" + S;}
+        var time = H + ":" + M + ":" + S ;
+        return time;
+    }*/
 
 
 
