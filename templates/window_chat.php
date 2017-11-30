@@ -6,72 +6,54 @@
  * Time: 14:47
  */
 
-/*Обработка кнопки ВЫЙТИ*/
-if ( @$_POST['exit'] ) {
-	setcookie( 'RestrictedArea', '', time() - 60 * 60 * 24 );
-	header( "Location: " . $_SERVER['PHP_SELF'] );
-	exit();
-}
-$message = 'Внесите данные, которые хотите изменить.';
-if ( ! empty( $_GET['event'] ) ) {
-	if ( $_GET['event'] == 'error' ) {
-		$message = 'Необходимо ввести все данные.';
-	}
-
-	if ( $_GET['event'] == 'success' ) {
-		$message = 'Запись добавлена.';
-	}
+$name = '';
+if ( is_user_logged_in() ) {
+	$user = get_user_info();
+	$name = $user['first_name'] . ' ' . $user['last_name'];
 }
 ?>
 
-	<div class="chat_container container">
-		<div class="row">
-			<div class="registrate col-sm-12">
-				<div class="chat_profile_buttons">
-					<form action="<?php echo $_SERVER["PHP_SELF"]; ?>" method="post">
-						<button type="button" class="btn btn_chat btn-success btn_chat_profile" data-toggle="modal"
-						        data-target="#modal-1">Мой профиль
-						</button>
-						<a href="<?php echo get_root_url() . '?p=logout'; ?>"
-						   class="btn btn-danger btn_chat btn-success chat_logout">Выход</a>
-					</form>
-				</div>
-				<br>
-				<br>
-
-				<h1>Окно чата</h1>
-				<div class="row">
-					<div class="col-md-12 col-sm-12 col-xs-12 chat_window">
-						<div class="col-md-9 col-sm-9 col-xs-9 chat_window_wall">
+<div class="chat_container container">
+	<div class="row">
+		<div class="col-md-12 col-sm-12 col-xs-12 chat">
+			<div class="col-md-9 col-sm-9 col-xs-9">
+				<div class="chat__wall">
+					<div class="chat__row">
+						<div class="chat__messages">
+							<?php echo display_message(); ?>
 						</div>
-						<div class="col-md-3 col-sm-3 col-xs-3 chat_window_avatar">
-							<div class="chat_window_avatar_img"></div>
-							<div class="chat_window_avatar_signature">
-								<?php
-								if ( is_user_logged_in() ) {
-									$user = get_user_info();
-									$name = $user['first_name'] . ' ' . $user['last_name'];
-								}
-								?>
-							</div>
+					</div>
+					<div class="chat__form">
+						<div class="message_box">
+							<form action="" method="post" class="message_box__form">
+								<input type="text" class="form-control message_box__title" placeholder="Тема сообщения"
+								       name="title"
+								       id="title" value="">
+								<textarea class="form-control message_box__message" rows="1"
+								          placeholder="Текст сообщения"
+								          name="content"></textarea>
+								<input class="btn btn-success message_box__submit" type="submit" value="Отправить"
+								       name="">
+								<input type="hidden" name="action" value="message_add">
+							</form>
 						</div>
 					</div>
 				</div>
-				<div class="row row-centered post_form">
-					<div class="col-md-6 col-sm-12">
-						<form action="" method="post">
-							<input type="text" class="form-control" placeholder="Тема сообщения" name="title"
-							       id="title" value="">
-							<textarea class="form-control" rows="5" placeholder="Текст сообщения" name="content"
-							          id="content"></textarea>
-							<input class="btn btn-info" type="submit" value="Отправить" name="">
-	                    <input type="hidden" name="action" value="message_add">
-						</form>
-					</div>
+			</div>
+			<div class="col-md-3 col-sm-3 col-xs-3 avatar">
+				<div class="avatar__image"></div>
+				<h3 class="avatar__signature"><?php echo $name; ?></h3>
+				<div class="avatar__buttons">
+					<button type="button" class="btn btn-primary btn-block" data-toggle="modal"
+					        data-target="#modal-1">Мой профиль
+					</button>
+					<a href="<?php echo get_root_url() . '?p=logout'; ?>"
+					   class="btn btn-link btn-block">Выход</a>
 				</div>
 			</div>
 		</div>
 	</div>
+</div>
 
 <?php
 if ( is_user_logged_in() ) {

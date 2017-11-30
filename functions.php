@@ -306,7 +306,6 @@ function display_message() {
 	print_r( $message_data );
 }
 
-add_action( 'init', 'display_message' );
 
 /**
  * Регистрация скриптов и их вывод

@@ -9,15 +9,7 @@
     margin-top: 2px;
 }
 
-.btn_main, .btn_chat_profile {
-    background-color: #0783ec;
-    border-color: #0783ec;
-}
 
-.btn_main:hover, .btn_main:focus, .btn_chat_profile:hover, .btn_chat_profile:focus  {
-    background-color: black;
-    border-color: black;
-}
 
 
 /* Стили меню сайта */
