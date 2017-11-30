@@ -8,8 +8,6 @@
 -- Версия PHP: 5.6.31
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
-START TRANSACTION;
 SET time_zone = "+00:00";
 
 
@@ -28,8 +26,7 @@ SET time_zone = "+00:00";
 -- Структура таблицы `users`
 --
 
-DROP TABLE IF EXISTS `users`;
-CREATE TABLE IF NOT EXISTS `users` (
+CREATE TABLE `users` (
   `ID` int(20) NOT NULL AUTO_INCREMENT,
   `nickname` varchar(255),
   `email` varchar(255) NOT NULL,
@@ -38,7 +35,6 @@ CREATE TABLE IF NOT EXISTS `users` (
   `last_name` text,
   PRIMARY KEY (`ID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
@@ -72,33 +68,15 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `message` (
-  `id` int(20) NOT NULL,
-  `id_user` text,
-  `datatime` datetime,
+  `id_message` int(20) NOT NULL AUTO_INCREMENT,
+  `id_user` int(20),
+  `datetime` datetime,
   `title` text NOT NULL,
   `content` text NOT NULL,
-  `photo` text
+  `photo` text,
+  PRIMARY KEY (`id_message`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
---
--- Индексы сохранённых таблиц
---
-
---
--- Индексы таблицы `message`
---
-ALTER TABLE `message`
-  ADD PRIMARY KEY (`id`);
-
---
--- AUTO_INCREMENT для сохранённых таблиц
---
-
---
--- AUTO_INCREMENT для таблицы `message`
---
-ALTER TABLE `message`
-  MODIFY `id` int(20) NOT NULL AUTO_INCREMENT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

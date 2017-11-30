@@ -12,7 +12,7 @@
 	                <?php echo $message_data['content'];?>
                 </div>
                 <div class="adapchat-date">
-		            <?php echo $message_data['datatime'];?>
+		            <?php echo $message_data['datetime'];?>
                 </div>
             </div>
         </div>
