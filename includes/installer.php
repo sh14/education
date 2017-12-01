@@ -48,6 +48,22 @@ function add_default_data() {
 add_action( 'init', 'add_default_data' );
 
 /**
+ * Функция проверки существования базы данных
+ */
+
+function check_database() {
+	$sql_check_database = "SHOW TABLES FROM " . DATABASE;
+	$result_db          = do_query( $sql_check_database );
+	$rows               = $result_db->num_rows;
+
+	if ( $rows == 0 ) {
+		return false;
+	} else {
+		return true;
+	}
+}
+
+/**
  * Функция добавления таблицы
  */
 
@@ -68,6 +84,37 @@ function insert_tables() {
 	echo "Таблицы успешно импортированы";
 }
 
-function insert_configuration_data() {
+function get_configuration_data() {
+	if (! empty( $_POST['action'] ) && $_POST['action'] == 'configuration') {
+		if ( ! empty($_POST['host']) && ! empty($_POST['login']) && ! empty($_POST['database'])) {
+			echo 'Заполните все поля помеченные звёздочкой';
+			$vars_string       = 'host,login,password,database';
+			$vars              = array_map( 'trim', explode( ',', $vars_string ) );
+			$values            = [];
+			foreach ( $vars as $var_key => $var_value ) {
+				if ( ! empty( $_POST[ $var_value ] ) ) {
+					$values[] = "'$_POST[$var_value]'";
+				} else {
+					unset( $vars[ $var_key ] );
+				}
+			}
+
+			$vars = array_combine( array_keys( $values ), array_values( $vars ) );
+			for ( $i = 0; $i < count( $values ); $i ++ ) {
+				$values[ $i ] = $vars[ $i ] . '=' . $values[ $i ];
+			}
+		} elseif (empty($_POST['host'])) {
+			echo 'Поле "Хост" не заполнено';
+		} elseif (empty($_POST['login'])) {
+			echo 'Поле "Логин" не заполнено';
+		} elseif (empty($_POST['database'])) {
+			echo 'Поле "Название базы данных" не заполнено';
+		}
+	}
+}
+
+add_action( 'init', 'get_configuration_data' );
+
+function set_configuration_data() {
 
 }
