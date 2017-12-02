@@ -227,8 +227,8 @@ add_action( 'init', 'upload_image' );
  * @param       $handle
  * @param       $src
  * @param array $deps
- * @param bool  $ver
- * @param bool  $in_footer
+ * @param bool $ver
+ * @param bool $in_footer
  *
  * @return array
  */
@@ -296,16 +296,18 @@ function enqueue_script( $handle ) {
  *
  */
 function display_message() {
-	global $message_data;
-	$sql          = "SELECT * FROM `message`";
-	$result       = do_query( $sql );
-	$message_data = array();
-	while ( $rows = mysqli_fetch_array( $result ) ) {
-		$message_data[] = array_values( $rows );
+	if ( is_user_logged_in() ) {
+		$sql    = "SELECT `title`, `content`, `datatime`FROM `message`";
+		$result = do_query( $sql );
+		for ( $i = 0; $i < 30; $i ++ ) {
+			while ( $rows = mysqli_fetch_array( $result, MYSQLI_ASSOC ) ) {
+				include 'templates/message.php';
+			}
+		}
 	}
-	print_r( $message_data );
 }
 
+add_action( 'init', 'display_message' );
 
 /**
  * Регистрация скриптов и их вывод
