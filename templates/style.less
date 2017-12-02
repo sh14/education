@@ -3,6 +3,7 @@
 @light_grey: #eee;
 @dark_grey: #333;
 @light_green: #aafba5;
+@white_biege: #e7f3ff;
 body {
   background: @light_grey;
 }
@@ -123,4 +124,20 @@ body {
 .chat__messages {
   background-color: @light_green;
   padding: 0px 20px;
+  div:before div:after {
+    content: '';
+    display: block;
+    clear: both;
+  }
+  .adapchat-item {
+     max-width: 90%;
+     background-color: @white_biege;
+     margin: 10px auto;
+     padding: 10px;
+   }
+  .adapchat-chater {
+    width: 60px;
+    height: 60px;
+    background-color: @grey;
+  }
 }
