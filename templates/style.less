@@ -5,139 +5,167 @@
 @light_green: #aafba5;
 @white_biege: #e7f3ff;
 body {
-  background: @light_grey;
+	background: @light_grey;
 }
+
 .personal-info {
-  .message {
-    margin-top: 12px;
-  }
+	.message {
+		margin-top: 12px;
+	}
 }
+
 .profile {
-  .avatar {
-    border-radius: 50%;
-    width: 200px;
-    height: 200px;
-    background-image: url("../images/character-designer.png");
-    background-repeat: no-repeat;
-    background-size: 100% auto;
-    background-position: center;
-    float: left;
-  }
-  .file_upload {
-    display: block;
-    position: relative;
-    overflow: hidden;
-    font-size: 1em;
-    height: 2.2em;
-    line-height: 2em;
-    padding-left: 0;
-    padding-right: 0;
-    & > .button {
-      display: block;
-      cursor: pointer;
-      box-sizing: border-box;
-      -moz-box-sizing: border-box;
-      width: 100%;
-      height: 100%;
-      text-align: center;
-      background: #7300df;
-      transition: background 0.2s;
-      border-width: 1px;
-      border-style: solid;
-      border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-      border-radius: 2px;
-      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2) inset, 0 1px 2px rgba(0, 0, 0, 0.05);
-      color: @white;
-      text-shadow: #6200bd 0 -1px 0;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-    }
-    & > div {
-      padding-left: 1em;
-      display: none;
-    }
-    input[type=file] {
-      width: 100%;
-      height: 100%;
-      position: absolute;
-      top: 0;
-      opacity: 0
-    }
-    &.focus {
-      box-shadow: 0 0 5px rgba(0, 30, 255, 0.4);
-    }
-    &:hover {
-      & > .button {
-        background: #6200bd;
-        text-shadow: #5d00b3 0 -1px 0;
-      }
-    }
-    &:active {
-      & > .button {
-        background: #5d00b3;
-        box-shadow: 0 0 3px rgba(0, 0, 0, 0.3) inset;
-      }
-    }
-  }
+	.avatar {
+		border-radius: 50%;
+		width: 200px;
+		height: 200px;
+		background-image: url("../images/character-designer.png");
+		background-repeat: no-repeat;
+		background-size: 100% auto;
+		background-position: center;
+		float: left;
+	}
+	.file_upload {
+		display: block;
+		position: relative;
+		overflow: hidden;
+		font-size: 1em;
+		height: 2.2em;
+		line-height: 2em;
+		padding-left: 0;
+		padding-right: 0;
+		& > .button {
+			display: block;
+			cursor: pointer;
+			box-sizing: border-box;
+			-moz-box-sizing: border-box;
+			width: 100%;
+			height: 100%;
+			text-align: center;
+			background: #7300df;
+			transition: background 0.2s;
+			border-width: 1px;
+			border-style: solid;
+			border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+			border-radius: 2px;
+			box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2) inset, 0 1px 2px rgba(0, 0, 0, 0.05);
+			color: @white;
+			text-shadow: #6200bd 0 -1px 0;
+			overflow: hidden;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+		}
+		& > div {
+			padding-left: 1em;
+			display: none;
+		}
+		input[type=file] {
+			width: 100%;
+			height: 100%;
+			position: absolute;
+			top: 0;
+			opacity: 0
+		}
+		&.focus {
+			box-shadow: 0 0 5px rgba(0, 30, 255, 0.4);
+		}
+		&:hover {
+			& > .button {
+				background: #6200bd;
+				text-shadow: #5d00b3 0 -1px 0;
+			}
+		}
+		&:active {
+			& > .button {
+				background: #5d00b3;
+				box-shadow: 0 0 3px rgba(0, 0, 0, 0.3) inset;
+			}
+		}
+	}
 }
+
 .menu {
-  background: @dark_grey;
-  margin-bottom: 20px;
-  ul {
-    padding: 0;
-    margin: auto;
-    display: table;
-    list-style: none;
-    li {
-      float: left;
-      color: @light_grey;
-      a {
-        display: block;
-        padding: 10px 20px;
-        color: @light_grey;
-        text-decoration: none;
-        transition: all 200ms;
-        &:hover {
-          color: @grey;
-        }
-      }
-    }
-  }
+	background: @dark_grey;
+	margin-bottom: 20px;
+	ul {
+		padding: 0;
+		margin: auto;
+		display: table;
+		list-style: none;
+		li {
+			float: left;
+			color: @light_grey;
+			a {
+				display: block;
+				padding: 10px 20px;
+				color: @light_grey;
+				text-decoration: none;
+				transition: all 200ms;
+				&:hover {
+					color: @grey;
+				}
+			}
+		}
+	}
 }
+
 .profile .avatar, .profile .file_upload, .registration button {
-  margin-bottom: 20px;
+	margin-bottom: 20px;
 }
+
 @media only screen and ( max-width: 500px ) {
-  .profile {
-    .file_upload {
-      display: block;
-      & > div {
-        display: none;
-      }
-    }
-  }
-  .profile .file_upload {
-    display: inline-block;
-  }
+	.profile {
+		.file_upload {
+			display: block;
+			& > div {
+				display: none;
+			}
+		}
+	}
+
+	.profile .file_upload {
+		display: inline-block;
+	}
 }
+
 .chat__messages {
-  background-color: @light_green;
-  padding: 0px 20px;
-  div:before div:after {
-    content: '';
-    display: block;
-    clear: both;
-  }
-  .adapchat-item {
-     max-width: 90%;
-     background-color: @white_biege;
-     margin: 10px auto;
-     padding: 10px;
-   }
-  .adapchat-chater {
-    width: 60px;
-    height: 60px;
-    background-color: @grey;
-  }
+	background-color: @light_green;
+	padding: 0px 20px;
+
+	div:before div:after {
+		content: '';
+		display: block;
+		clear: both;
+	}
+	.adapchat-item {
+		max-width: 90%;
+		margin: 10px auto;
+		padding: 10px;
+		display: table;
+
+		.adapchat-chater {
+			display: table-cell;
+			width: 100px;
+			height: 100px;
+			border-radius: 50px;
+			background-color: #0f0f0f;
+			background-image: url(../images/character-designer.png);
+			background-repeat: no-repeat;
+			background-size: 75% auto;
+			background-position: top;
+			float: left;
+		}
+		.adapchat-text {
+			box-shadow: 5px 5px 33px 0px rgba(0, 0, 0, 0.69);
+			-webkit-box-shadow: 5px 5px 33px 0px rgba(0, 0, 0, 0.69);
+			-moz-box-shadow: 5px 5px 33px 0px rgba(0, 0, 0, 0.69);
+			padding: 0px 20px 10px;
+			background-color: #ffe375;
+			border-radius: 10px;
+			float: left;
+			margin: 0 10px;
+		}
+
+	}
+
 }

@@ -1,6 +1,5 @@
 <div class="adapchat-item">
 	<div class="adapchat-chater">
-		<img src="../images/character-designer.png" alt="" class="adapchat-photo">
 	</div>
 	<div class="adapchat-text">
 		<div class="subject_matter">
