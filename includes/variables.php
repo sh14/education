@@ -12,7 +12,7 @@ global $link;
 // если $link - пуста
 if ( empty( $link ) ) {
 	$link = mysqli_connect( HOST, LOGIN, PASSWORD, DATABASE )
-	or die('Ошибка при подключении к серверу MySQL: ' . mysqli_connect_error($link));
+	or die( 'Ошибка при подключении к серверу MySQL: ' . mysqli_connect_error() );
 }
 
 global $global_actions;
@@ -27,5 +27,5 @@ if ( empty( $scripts ) ) {
 
 global $current_user;
 if ( empty( $current_user ) ) {
-    $current_user = [];
+	$current_user = [];
 }
