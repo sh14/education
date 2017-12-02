@@ -307,7 +307,6 @@ function display_message() {
 	}
 }
 
-add_action( 'init', 'display_message' );
 
 /**
  * Регистрация скриптов и их вывод

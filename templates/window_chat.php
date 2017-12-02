@@ -18,11 +18,7 @@ if ( is_user_logged_in() ) {
 		<div class="col-md-12 col-sm-12 col-xs-12 chat">
 			<div class="col-md-9 col-sm-9 col-xs-9">
 				<div class="chat__wall">
-					<div class="chat__row">
-						<div class="chat__messages">
-							<?php echo display_message(); ?>
-						</div>
-					</div>
+
 					<div class="chat__form">
 						<div class="message_box">
 							<form action="" method="post" class="message_box__form">
@@ -38,6 +34,11 @@ if ( is_user_logged_in() ) {
 							</form>
 						</div>
 					</div>
+                    <div class="chat__row">
+                        <div class="chat__messages">
+							<?php echo display_message(); ?>
+                        </div>
+                    </div>
 				</div>
 			</div>
 			<div class="col-md-3 col-sm-3 col-xs-3 avatar">
