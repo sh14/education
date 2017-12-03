@@ -297,12 +297,10 @@ function enqueue_script( $handle ) {
  */
 function display_message() {
 	if ( is_user_logged_in() ) {
-		$sql    = "SELECT `title`, `content`, `datatime`FROM `message`";
+		$sql    = "SELECT `title`, `content`, `datatime` FROM `message` ORDER BY `id` DESC limit 30";
 		$result = do_query( $sql );
-		for ( $i = 0; $i < 30; $i ++ ) {
-			while ( $rows = mysqli_fetch_array( $result, MYSQLI_ASSOC ) ) {
-				include 'templates/message.php';
-			}
+		while ( $rows = mysqli_fetch_array( $result, MYSQLI_ASSOC ) ) {
+			include 'templates/message.php';
 		}
 	}
 }
