@@ -297,7 +297,7 @@ function enqueue_script( $handle ) {
  */
 function display_message() {
 	if ( is_user_logged_in() ) {
-		$sql    = "SELECT `title`, `content`, `datatime` FROM `message` ORDER BY `id` DESC limit 30";
+		$sql    = "SELECT * FROM `message` ORDER BY `id_message` DESC limit 30";
 		$result = do_query( $sql );
 		$count = mysqli_num_rows($result);
 		if ($count != 0) {

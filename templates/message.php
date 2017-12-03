@@ -11,7 +11,7 @@
 			<?php echo $rows['content']; ?>
 		</div>
 		<div class="adapchat-date">
-			<?php echo $rows['datatime']; ?>
+			<?php echo $rows['datetime']; ?>
 		</div>
 	</div>
 </div>
