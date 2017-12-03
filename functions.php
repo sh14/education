@@ -227,8 +227,8 @@ add_action( 'init', 'upload_image' );
  * @param       $handle
  * @param       $src
  * @param array $deps
- * @param bool $ver
- * @param bool $in_footer
+ * @param bool  $ver
+ * @param bool  $in_footer
  *
  * @return array
  */
@@ -299,8 +299,13 @@ function display_message() {
 	if ( is_user_logged_in() ) {
 		$sql    = "SELECT `title`, `content`, `datatime` FROM `message` ORDER BY `id` DESC limit 30";
 		$result = do_query( $sql );
-		while ( $rows = mysqli_fetch_array( $result, MYSQLI_ASSOC ) ) {
-			include 'templates/message.php';
+		$count = mysqli_num_rows($result);
+		if ($count != 0) {
+			while ( $rows = mysqli_fetch_array( $result, MYSQLI_ASSOC ) ) {
+				include 'templates/message.php';
+			}
+		}else{
+			echo 'Вы будете первым, кто оставил тут запись';
 		}
 	}
 }
@@ -380,7 +385,6 @@ function emailValidation( $email ) {
 
 function message_add() {
 	if ( is_user_logged_in() && ! empty( $_POST['content'] ) ) {
-
 		$user_id = get_current_user_id();
 		do_query( "INSERT INTO `message` ( `title`, `id_user`, `content` ) VALUES ('{$_POST['title']}',{$user_id}, '{$_POST['content']}' )" );
 	}
