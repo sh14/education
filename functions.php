@@ -305,7 +305,7 @@ function display_message() {
 				include 'templates/message.php';
 			}
 		}else{
-			echo 'Вы будете первым, кто оставил тут запись';
+			echo '<h3>Вы будете первым, кто оставит тут запись!</h3>';
 		}
 	}
 }
