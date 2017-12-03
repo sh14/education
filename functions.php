@@ -382,7 +382,7 @@ function message_add() {
 	if ( is_user_logged_in() && ! empty( $_POST['content'] ) ) {
 
 		$user_id = get_current_user_id();
-		do_query( "INSERT INTO `message` ( `id_user`, `content` ) VALUES ({$user_id}, '{$_POST['content']}' )" );
+		do_query( "INSERT INTO `message` ( `title`, `id_user`, `content` ) VALUES ('{$_POST['title']}',{$user_id}, '{$_POST['content']}' )" );
 	}
 }
 
