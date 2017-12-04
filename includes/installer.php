@@ -114,8 +114,7 @@ function get_configuration_data() {
 		}
 	}
 }
-
-add_action( 'init', 'get_configuration_data' );
+//add_action( 'init', 'get_configuration_data' );
 
 function set_configuration_data( $host, $login, $password, $database ) {
 	$variables= [$host,$login,$password,$database];
