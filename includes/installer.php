@@ -105,8 +105,6 @@ function get_configuration_data() {
 			} else {
 				set_configuration_data($values[0],$values[1],$values[2],$values[3]);
 			}
-			echo "что за валюес ".$values[ $i ];
-
 		} elseif ( empty( $_POST['host'] ) ) {
 			echo 'Поле "Хост" не заполнено';
 		} elseif ( empty( $_POST['login'] ) ) {
@@ -117,7 +115,7 @@ function get_configuration_data() {
 	}
 }
 
-//add_action( 'init', 'get_configuration_data' );
+add_action( 'init', 'get_configuration_data' );
 
 function set_configuration_data( $host, $login, $password, $database ) {
 	$variables= [$host,$login,$password,$database];
@@ -128,22 +126,16 @@ function set_configuration_data( $host, $login, $password, $database ) {
 	foreach ($constant_name as $constant_key => $constant_value) {
 		foreach ($file_array as $file_value) {
 			if (strstr($file_value,$constant_value)) {
-				echo "$file_value <br>";
 				$position = strpos( $file_value, $constant_value );
 				$position      += strlen( $constant_value ) + 3;
-				echo "$position <br>";
 				$string        = substr( $file_value, $position );
 				$string        = explode( "'", $string );
 				$string = $string[0];
-				$get=gettype($string);
-				echo "Тип переменной $get <br>";
-				echo "Строка замены $string <br>";
 				if ($string == '') {
 					$replace = "define('$constant_value','$variables[$constant_key]');\r\n";
 				} else {
 					$replace = str_replace($string,$variables[$constant_key],$file_value);
 				}
-				echo 'Новое значение '.$replace.' <br>';
 				fwrite($fp,$replace);
 			}
 		}
