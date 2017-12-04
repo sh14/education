@@ -85,12 +85,12 @@ function insert_tables() {
 }
 
 function get_configuration_data() {
-	if (! empty( $_POST['action'] ) && $_POST['action'] == 'configuration') {
-		if ( ! empty($_POST['host']) && ! empty($_POST['login']) && ! empty($_POST['database'])) {
+	if ( ! empty( $_POST['action'] ) && $_POST['action'] == 'configuration' ) {
+		if ( ! empty( $_POST['host'] ) && ! empty( $_POST['login'] ) && ! empty( $_POST['database'] ) ) {
 			echo 'Заполните все поля помеченные звёздочкой';
-			$vars_string       = 'host,login,password,database';
-			$vars              = array_map( 'trim', explode( ',', $vars_string ) );
-			$values            = [];
+			$vars_string = 'host,login,password,database';
+			$vars        = array_map( 'trim', explode( ',', $vars_string ) );
+			$values      = [];
 			foreach ( $vars as $var_key => $var_value ) {
 				if ( ! empty( $_POST[ $var_value ] ) ) {
 					$values[] = "'$_POST[$var_value]'";
@@ -98,23 +98,54 @@ function get_configuration_data() {
 					unset( $vars[ $var_key ] );
 				}
 			}
-
-			$vars = array_combine( array_keys( $values ), array_values( $vars ) );
-			for ( $i = 0; $i < count( $values ); $i ++ ) {
+			$num_values = count( $values );
+			$vars       = array_combine( array_keys( $values ), array_values( $vars ) );
+			for ( $i = 0; $i < $num_values; $i ++ ) {
 				$values[ $i ] = $vars[ $i ] . '=' . $values[ $i ];
+				echo "что за валюес ".$values[ $i ];
 			}
-		} elseif (empty($_POST['host'])) {
+		} elseif ( empty( $_POST['host'] ) ) {
 			echo 'Поле "Хост" не заполнено';
-		} elseif (empty($_POST['login'])) {
+		} elseif ( empty( $_POST['login'] ) ) {
 			echo 'Поле "Логин" не заполнено';
-		} elseif (empty($_POST['database'])) {
+		} elseif ( empty( $_POST['database'] ) ) {
 			echo 'Поле "Название базы данных" не заполнено';
 		}
 	}
 }
 
-add_action( 'init', 'get_configuration_data' );
+//add_action( 'init', 'get_configuration_data' );
 
-function set_configuration_data() {
-
+function set_configuration_data( $host, $login, $password = '', $database ) {
+	$variables= [$host,$login,$password,$database];
+	$constant_name = [ 'HOST', 'LOGIN', 'PASSWORD', 'DATABASE' ];
+	$file_array=file('config.php');
+	$fp=fopen('config.php','w');
+	fwrite($fp,"<?php\r\n");
+	foreach ($constant_name as $constant_key => $constant_value) {
+		foreach ($file_array as $file_value) {
+			if (strstr($file_value,$constant_value)) {
+				echo "$file_value <br>";
+				$position = strpos( $file_value, $constant_value );
+				$position      += strlen( $constant_value ) + 3;
+				echo "$position <br>";
+				$string        = substr( $file_value, $position );
+				$string        = explode( "'", $string );
+				$string = $string[0];
+				$get=gettype($string);
+				echo "Тип переменной $get <br>";
+				echo "Строка замены $string <br>";
+				if ($string == '') {
+					$replace = "define('$constant_value','$variables[$constant_key]');\r\n";
+				} else {
+					$replace = str_replace($string,$variables[$constant_key],$file_value);
+				}
+				echo 'Новое значение '.$replace.' <br>';
+				fwrite($fp,$replace);
+			}
+		}
+	}
+	fclose($fp);
 }
+
+//set_configuration_data();
