@@ -209,7 +209,8 @@ function profile_edit() {
 		}
 
 		$vars = array_combine( array_keys( $values ), array_values( $vars ) );
-		for ( $i = 0; $i < count( $values ); $i ++ ) {
+		$num_values = count( $values );
+		for ( $i = 0; $i < $num_values; $i ++ ) {
 			$values[ $i ] = $vars[ $i ] . '=' . $values[ $i ];
 		}
 		$user_info = get_user_info();

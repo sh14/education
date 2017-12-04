@@ -107,3 +107,48 @@ body {
     display: inline-block;
   }
 }
+.chat__messages {
+  background-color: #aafba5;
+  padding: 0px 20px;
+}
+.chat__messages div:before div:after {
+  content: '';
+  display: block;
+  clear: both;
+}
+.chat__messages .adapchat-item {
+  max-width: 90%;
+  margin: 10px auto;
+  padding: 10px;
+  display: table;
+}
+.chat__messages .adapchat-item .adapchat-chater {
+  display: table-cell;
+  width: 100px;
+  height: 100px;
+  border-radius: 50px;
+  background-color: #0f0f0f;
+  background-image: url(../images/character-designer.png);
+  background-repeat: no-repeat;
+  background-size: 75% auto;
+  background-position: top;
+  float: left;
+}
+.chat__messages .adapchat-item .adapchat-text {
+  box-shadow: 5px 5px 33px 0px rgba(0, 0, 0, 0.69);
+  -webkit-box-shadow: 5px 5px 33px 0px rgba(0, 0, 0, 0.69);
+  -moz-box-shadow: 5px 5px 33px 0px rgba(0, 0, 0, 0.69);
+  padding: 0px 20px 10px;
+  background-color: #ffe375;
+  border-radius: 10px;
+  float: left;
+  margin: 0 10px;
+}
+.chat__messages .adapchat-item .adapchat-text .adapchat-message {
+  font-size: 1.3em;
+}
+.chat__messages .adapchat-item .adapchat-text .adapchat-date {
+  font-size: 0.7em;
+  float: right;
+  margin-top: 5px;
+}
