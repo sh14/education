@@ -22,7 +22,7 @@
 	<div class="form-group">
 		<label class="col-lg-3 control-label">Введите пароль:</label>
 		<div class="col-lg-8">
-			<input class="form-control" type="email" name="password" value="">
+			<input class="form-control" type="text" name="password" value="">
 		</div>
 	</div>
 	<div class="form-group">

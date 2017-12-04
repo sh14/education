@@ -91,19 +91,22 @@ function get_configuration_data() {
 			$vars_string = 'host,login,password,database';
 			$vars        = array_map( 'trim', explode( ',', $vars_string ) );
 			$values      = [];
+			$empty_input_count = 0;
 			foreach ( $vars as $var_key => $var_value ) {
 				if ( ! empty( $_POST[ $var_value ] ) ) {
-					$values[] = "'$_POST[$var_value]'";
+					$values[] = "$_POST[$var_value]";
 				} else {
 					unset( $vars[ $var_key ] );
+					++ $empty_input_count;
 				}
 			}
-			$num_values = count( $values );
-			$vars       = array_combine( array_keys( $values ), array_values( $vars ) );
-			for ( $i = 0; $i < $num_values; $i ++ ) {
-				$values[ $i ] = $vars[ $i ] . '=' . $values[ $i ];
-				echo "что за валюес ".$values[ $i ];
+			if ($empty_input_count == 1) {
+				set_configuration_data($values[0],$values[1],'',$values[2]);
+			} else {
+				set_configuration_data($values[0],$values[1],$values[2],$values[3]);
 			}
+			echo "что за валюес ".$values[ $i ];
+
 		} elseif ( empty( $_POST['host'] ) ) {
 			echo 'Поле "Хост" не заполнено';
 		} elseif ( empty( $_POST['login'] ) ) {
@@ -116,7 +119,7 @@ function get_configuration_data() {
 
 //add_action( 'init', 'get_configuration_data' );
 
-function set_configuration_data( $host, $login, $password = '', $database ) {
+function set_configuration_data( $host, $login, $password, $database ) {
 	$variables= [$host,$login,$password,$database];
 	$constant_name = [ 'HOST', 'LOGIN', 'PASSWORD', 'DATABASE' ];
 	$file_array=file('config.php');
@@ -147,5 +150,3 @@ function set_configuration_data( $host, $login, $password = '', $database ) {
 	}
 	fclose($fp);
 }
-
-//set_configuration_data();
