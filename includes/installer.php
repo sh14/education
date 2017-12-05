@@ -121,24 +121,34 @@ function get_configuration_data() {
 function set_configuration_data( $host, $login, $password, $database ) {
 	$variables     = [ $host, $login, $password, $database ];
 	$constant_name = [ 'HOST', 'LOGIN', 'PASSWORD', 'DATABASE' ];
-	$file_array    = file( 'config.php' );
+	$file_exists = file_exists('config.php');
+	if ($file_exists === true) {
+		$file_array    = file( 'config.php' );
+	}
 	$fp            = fopen( 'config.php', 'w' );
 	fwrite( $fp, "<?php\r\n" );
-	foreach ( $constant_name as $constant_key => $constant_value ) {
-		foreach ( $file_array as $file_value ) {
-			if ( strstr( $file_value, $constant_value ) ) {
-				$position = strpos( $file_value, $constant_value );
-				$position += strlen( $constant_value ) + 3;
-				$string   = substr( $file_value, $position );
-				$string   = explode( "'", $string );
-				$string   = $string[0];
-				if ( $string == '' || ! file_exists( 'config.php' ) ) {
-					$replace = "define('$constant_value','$variables[$constant_key]');\r\n";
-				} else {
-					$replace = str_replace( $string, $variables[ $constant_key ], $file_value );
+	if ($file_exists === true) {
+		foreach ( $constant_name as $constant_key => $constant_value ) {
+			foreach ( $file_array as $file_value ) {
+				if ( strstr( $file_value, $constant_value ) ) {
+					$position = strpos( $file_value, $constant_value );
+					$position += strlen( $constant_value ) + 3;
+					$string   = substr( $file_value, $position );
+					$string   = explode( "'", $string );
+					$string   = $string[0];
+					if ( $string == '' ) {
+						$replace = "define('$constant_value','$variables[$constant_key]');\r\n";
+					} else {
+						$replace = str_replace( $string, $variables[ $constant_key ], $file_value );
+					}
+					fwrite( $fp, $replace );
 				}
-				fwrite( $fp, $replace );
 			}
+		}
+	} else {
+		foreach ( $constant_name as $constant_key => $constant_value ) {
+			$replace = "define('$constant_value','$variables[$constant_key]');\r\n";
+			fwrite( $fp, $replace );
 		}
 	}
 	fclose( $fp );
