@@ -13,43 +13,42 @@ if ( is_user_logged_in() ) {
 }
 ?>
 
-<div class="chat_container container">
+<div class="page container">
 	<div class="row">
-		<div class="col-md-12 col-sm-12 col-xs-12 chat">
+		<div class="col-md-12 col-sm-12 col-xs-12">
 			<div class="col-md-9 col-sm-9 col-xs-9">
-				<div class="chat__wall">
+				<div class="chat">
+					<div class="chat__messages">
+						<?php echo display_message(); ?>
 
-					<div class="chat__form">
-						<div class="message_box">
-							<form action="" method="post" class="message_box__form">
-								<input type="text" class="form-control message_box__title" placeholder="Тема сообщения"
-								       name="title"
-								       id="title" value="">
-								<textarea class="form-control message_box__message" rows="1"
-								          placeholder="Текст сообщения"
-								          name="content"></textarea>
-								<input class="btn btn-success message_box__submit" type="submit" value="Отправить"
-								       name="">
-								<input type="hidden" name="action" value="message_add">
-							</form>
-						</div>
+
 					</div>
-                    <div class="chat__row">
-                        <div class="chat__messages">
-							<?php echo display_message(); ?>
-                        </div>
-                    </div>
+					<form action="" method="post" class="chat__form">
+						<input type="text" class="form-control chat__title" placeholder="Тема сообщения"
+						       name="title"
+						       id="title" value="">
+						<textarea class="form-control chat__message" rows="1"
+						          placeholder="Текст сообщения"
+						          name="content"></textarea>
+						<button class="btn btn-success chat__submit" type="submit"
+						        name="">Отправить
+						</button>
+						<input type="hidden" name="action" value="message_add">
+					</form>
 				</div>
 			</div>
-			<div class="col-md-3 col-sm-3 col-xs-3 avatar">
-				<div class="avatar__image"></div>
-				<h3 class="avatar__signature"><?php echo $name; ?></h3>
-				<div class="avatar__buttons">
-					<button type="button" class="btn btn-primary btn-block" data-toggle="modal"
-					        data-target="#modal-1">Мой профиль
-					</button>
-					<a href="<?php echo get_root_url() . '?p=logout'; ?>"
-					   class="btn btn-link btn-block">Выход</a>
+
+			<div class="col-md-3 col-sm-3 col-xs-3">
+				<div class="avatar">
+					<div class="avatar__image"></div>
+					<h3 class="avatar__name"><?php echo $name; ?></h3>
+					<div class="avatar__buttons">
+						<button type="button" class="btn btn-primary btn-block" data-toggle="modal"
+						        data-target="#modal-1">Мой профиль
+						</button>
+						<a href="<?php echo get_root_url() . '?p=logout'; ?>"
+						   class="btn btn-link btn-block">Выход</a>
+					</div>
 				</div>
 			</div>
 		</div>

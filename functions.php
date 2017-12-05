@@ -107,26 +107,48 @@ function get_footer() {
 }
 
 /**
- * Функция подключения шаблона
+ * Функция подключения шаблона или его возврата в виде строки
  *
- * @param $name
+ * @param       $name
+ * @param array $atts
  *
- * @return bool
+ * @return bool|string
  */
-function get_template_part( $name ) {
+function get_template_part( $name, $atts = [] ) {
 
 	$template_path   = [];
 	$template_path[] = get_root_path() . '/templates/' . $name . '.php';
 	foreach ( $template_path as $path ) {
 		if ( file_exists( $path ) ) {
-			include $path;
+			if ( ! empty( $atts ) ) {
 
-			return true;
+				// если массив не ассоциативный
+				if ( array_keys( $atts ) === range( 0, sizeof( $atts ) - 1 ) ) {
+					$new_atts = [];
+					foreach ( $atts as $key ) {
+						$new_atts[ $key ] = '<%=' . $key . '%>';
+					}
+					$atts = $new_atts;
+					unset( $new_atts );
+				}
+				ob_start();
+				include $path;
+				$content = ob_get_contents();
+				ob_end_clean();
+
+				return $content;
+			} else {
+				include $path;
+
+				return true;
+			}
+
 		}
 	}
 
 	return false;
 }
+
 
 /**
  * Функция получения директории сайта
@@ -297,19 +319,63 @@ function enqueue_script( $handle ) {
  */
 function display_message() {
 	if ( is_user_logged_in() ) {
-		$sql    = "SELECT * FROM `message` ORDER BY `id_message` DESC limit 30";
+		$sql    = "SELECT * FROM message m LEFT JOIN users u ON u.ID = m.id_user ORDER BY datetime DESC LIMIT 3";
 		$result = do_query( $sql );
-		$count = mysqli_num_rows($result);
-		if ($count != 0) {
-			while ( $rows = mysqli_fetch_array( $result, MYSQLI_ASSOC ) ) {
-				include 'templates/message.php';
+		$count  = mysqli_num_rows( $result );
+		if ( $count > 0 ) {
+
+			$template = get_template_part( 'message', [
+				'image',
+				'name',
+				'title',
+				'content',
+				'datetime',
+				'class',
+			] );
+$current_user_id = get_current_user_id();
+			while ( $row = mysqli_fetch_array( $result, MYSQLI_ASSOC ) ) {
+//pr($row);
+				$image = '';
+				if ( ! empty( $row['photo'] ) ) {
+					$image = ' style="background-image:url(' . get_root_url().'/images/'.$row['photo'] . ');"';
+				}
+				$datetime = '';
+				if ( ! empty( $row['datetime'] ) ) {
+
+					$datetime = date( 'H:i:s, d.m.Y', strtotime( $row['datetime'] ) );
+				}
+				$name = '';
+				if ( ! empty( $row['first_name'] ) || ! empty( $row['last_name'] ) ) {
+					$name = $row['first_name'] . ' ' . $row['last_name'];
+				}
+
+				$class = '';
+				if($current_user_id != $row['ID']){
+					$class = ' message_alien';
+				}
+				$message = get_template_string( $template, [
+					'image'    => $image,
+					'name'     => $name,
+					'title'    => ! empty( $row['title'] ) ? $row['title'] : '',
+					'content'  => ! empty( $row['content'] ) ? $row['content'] : '',
+					'datetime' => $datetime,
+					'class' => $class,
+				] );
+				echo $message;
 			}
-		}else{
+		} else {
 			echo '<h3>Вы будете первым, кто оставит тут запись!</h3>';
 		}
 	}
 }
 
+function get_template_string( $content, $atts ) {
+	foreach ( $atts as $key => $value ) {
+		$content = str_replace( '<%=' . $key . '%>', $value, $content );
+	}
+
+	return $content;
+}
 
 /**
  * Регистрация скриптов и их вывод
@@ -387,7 +453,7 @@ function message_add() {
 	if ( is_user_logged_in() && ! empty( $_POST['content'] ) ) {
 		$user_id = get_current_user_id();
 		do_query( "INSERT INTO `message` ( `title`, `id_user`, `content` ) VALUES ('{$_POST['title']}',{$user_id}, '{$_POST['content']}' )" );
-		header('location: index.php');
+		header( 'location: index.php' );
 	}
 }
 

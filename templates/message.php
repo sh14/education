@@ -1,18 +1,15 @@
-<div class="adapchat-item">
-	<div class="adapchat-chater">
-	</div>
-	<div class="adapchat-text">
-		<div class="subject_matter">
-			<h3>
-				<?php echo $rows['title']; ?>
-			</h3>
+<div class="message<?php echo $atts['class']; ?>">
+	<div class="message__box">
+		<div class="message__user-avatar">
+			<a href="javascript:" class="message__user-image"<?php echo $atts['image']; ?>></a>
 		</div>
-		<div class="adapchat-message">
-			<?php echo $rows['content']; ?>
-		</div>
-		<div class="adapchat-date">
-			<?php echo $rows['datetime']; ?>
+		<div class="message__data">
+			<div class="message__data-box">
+				<a href="javascript:" class="message__user-name"><?php echo $atts['name']; ?></a>
+				<div class="message__title"><?php echo $atts['title']; ?></div>
+				<div class="message__text"><?php echo $atts['content']; ?></div>
+			</div>
 		</div>
 	</div>
+	<div class="message__date"><?php echo $atts['datetime']; ?></div>
 </div>
-
