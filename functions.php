@@ -3,8 +3,8 @@
 include 'config.php';
 include 'includes/variables.php';
 include 'includes/hooks.php';
-include 'includes/user.php';
 include 'includes/installer.php';
+include 'includes/user.php';
 include 'includes/formatting.php';
 
 // объявление глобальной переменной
