@@ -363,7 +363,7 @@ $current_user_id = get_current_user_id();
 				] );
 				echo $message;
 			}
-		} else {
+		}else{
 			echo '<h3>Вы будете первым, кто оставит тут запись!</h3>';
 		}
 	}
@@ -459,4 +459,21 @@ function message_add() {
 
 add_action( 'init', 'message_add' );
 
+// Функция получения последних n сообщений и конвертация их в формат json
+function get_last_messages() {
+	if ( ! empty( $_POST['last_message_id'] ) ) {
+		$last_message_id = $_POST['last_message_id'];
 
+		$sql    = "SELECT * FROM `message` ORDER BY `id_message` DESC limit 3";
+		$result = do_query( $sql );
+
+		while ( $rows = mysqli_fetch_array( $result, MYSQLI_ASSOC ) ) {
+			$messages[] = $rows;
+
+		}
+		echo json_encode($messages);
+		die();
+	}
+}
+
+add_action('init', 'get_last_messages');
