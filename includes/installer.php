@@ -13,6 +13,7 @@ function add_default_data() {
 	$sql_check_database = "SHOW TABLES FROM " . DATABASE;
 	$result_db          = do_query( $sql_check_database );
 	$rows               = $result_db->num_rows;
+	$password = encript_password(123);
 
 	if ( $rows == 0 ) {
 		insert_tables();
@@ -26,7 +27,7 @@ function add_default_data() {
 	$sql[] = "INSERT INTO `message`( `id_user`, `datetime`, `title`, `content`, `photo`) 
 	VALUES (1,'2017-11-12 12:00:00','Привет, мир!','Это тестовая публикация!','../images/character-designer.png')";
 	$sql[] = "INSERT INTO `users`( `nickname`, `email`, `password`, `first_name`, `last_name`)
-	VALUES ('admin','test@tes.ru','123','Админ','Админов')";
+	VALUES ('admin','test@tes.ru','{$password}','Админ','Админов')";
 
 	$sql_set_id     = [];
 	$sql_reset_id   = [];
@@ -88,9 +89,9 @@ function get_configuration_data() {
 	if ( ! empty( $_POST['action'] ) && $_POST['action'] == 'configuration' ) {
 		if ( ! empty( $_POST['host'] ) && ! empty( $_POST['login'] ) && ! empty( $_POST['database'] ) ) {
 			echo 'Заполните все поля помеченные звёздочкой';
-			$vars_string = 'host,login,password,database';
-			$vars        = array_map( 'trim', explode( ',', $vars_string ) );
-			$values      = [];
+			$vars_string       = 'host,login,password,database';
+			$vars              = array_map( 'trim', explode( ',', $vars_string ) );
+			$values            = [];
 			$empty_input_count = 0;
 			foreach ( $vars as $var_key => $var_value ) {
 				if ( ! empty( $_POST[ $var_value ] ) ) {
@@ -100,10 +101,10 @@ function get_configuration_data() {
 					++ $empty_input_count;
 				}
 			}
-			if ($empty_input_count == 1) {
-				set_configuration_data($values[0],$values[1],'',$values[2]);
+			if ( $empty_input_count == 1 ) {
+				set_configuration_data( $values[0], $values[1], '', $values[2] );
 			} else {
-				set_configuration_data($values[0],$values[1],$values[2],$values[3]);
+				set_configuration_data( $values[0], $values[1], $values[2], $values[3] );
 			}
 		} elseif ( empty( $_POST['host'] ) ) {
 			echo 'Поле "Хост" не заполнено';
@@ -114,30 +115,31 @@ function get_configuration_data() {
 		}
 	}
 }
+
 //add_action( 'init', 'get_configuration_data' );
 
 function set_configuration_data( $host, $login, $password, $database ) {
-	$variables= [$host,$login,$password,$database];
+	$variables     = [ $host, $login, $password, $database ];
 	$constant_name = [ 'HOST', 'LOGIN', 'PASSWORD', 'DATABASE' ];
-	$file_array=file('config.php');
-	$fp=fopen('config.php','w');
-	fwrite($fp,"<?php\r\n");
-	foreach ($constant_name as $constant_key => $constant_value) {
-		foreach ($file_array as $file_value) {
-			if (strstr($file_value,$constant_value)) {
+	$file_array    = file( 'config.php' );
+	$fp            = fopen( 'config.php', 'w' );
+	fwrite( $fp, "<?php\r\n" );
+	foreach ( $constant_name as $constant_key => $constant_value ) {
+		foreach ( $file_array as $file_value ) {
+			if ( strstr( $file_value, $constant_value ) ) {
 				$position = strpos( $file_value, $constant_value );
-				$position      += strlen( $constant_value ) + 3;
-				$string        = substr( $file_value, $position );
-				$string        = explode( "'", $string );
-				$string = $string[0];
-				if ($string == '') {
+				$position += strlen( $constant_value ) + 3;
+				$string   = substr( $file_value, $position );
+				$string   = explode( "'", $string );
+				$string   = $string[0];
+				if ( $string == '' || ! file_exists( 'config.php' ) ) {
 					$replace = "define('$constant_value','$variables[$constant_key]');\r\n";
 				} else {
-					$replace = str_replace($string,$variables[$constant_key],$file_value);
+					$replace = str_replace( $string, $variables[ $constant_key ], $file_value );
 				}
-				fwrite($fp,$replace);
+				fwrite( $fp, $replace );
 			}
 		}
 	}
-	fclose($fp);
+	fclose( $fp );
 }
