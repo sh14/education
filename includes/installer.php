@@ -13,7 +13,7 @@ function add_default_data() {
 	$sql_check_database = "SHOW TABLES FROM " . DATABASE;
 	$result_db          = do_query( $sql_check_database );
 	$rows               = $result_db->num_rows;
-	$password = encript_password(123);
+	$password           = encript_password( 123 );
 
 	if ( $rows == 0 ) {
 		insert_tables();
@@ -69,6 +69,7 @@ function check_database() {
  */
 
 function insert_tables() {
+	global $link;
 	$filename = 'shlo.sql';
 	$templine = '';
 	$lines    = file( $filename );
@@ -121,13 +122,13 @@ function get_configuration_data() {
 function set_configuration_data( $host, $login, $password, $database ) {
 	$variables     = [ $host, $login, $password, $database ];
 	$constant_name = [ 'HOST', 'LOGIN', 'PASSWORD', 'DATABASE' ];
-	$file_exists = file_exists('config.php');
-	if ($file_exists === true) {
-		$file_array    = file( 'config.php' );
+	$file_exists   = file_exists( 'config.php' );
+	if ( $file_exists === true ) {
+		$file_array = file( 'config.php' );
 	}
-	$fp            = fopen( 'config.php', 'w' );
+	$fp = fopen( 'config.php', 'w' );
 	fwrite( $fp, "<?php\r\n" );
-	if ($file_exists === true) {
+	if ( $file_exists === true ) {
 		foreach ( $constant_name as $constant_key => $constant_value ) {
 			foreach ( $file_array as $file_value ) {
 				if ( strstr( $file_value, $constant_value ) ) {
