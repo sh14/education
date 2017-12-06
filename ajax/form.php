@@ -17,28 +17,54 @@
 
 <hr>
 
-<form method="POST" id="message" action="?123">
+<!--<form method="POST" id="message" action="?123">
     <label for="your_massage">Your Message</label>
     <input type="text" name="your_massage" id="your_massage" placeholder="Напишите сообщение...">
     <input value="Send Message" type="submit" data-event="btn_message">
-</form>
+</form>-->
 
-<script id="message-template" type="text/ejs">
+<!--<script id="message-template" type="text/ejs">
 		<div class="message">
 			<img src="#" class="photo-user" name="<%=p%>"><p class="head-message"></p>
 			<p class="text-message"><%=message%></p>
 		</div>
+</script>-->
+
+<form action="" method="post" class="chat__form" id="message">
+    <input type="text" class="form-control chat__title" placeholder="Тема сообщения"
+           name="title"
+           id="title" value="">
+    <textarea class="form-control chat__message" rows="1"
+              placeholder="Текст сообщения"
+              name="content" id="your_massage"></textarea>
+    <button class="btn btn-success chat__submit" type="submit"
+            name="" data-event="btn_message">Отправить
+    </button>
+    <input type="hidden" name="action" value="message_add">
+</form>
+
+<script id="message-template" type="text/ejs">
+    <div class="message<?php echo $atts['class']; ?>">
+        <div class="message__box">
+            <div class="message__user-avatar">
+                <a href="javascript:" class="message__user-image"<?php echo $atts['image']; ?>></a>
+            </div>
+            <div class="message__data">
+                <div class="message__data-box">
+                    <a href="javascript:" class="message__user-name"><?php echo $atts['name']; ?></a>
+                    <div class="message__title"><?php echo $atts['title']; ?></div>
+                    <div class="message__text"><%=message%></div>
+                </div>
+            </div>
+        </div>
+        <div class="message__date"><?php echo $atts['datetime']; ?></div>
+    </div>
 </script>
 
 <div id="results_message"><!-- текст сообщений --></div>
 
 
 
-
-<!--получить данные из конкретного инпута
-определить переменную темплате и вызвать функцию.
-и в массив этой функции вставить данные полученные из инпута
-и вставить данные переменной темплате в блок в которой находятся все сообщдения-->
 <script>
     var your_message = document.getElementById("your_massage");
     var btn_message = document.querySelector('[data-event="btn_message"]');
@@ -72,16 +98,29 @@
             jQuery('#results_message').append(template);
         }
         your_message.value = "";
+
+
+        var mes = $('#message').serialize();
+        $.ajax({
+            type: 'POST',
+            url: 'index.php',
+            data: mes,
+            success: function (data) {
+                $('#results_message').append(data);
+            },
+            error: function (xhr, str) {
+                alert('Возникла ошибка: ' + xhr.responseCode);
+            }
+        });
     }
 
-
-    //ниже ajax запрос на сообщения из сервера
+   /* //ниже ajax запрос на сообщения из сервера
     function see_message() {
         if(your_message.value != "") {
             var mes = $('#message').serialize();
             $.ajax({
                 type: 'POST',
-                url: 'mes.php',
+                url: 'index.php',
                 data: mes,
                 success: function (data) {
                     $('#results_message').append(data);
@@ -92,7 +131,7 @@
             });
         }
     }
-
+*/
     (function () {
         var cache = {};
 
@@ -126,20 +165,6 @@
         };
     })();
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     //ниже функция шаблона отображения времени отправки сообщения
     /*function curent(){
         var H = now.getHours();
@@ -150,59 +175,4 @@
         return time;
     }*/
 
-
-
-//запрос ajax
-
-    var btn_auth = document.querySelector('[data-event="auth"]');
-
-    btn_auth.addEventListener("click", auth);
-    //btn_message.addEventListener("click", see_message);
-
-    function auth(event) {
-        event.preventDefault();
-        var form   = $('#auth').serialize();
-            $.ajax({
-            type: 'POST',
-            url: 'res.php',
-            data: form,
-            success: function(data) {
-                $('#results_form').html(data);
-            },
-            error:  function(xhr, str){
-                alert('Возникла ошибка: ' + xhr.responseCode);
-            }
-        });
-    }
-
-
-    function control_auth() {
-        var base = setInterval(function(){
-            $.ajax({
-                url: 'res.php',
-                success: function(url) {
-                    $('#results_form').html(data);
-                },
-                error:  function(xhr, str){
-                    alert('Возникла ошибка: ' + xhr.responseCode);
-                }
-            });
-        }, 100);
-        clearInterval (base);
-    }
-
-    function control_message() {
-        var base = setInterval(function(){
-            $.ajax({
-                url: 'mes.php',
-                success: function(url) {
-                    $('#results_message').html(data);
-                },
-                error:  function(xhr, str){
-                    alert('Возникла ошибка: ' + xhr.responseCode);
-                }
-            });
-        }, 100);
-        clearInterval (base);
-    }
     </script>

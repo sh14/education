@@ -56,7 +56,7 @@ function Send()
     // идём по всем элементам массива $messages
     foreach ($messages as $value) {
     // продолжаем формировать скрипт для отправки пользователю
-    $js .= 'chat.append("<span>' . $value['name'] . '&raquo; ' . $value['text'] . '</span>");'; // добавить сообщние (<span>Имя &raquo; текст сообщения</span>) в наш div
+    $js .= 'chat.append("<p>' . $value['name'] . '&raquo; ' . $value['text'] . '</p>");'; // добавить сообщние (<span>Имя &raquo; текст сообщения</span>) в наш div
     }
 
     $js .= "last_message_id = $last_message_id;"; // запишем номер последнего полученного сообщения, что бы в следующий раз начать загрузку с этого сообщения
