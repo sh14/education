@@ -336,7 +336,7 @@ function display_message() {
 			] );
 $current_user_id = get_current_user_id();
 			while ( $row = mysqli_fetch_array( $result, MYSQLI_ASSOC ) ) {
-pr($row);
+//pr($row);
 				$image = '';
 				if ( ! empty( $row['photo'] ) ) {
 					$image = ' style="background-image:url(' . get_root_url().'/images/'.$row['photo'] . ');"';
