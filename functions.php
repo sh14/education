@@ -332,6 +332,7 @@ function display_message() {
 				'datetime',
 				'class',
 				'ID',
+				'id_message',
 			] );
 $current_user_id = get_current_user_id();
 			while ( $row = mysqli_fetch_array( $result, MYSQLI_ASSOC ) ) {
@@ -361,7 +362,8 @@ pr($row);
 					'content'  => ! empty( $row['content'] ) ? $row['content'] : '',
 					'datetime' => $datetime,
 					'class' => $class,
-					'ID' => $row['ID']
+					'ID' => $row['ID'],
+					'id_message' => $row ['id_message']
 				] );
 				echo $message;
 			}
