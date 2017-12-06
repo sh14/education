@@ -33,6 +33,7 @@ CREATE TABLE `users` (
   `password` text NOT NULL,
   `first_name` text,
   `last_name` text,
+  `photo` text,
   PRIMARY KEY (`ID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
