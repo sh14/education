@@ -306,8 +306,9 @@ function enqueue_script( $handle ) {
 		} else {
 			$action = 'head';
 		}
+
 		add_action( $action, function () use ( $out ) {
-			echo $out;
+			echo $out . "\n";
 		} );
 
 	}
@@ -324,7 +325,7 @@ function display_message() {
 		$count  = mysqli_num_rows( $result );
 		if ( $count > 0 ) {
 
-			$template = get_template_part( 'message', [
+			$template        = get_template_part( 'message', [
 				'image',
 				'name',
 				'title',
@@ -332,12 +333,12 @@ function display_message() {
 				'datetime',
 				'class',
 			] );
-$current_user_id = get_current_user_id();
+			$current_user_id = get_current_user_id();
 			while ( $row = mysqli_fetch_array( $result, MYSQLI_ASSOC ) ) {
 //pr($row);
 				$image = '';
 				if ( ! empty( $row['photo'] ) ) {
-					$image = ' style="background-image:url(' . get_root_url().'/images/'.$row['photo'] . ');"';
+					$image = ' style="background-image:url(' . get_root_url() . '/images/' . $row['photo'] . ');"';
 				}
 				$datetime = '';
 				if ( ! empty( $row['datetime'] ) ) {
@@ -350,7 +351,7 @@ $current_user_id = get_current_user_id();
 				}
 
 				$class = '';
-				if($current_user_id != $row['ID']){
+				if ( $current_user_id != $row['ID'] ) {
 					$class = ' message_alien';
 				}
 				$message = get_template_string( $template, [
@@ -359,11 +360,11 @@ $current_user_id = get_current_user_id();
 					'title'    => ! empty( $row['title'] ) ? $row['title'] : '',
 					'content'  => ! empty( $row['content'] ) ? $row['content'] : '',
 					'datetime' => $datetime,
-					'class' => $class,
+					'class'    => $class,
 				] );
 				echo $message;
 			}
-		}else{
+		} else {
 			echo '<h3>Вы будете первым, кто оставит тут запись!</h3>';
 		}
 	}
@@ -383,6 +384,12 @@ function get_template_string( $content, $atts ) {
 function enqueue_scripts() {
 	register_script( 'jquery', get_stylesheet_directory() . '/js/jquery-3.2.1.min.js' );
 	enqueue_script( 'jquery' );
+
+	register_script( 'bootstrap', get_stylesheet_directory() . '/bootstrap/js/bootstrap.min.js', [ 'jquery' ], '', true );
+	enqueue_script( 'bootstrap' );
+
+	register_script( 'functions', get_stylesheet_directory() . '/js/functions.js', [ 'jquery' ], '', true );
+	enqueue_script( 'functions' );
 }
 
 add_action( 'init', 'enqueue_scripts' );
@@ -464,16 +471,16 @@ function get_last_messages() {
 	if ( ! empty( $_POST['last_message_id'] ) ) {
 		$last_message_id = $_POST['last_message_id'];
 
-		$sql    = "SELECT * FROM `message` ORDER BY `id_message` DESC limit 3";
+		$sql    = "SELECT * FROM `message` ORDER BY `id_message` DESC LIMIT 3";
 		$result = do_query( $sql );
 
 		while ( $rows = mysqli_fetch_array( $result, MYSQLI_ASSOC ) ) {
 			$messages[] = $rows;
 
 		}
-		echo json_encode($messages);
+		echo json_encode( $messages );
 		die();
 	}
 }
 
-add_action('init', 'get_last_messages');
+add_action( 'init', 'get_last_messages' );
