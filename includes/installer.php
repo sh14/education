@@ -154,3 +154,4 @@ function set_configuration_data( $host, $login, $password, $database ) {
 	}
 	fclose( $fp );
 }
+$q='';
