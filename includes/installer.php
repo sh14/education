@@ -112,7 +112,6 @@ function get_configuration_data() {
 			} else {
 				set_configuration_data( $values[0], $values[1], $values[2], $values[3] );
 			}
-			header('location:'.get_root_url());
 		} elseif ( empty( $_POST['host'] ) ) {
 			echo 'Поле "Хост" не заполнено';
 		} elseif ( empty( $_POST['login'] ) ) {
