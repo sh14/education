@@ -158,23 +158,25 @@ add_action( 'init', 'autorization_user' );
  *
  */
 function is_user_logged_in() {
+	global $link;
+	if ( $link ) {
+		if ( ! empty( $_COOKIE['shlo_chat'] ) ) {
 
-	if ( ! empty( $_COOKIE['shlo_chat'] ) ) {
+			list( $email, $password ) = explode( ';', esc_sql( $_COOKIE['shlo_chat'] ) );
 
-		list( $email, $password ) = explode( ';', esc_sql( $_COOKIE['shlo_chat'] ) );
+			if ( ! empty( $email ) && ! empty( $password ) ) {
+				$sql    = "SELECT COUNT(*) FROM users WHERE email='{$email}' AND password='{$password}'";
+				$result = do_query( $sql );
+				$rows   = $result->fetch_row();
 
-		if ( ! empty( $email ) && ! empty( $password ) ) {
-			$sql    = "SELECT COUNT(*) FROM users WHERE email='{$email}' AND password='{$password}'";
-			$result = do_query( $sql );
-			$rows   = $result->fetch_row();
-
-			if ( $rows[0] == 1 ) {
-				return true;
+				if ( $rows[0] == 1 ) {
+					return true;
+				}
 			}
 		}
-	}
 
-	return false;
+		return false;
+	}
 }
 
 
@@ -208,7 +210,7 @@ function profile_edit() {
 			}
 		}
 
-		$vars = array_combine( array_keys( $values ), array_values( $vars ) );
+		$vars       = array_combine( array_keys( $values ), array_values( $vars ) );
 		$num_values = count( $values );
 		for ( $i = 0; $i < $num_values; $i ++ ) {
 			$values[ $i ] = $vars[ $i ] . '=' . $values[ $i ];

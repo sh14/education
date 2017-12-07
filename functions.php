@@ -7,14 +7,6 @@ include 'includes/installer.php';
 include 'includes/user.php';
 include 'includes/formatting.php';
 
-// объявление глобальной переменной
-global $link;
-
-// если $link - пуста
-if ( empty( $link ) ) {
-	$link = mysqli_connect( HOST, LOGIN, PASSWORD, DATABASE )
-	or die( 'Ошибка при подключении к серверу MySQL: ' . mysqli_connect_error() );
-}
 
 function init() {
 	do_action( 'init' );
@@ -73,15 +65,16 @@ function pr( $data, $debug_backtrace = false ) {
  */
 function do_query( $query ) {
 	global $link;
+	if ( $link ) {
+		mysqli_set_charset( $link, 'utf8' );
 
-	mysqli_set_charset( $link, 'utf8' );
+		$result = mysqli_query( $link, $query );
+		if ( ! $result ) {
+			die( 'Неверный запрос: ' . mysqli_error( $link ) );
+		}
 
-	$result = mysqli_query( $link, $query );
-	if ( ! $result ) {
-		die( 'Неверный запрос: ' . mysqli_error( $link ) );
+		return $result;
 	}
-
-	return $result;
 }
 
 /**
@@ -357,13 +350,13 @@ function display_message() {
 					$class = ' message_alien';
 				}
 				$message = get_template_string( $template, [
-					'image'    => $image,
-					'name'     => $name,
-					'title'    => ! empty( $row['title'] ) ? $row['title'] : '',
-					'content'  => ! empty( $row['content'] ) ? $row['content'] : '',
-					'datetime' => $datetime,
-					'class'    => $class,
-					'ID' => $row['ID'],
+					'image'      => $image,
+					'name'       => $name,
+					'title'      => ! empty( $row['title'] ) ? $row['title'] : '',
+					'content'    => ! empty( $row['content'] ) ? $row['content'] : '',
+					'datetime'   => $datetime,
+					'class'      => $class,
+					'ID'         => $row['ID'],
 					'id_message' => $row ['id_message']
 				] );
 				echo $message;
@@ -488,3 +481,12 @@ function get_last_messages() {
 }
 
 add_action( 'init', 'get_last_messages' );
+
+function redirect_configuration_page() {
+	global $redirect;
+	if ( $redirect === true ) {
+		return true;
+	} else {
+		return false;
+	}
+}
