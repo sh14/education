@@ -6,6 +6,8 @@
  * Time: 14:47
  */
 
+date_default_timezone_set('Europe/Moscow');
+
 $name = '';
 if ( is_user_logged_in() ) {
 	$user = get_user_info();
@@ -30,10 +32,13 @@ if ( is_user_logged_in() ) {
                         <textarea class="form-control chat__message" rows="1"
                                   placeholder="Текст сообщения"
                                   name="content" id="your_massage"></textarea>
-                        <button class="btn btn-success chat__submit" type="submit"
+	                    <input type="hidden" type="datetime-local" name="datetime" value="<?php
+	                    echo date( 'Y-m-d' ) . 'T' . date( 'H:i' );
+	                    ?>">
+	                    <input type="hidden" name="action" value="message_add">
+	                    <button class="btn btn-success chat__submit" type="submit"
                                 name="" data-event="btn_message">Отправить
                         </button>
-                        <input type="hidden" name="action" value="message_add">
                     </form>
 
                     <script id="message-template" type="text/ejs">
@@ -99,7 +104,7 @@ if ( is_user_logged_in() ) {
 
 
 <script>
-    var your_message = document.getElementById("your_massage");
+    /*var your_message = document.getElementById("your_massage");
     var btn_message = document.querySelector('[data-event="btn_message"]');
     var results_message = document.getElementById("results_message");
     var p = document.createElement('p');
@@ -178,7 +183,7 @@ if ( is_user_logged_in() ) {
             // Provide some basic currying to the user
             return data ? fn( data ) : fn;
         };
-    })();
+    })();*/
 
     /* //ниже ajax запрос на сообщения из сервера
          function see_message() {

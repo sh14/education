@@ -451,13 +451,18 @@ function emailValidation( $email ) {
 //echo emailValidation($email);
 
 
-//Функция добавления сообщений в БД
+/**
+ * Функция добавления сообщений в БД
+ */
 
 function message_add() {
-	if ( is_user_logged_in() && ! empty( $_POST['content'] ) ) {
-		$user_id = get_current_user_id();
-		do_query( "INSERT INTO `message` ( `title`, `id_user`, `content` ) VALUES ('{$_POST['title']}',{$user_id}, '{$_POST['content']}' )" );
-		header( 'location: index.php' );
+	if ( ! empty( $_POST['action'] ) && $_POST['action'] == 'message_add' ) {
+		if ( is_user_logged_in() && ! empty( $_POST['content'] ) ) {
+			$user_id = get_current_user_id();
+			do_query( "INSERT INTO `message` ( `id_user`, `datetime`, `title`, `content` ) 
+			VALUES ({$user_id}, '{$_POST['datetime']}', '{$_POST['title']}', '{$_POST['content']}' )" );
+			header( 'location: index.php' );
+		}
 	}
 }
 

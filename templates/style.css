@@ -143,7 +143,7 @@ div:after {
   margin: 0;
 }
 .chat__title {
-  display: none;
+  display: block;
 }
 .chat__message {
   border-radius: 0 0 4px 4px;
