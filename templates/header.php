@@ -8,6 +8,9 @@
 
 	<link rel="stylesheet" href="<?php echo get_stylesheet_directory(); ?>/bootstrap/css/bootstrap.min.css">
 	<link rel="stylesheet" href="<?php echo get_stylesheet_directory(); ?>/style.css">
+	<link rel="stylesheet" href="<?php echo get_stylesheet_directory(); ?>/js/jcrop/css/jquery.Jcrop.min.css">
+	<link rel="stylesheet" href="<?php echo get_stylesheet_directory(); ?>/js/FileAPI/statics/jquery.modal.css">
+	<script>window.FileAPI = { media: true, staticPath: '<?php echo get_stylesheet_directory(); ?>/js/FileAPI/dist/' };</script>
 	<title>Chat</title>
 	<?php
 	head();

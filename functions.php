@@ -7,14 +7,6 @@ include 'includes/installer.php';
 include 'includes/user.php';
 include 'includes/formatting.php';
 
-// объявление глобальной переменной
-global $link;
-
-// если $link - пуста
-if ( empty( $link ) ) {
-	$link = mysqli_connect( HOST, LOGIN, PASSWORD, DATABASE )
-	or die( 'Ошибка при подключении к серверу MySQL: ' . mysqli_connect_error() );
-}
 
 function init() {
 	do_action( 'init' );
@@ -73,15 +65,16 @@ function pr( $data, $debug_backtrace = false ) {
  */
 function do_query( $query ) {
 	global $link;
+	if ( $link ) {
+		mysqli_set_charset( $link, 'utf8' );
 
-	mysqli_set_charset( $link, 'utf8' );
+		$result = mysqli_query( $link, $query );
+		if ( ! $result ) {
+			die( 'Неверный запрос: ' . mysqli_error( $link ) );
+		}
 
-	$result = mysqli_query( $link, $query );
-	if ( ! $result ) {
-		die( 'Неверный запрос: ' . mysqli_error( $link ) );
+		return $result;
 	}
-
-	return $result;
 }
 
 /**
@@ -241,7 +234,7 @@ function upload_image() {
 	}
 }
 
-add_action( 'init', 'upload_image' );
+//add_action( 'init', 'upload_image' );
 
 
 /**
@@ -396,6 +389,21 @@ function enqueue_scripts() {
 	register_script( 'functions', get_stylesheet_directory() . '/js/functions.js', [ 'jquery' ], '', true );
 	enqueue_script( 'functions' );
 
+	register_script( 'fileapi', get_stylesheet_directory() . '/js/FileAPI/dist/FileAPI.min.js' );
+	enqueue_script( 'fileapi' );
+
+	register_script( 'fileapi.exif', get_stylesheet_directory() . '/js/FileAPI/plugins/FileAPI.exif.js' );
+	enqueue_script( 'fileapi.exif' );
+
+	register_script( 'jquery.fileapi', get_stylesheet_directory() . '/js/FileAPI/jquery.fileapi.js' );
+	enqueue_script( 'jquery.fileapi' );
+
+	register_script( 'jcrop', get_stylesheet_directory() . '/js/jcrop/js/jquery.Jcrop.min.js' );
+	enqueue_script( 'jcrop' );
+
+	register_script('jquery.modal', get_stylesheet_directory() . '/js/FileAPI/statics/jquery.modal.js');
+	enqueue_script('jquery.modal');
+
 	register_script( 'vlad', get_stylesheet_directory() . '/js/vlad.js', [ 'jquery' ], '', true );
 	enqueue_script( 'vlad' );
 }
@@ -462,13 +470,18 @@ function emailValidation( $email ) {
 //echo emailValidation($email);
 
 
-//Функция добавления сообщений в БД
+/**
+ * Функция добавления сообщений в БД
+ */
 
 function message_add() {
-	if ( is_user_logged_in() && ! empty( $_POST['content'] ) ) {
-		$user_id = get_current_user_id();
-		do_query( "INSERT INTO `message` ( `title`, `id_user`, `content` ) VALUES ('{$_POST['title']}',{$user_id}, '{$_POST['content']}' )" );
-		header( 'location: index.php' );
+	if ( ! empty( $_POST['action'] ) && $_POST['action'] == 'message_add' ) {
+		if ( is_user_logged_in() && ! empty( $_POST['content'] ) ) {
+			$user_id = get_current_user_id();
+			do_query( "INSERT INTO `message` ( `id_user`, `datetime`, `title`, `content` ) 
+			VALUES ({$user_id}, '{$_POST['datetime']}', '{$_POST['title']}', '{$_POST['content']}' )" );
+			header( 'location: index.php' );
+		}
 	}
 }
 
@@ -492,3 +505,12 @@ function get_last_messages() {
 }
 
 add_action( 'init', 'get_last_messages' );
+
+function redirect_configuration_page() {
+	global $redirect;
+	if ( $redirect === true ) {
+		return true;
+	} else {
+		return false;
+	}
+}
