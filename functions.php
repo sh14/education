@@ -233,7 +233,7 @@ function upload_image() {
 	}
 }
 
-add_action( 'init', 'upload_image' );
+//add_action( 'init', 'upload_image' );
 
 
 /**
@@ -387,6 +387,21 @@ function enqueue_scripts() {
 
 	register_script( 'functions', get_stylesheet_directory() . '/js/functions.js', [ 'jquery' ], '', true );
 	enqueue_script( 'functions' );
+
+	register_script( 'fileapi', get_stylesheet_directory() . '/js/FileAPI/dist/FileAPI.min.js' );
+	enqueue_script( 'fileapi' );
+
+	register_script( 'fileapi.exif', get_stylesheet_directory() . '/js/FileAPI/plugins/FileAPI.exif.js' );
+	enqueue_script( 'fileapi.exif' );
+
+	register_script( 'jquery.fileapi', get_stylesheet_directory() . '/js/FileAPI/jquery.fileapi.js' );
+	enqueue_script( 'jquery.fileapi' );
+
+	register_script( 'jcrop', get_stylesheet_directory() . '/js/jcrop/js/jquery.Jcrop.min.js' );
+	enqueue_script( 'jcrop' );
+
+	register_script('jquery.modal', get_stylesheet_directory() . '/js/FileAPI/statics/jquery.modal.js');
+	enqueue_script('jquery.modal');
 }
 
 add_action( 'init', 'enqueue_scripts' );

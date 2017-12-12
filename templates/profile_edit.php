@@ -23,15 +23,50 @@ $user = get_user_info();
 	<!-- Колонка аватара -->
 	<form class="form-avatar" method="post" enctype="multipart/form-data">
 		<div class="row">
-			<div class="text-center col-md-3">
-				<div class="avatar col-md-12 " alt="avatar"></div>
-				<label class="file_upload col-md-12 col-xs-12">
-					<span class="button">Загрузить фотографию</span>
-					<input class="file-avatar" type="file" name="file_to_upload" id="file_to_upload" accept="image/*">
-				</label>
-				<input type="hidden" name="action" value="upload">
+			<div class="text-center col-md-5">
+
+				<div id="avatar" class="avatar">
+					<div id="avatar__preview" class="js-preview avatar__preview"></div>
+				</div>
+
+				<div class="js-fileapi-wrapper">
+					<label class="js-browse file_upload col-md-12 col-xs-12">
+						<span class="button">Загрузить фотографию</span>
+						<input class="file-avatar" type="file" name="file_to_upload" id="file_to_upload" accept="image/*">
+					</label>
+					<div class="js-upload" style="display: none;">
+						<div class="progress progress-success"><div class="js-progress bar"></div></div>
+						<span class="btn-txt">Загрузка фотографии</span>
+					</div>
+				</div>
+
+				<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#img-preview">Предпросмотр</button
+
+				<!-- Модальное окно -->
+				<div id="img-preview" class="modal fade img-modal" role="dialog">
+					<div class="modal-dialog">
+
+						<div class="modal-content modal-preview" style="left: 250px;">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal">&times;</button>
+								<h4 class="modal-title">Ваша фотография</h4>
+							</div>
+							<div id="loading" class="loader" style="display: none; position: absolute; left: 45%; top: 30%"></div>
+							<div id="image_container" class="modal-body">
+								<p>Some text in the modal.</p>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+							</div>
+						</div>
+
+					</div>
+				</div>
+
 			</div>
 		</div>
+
+		<input type="hidden" name="action" value="upload">
 	</form>
 
 	<!-- Колонка профиля -->

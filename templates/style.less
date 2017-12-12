@@ -42,11 +42,18 @@ div:before, div:after {
 		border-radius: 50%;
 		width: 200px;
 		height: 200px;
-		background-image: url("../images/character-designer.png");
-		background-repeat: no-repeat;
-		background-size: 100% auto;
-		background-position: center;
+		background: #e0e0e0 url(../images/user.svg) 50% 50% e('/') contain no-repeat;
+		margin-left: 10px;
 		float: left;
+		&__preview {
+			position: absolute;
+		}
+		canvas {
+			border-radius: 50%;
+			width: 200px;
+			height: 200px;
+			overflow: hidden;
+		}
 	}
 	.file_upload {
 		display: block;
@@ -55,8 +62,8 @@ div:before, div:after {
 		font-size: 1em;
 		height: 2.2em;
 		line-height: 2em;
-		padding-left: 0;
-		padding-right: 0;
+		padding-left: 15px;
+		padding-right: 15px;
 		& > .button {
 			display: block;
 			cursor: pointer;
@@ -87,7 +94,8 @@ div:before, div:after {
 			height: 100%;
 			position: absolute;
 			top: 0;
-			opacity: 0
+			opacity: 0;
+			z-index: -1;
 		}
 		&.focus {
 			box-shadow: 0 0 5px rgba(0, 30, 255, 0.4);
@@ -300,3 +308,82 @@ div:before, div:after {
 	}
 }
 
+
+.popup {
+	margin: 25px;
+	float: left;
+	display: inline-block;
+	box-shadow: 0 0 5px #000;
+	background-color: #fff;
+}
+.popup__body {
+	margin: 10px 10px 5px;
+}
+
+.btn {
+	cursor: pointer;
+	display: inline-block;
+	*zoom: 1;
+	*display: inline;
+	position: relative;
+	overflow: hidden;
+	font-size: 20px;
+	font-family: Arial, Helvetica, sans-serif;
+	border-radius: 4px;
+	vertical-align: middle;
+
+	.progress {
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		opacity: .5;
+		position: absolute;
+		.bar {
+			width: 0;
+			top: 0;
+			left: 0;
+			bottom: 0;
+			position: absolute;
+			background-color: #f60;
+		}
+	}
+}
+
+.btn_browse {
+	cursor: pointer;
+	border: 1px solid rgba(0,0,0,.2);
+	padding: 8px 20px;
+	background-color: #FFDC73;
+	background: -moz-linear-gradient(top,#FFE599 0%,#FFDC73);
+	background: -webkit-gradient(linear, left top, left bottom,from(#FFE599),to(#FFDC73));
+	box-shadow: 0 1px 1px rgba(255,255,255,.5);
+}
+.btn_browse_small {
+	padding: 5px 10px;
+	font-size: 16px;
+}
+.btn-text {
+	position: relative;
+}
+
+.js-img {
+	background-image: url("../images/character-designer.png");
+}
+
+.img-modal {
+	overflow: visible!important;
+}
+#preview-pane {
+	display: block;
+	position: absolute;
+	z-index: 2000;
+	left: -240px;
+	float: left;
+}
+
+#preview-pane .preview-container {
+	width: 200px;
+	height: 200px;
+	overflow: hidden;
+}
