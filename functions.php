@@ -135,6 +135,7 @@ function get_template_part( $name, $atts = [] ) {
 				include $path;
 				$content = ob_get_contents();
 				ob_end_clean();
+				$content = implode( '', array_map( 'trim', explode( "\n", $content ) ) );
 
 				return $content;
 			} else {
@@ -357,13 +358,13 @@ function display_message() {
 					$class = ' message_alien';
 				}
 				$message = get_template_string( $template, [
-					'image'    => $image,
-					'name'     => $name,
-					'title'    => ! empty( $row['title'] ) ? $row['title'] : '',
-					'content'  => ! empty( $row['content'] ) ? $row['content'] : '',
-					'datetime' => $datetime,
-					'class'    => $class,
-					'ID' => $row['ID'],
+					'image'      => $image,
+					'name'       => $name,
+					'title'      => ! empty( $row['title'] ) ? $row['title'] : '',
+					'content'    => ! empty( $row['content'] ) ? $row['content'] : '',
+					'datetime'   => $datetime,
+					'class'      => $class,
+					'ID'         => $row['ID'],
 					'id_message' => $row ['id_message']
 				] );
 				echo $message;
@@ -394,6 +395,9 @@ function enqueue_scripts() {
 
 	register_script( 'functions', get_stylesheet_directory() . '/js/functions.js', [ 'jquery' ], '', true );
 	enqueue_script( 'functions' );
+
+	register_script( 'vlad', get_stylesheet_directory() . '/js/vlad.js', [ 'jquery' ], '', true );
+	enqueue_script( 'vlad' );
 }
 
 add_action( 'init', 'enqueue_scripts' );
