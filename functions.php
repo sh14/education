@@ -400,8 +400,8 @@ function enqueue_scripts() {
 	register_script( 'jcrop', get_stylesheet_directory() . '/js/jcrop/js/jquery.Jcrop.min.js' );
 	enqueue_script( 'jcrop' );
 
-	register_script('jquery.modal', get_stylesheet_directory() . '/js/FileAPI/statics/jquery.modal.js');
-	enqueue_script('jquery.modal');
+	register_script( 'jquery.modal', get_stylesheet_directory() . '/js/FileAPI/statics/jquery.modal.js' );
+	enqueue_script( 'jquery.modal' );
 }
 
 add_action( 'init', 'enqueue_scripts' );
@@ -510,3 +510,28 @@ function redirect_configuration_page() {
 		return false;
 	}
 }
+
+function proverka() {
+
+	//Получение данных из $_POST (от Влада)
+//	$_POST['content'] = 'ne jfuy';
+//	$_POST['event'] = 'message_update';
+//	$_POST['id_message'] = 4;
+//	$_POST['id_user'] = 2;
+	// Проверка на наличие и значение атрибута 'event'
+	if ( ! empty($_POST['event'] && $_POST['event']=='message_update')) {
+		$sql    = "SELECT COUNT(*) FROM `message` WHERE `id_message` = {$_POST['id_message']} AND  `id_user` = {$_POST['id_user']}";
+		$result = do_query( $sql );
+		$row    = $result->fetch_row();
+	//	pr( $row );
+	//  Замена старого сообщения в дб на новое, при прохождении проверки
+		if ( $row = 1 ) {
+			$new_message = $_POST['content'];
+			$update = "UPDATE `message` SET content = '{$new_message}' WHERE `id_message` = {$_POST['id_message']}";
+			do_query($update);
+		}
+
+	}
+}
+add_action( 'init', 'proverka' );
+
