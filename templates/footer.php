@@ -158,9 +158,7 @@
 				}
 			}
 		}
-
-		//var canvas = $('.image_2 canvas')[0];
-		//var context = canvas.getContext('2d');
+		
 
 		$( '#img-preview' ).on( 'click', '#target canvas', function(){
 			$(this).Jcrop({
