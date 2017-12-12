@@ -40,8 +40,6 @@ $user = get_user_info();
 					</div>
 				</div>
 
-				<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#img-preview">Предпросмотр</button
-
 				<!-- Модальное окно -->
 				<div id="img-preview" class="modal fade img-modal" role="dialog">
 					<div class="modal-dialog">
