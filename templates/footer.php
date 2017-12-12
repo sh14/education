@@ -80,7 +80,6 @@
 			var image = FileAPI.Image( file ), callback;
 
 			if ( type ) {
-				//label += ' ('+type+')';
 				image.resize( width, height, type );
 			} else if ( width ) {
 				image.preview( width, height );

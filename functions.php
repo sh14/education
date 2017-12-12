@@ -128,6 +128,7 @@ function get_template_part( $name, $atts = [] ) {
 				include $path;
 				$content = ob_get_contents();
 				ob_end_clean();
+				$content = implode( '', array_map( 'trim', explode( "\n", $content ) ) );
 
 				return $content;
 			} else {
@@ -402,6 +403,9 @@ function enqueue_scripts() {
 
 	register_script( 'jquery.modal', get_stylesheet_directory() . '/js/FileAPI/statics/jquery.modal.js' );
 	enqueue_script( 'jquery.modal' );
+
+	register_script( 'vlad', get_stylesheet_directory() . '/js/vlad.js', [ 'jquery' ], '', true );
+	enqueue_script( 'vlad' );
 }
 
 add_action( 'init', 'enqueue_scripts' );
