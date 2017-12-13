@@ -179,6 +179,96 @@ function is_user_logged_in() {
 	}
 }
 
+/**
+ * Функция загрузки фотографии пользователя
+ */
+function upload_image() {
+	if ( ! empty( $_POST['action'] ) && $_POST['action'] == 'upload' ) {
+		$target_dir      = '/images/';
+		$target_file     = get_root_path() . $target_dir . basename( $_FILES['file_to_upload']['name'] );
+		$upload_ok       = 1;
+		$image_file_type = pathinfo( $target_file, PATHINFO_EXTENSION );
+		if ( isset( $_POST['submit'] ) ) {
+			$check = getimagesize( $_FILES['file_to_upload']['tmp_name'] );
+			if ( $check !== false ) {
+				echo 'Файл ' . $check['mime'] . ' является изображением.';
+				$upload_ok = 1;
+			} else {
+				echo 'Файл не является изображением.';
+				$upload_ok = 0;
+			}
+		}
+
+		if ( file_exists( $target_file ) ) {
+			echo 'Файл уже существует.';
+			$upload_ok = 0;
+		}
+		if ( $_FILES['file_to_upload']['size'] > 500000 ) {
+			echo 'Файл слишком большой.';
+			$upload_ok = 0;
+		}
+		if ( $image_file_type != "jpg" && $image_file_type != "png" && $image_file_type != "jpeg"
+		     && $image_file_type != "gif" ) {
+			echo 'Можно загружать только файлы JPG, JPEG, PNG & GIF.';
+			$upload_ok = 0;
+		}
+		if ( $upload_ok == 0 ) {
+			echo 'Файл не загружен.';
+		} else {
+			if ( move_uploaded_file( $_FILES['file_to_upload']['tmp_name'], $target_file ) ) {
+				echo 'Файл ' . basename( $_FILES['file_to_upload']['name'] ) . ' успешно загружен.';
+			} else {
+				echo 'При загрузке файла произошла ошибка.';
+			}
+		}
+	}
+}
+
+//add_action( 'init', 'upload_image' );
+
+/**
+ * Функция загрузки изображения canvas
+ */
+
+function image_resize() {
+	$str = 'Строка в кодировке UTF-8';
+	echo base64_encode($str);
+	print_r($_FILES);
+	//echo get_root_path();
+	if ( ! empty( $_POST['action'] ) && $_POST['action'] == 'upload' ) {
+		echo get_root_path();
+		echo basename( $_FILES['file_to_upload']['name'] );
+		$target_dir      = '/images/users/';
+		$target_file     = get_root_path() . $target_dir . basename( $_FILES['file_to_upload']['name'] );
+		$img = $_POST['image'];
+		$img = str_replace('data:image/png;base64,', '', $img);
+		$img = str_replace(' ', '+', $img);
+		$data = base64_decode($img);
+		$success = file_put_contents($target_file, $data);
+		print $success ? $target_file : 'Unable to save the file.';
+
+		echo $target_dir;
+
+		//header('Location: '.$_POST['return_url']);
+
+		/*
+		$targ_w = $targ_h = 200;
+		$jpeg_quality = 100;
+
+		$src = 'images/avatar.jpg';
+		$img_r = imagecreatefromjpeg($src);
+		$dst_r = ImageCreateTrueColor( $targ_w, $targ_h );
+
+		imagecopyresampled($dst_r,$img_r,0,0,$_POST['x'],$_POST['y'],
+			$targ_w,$targ_h,$_POST['w'],$_POST['h']);
+
+		header('Content-type: image/jpeg');
+		imagejpeg($dst_r, null, $jpeg_quality);
+		*/
+	}
+}
+
+add_action( 'init', 'image_resize' );
 
 /**
  *  Функция редактирования профиля пользователя

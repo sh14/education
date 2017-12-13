@@ -190,73 +190,6 @@ function encript_password( $password ) {
 }
 
 /**
- * Функция загрузки фотографии пользователя
- */
-function upload_image() {
-	if ( ! empty( $_POST['action'] ) && $_POST['action'] == 'upload' ) {
-		$target_dir      = '/images/';
-		$target_file     = get_root_path() . $target_dir . basename( $_FILES['file_to_upload']['name'] );
-		$upload_ok       = 1;
-		$image_file_type = pathinfo( $target_file, PATHINFO_EXTENSION );
-		if ( isset( $_POST['submit'] ) ) {
-			$check = getimagesize( $_FILES['file_to_upload']['tmp_name'] );
-			if ( $check !== false ) {
-				echo 'Файл ' . $check['mime'] . ' является изображением.';
-				$upload_ok = 1;
-			} else {
-				echo 'Файл не является изображением.';
-				$upload_ok = 0;
-			}
-		}
-
-		if ( file_exists( $target_file ) ) {
-			echo 'Файл уже существует.';
-			$upload_ok = 0;
-		}
-		if ( $_FILES['file_to_upload']['size'] > 500000 ) {
-			echo 'Файл слишком большой.';
-			$upload_ok = 0;
-		}
-		if ( $image_file_type != "jpg" && $image_file_type != "png" && $image_file_type != "jpeg"
-		     && $image_file_type != "gif" ) {
-			echo 'Можно загружать только файлы JPG, JPEG, PNG & GIF.';
-			$upload_ok = 0;
-		}
-		if ( $upload_ok == 0 ) {
-			echo 'Файл не загружен.';
-		} else {
-			if ( move_uploaded_file( $_FILES['file_to_upload']['tmp_name'], $target_file ) ) {
-				echo 'Файл ' . basename( $_FILES['file_to_upload']['name'] ) . ' успешно загружен.';
-			} else {
-				echo 'При загрузке файла произошла ошибка.';
-			}
-		}
-	}
-}
-
-//add_action( 'init', 'upload_image' );
-
-function image_resize() {
-	if ( ! empty( $_POST['action'] ) && $_POST['action'] == 'upload' ) {
-		$targ_w = $targ_h = 200;
-		$jpeg_quality = 90;
-
-		$src = 'images/avatar.jpg';
-		$img_r = imagecreatefromjpeg($src);
-		$dst_r = ImageCreateTrueColor( $targ_w, $targ_h );
-
-		imagecopyresampled($dst_r,$img_r,0,0,$_POST['x'],$_POST['y'],
-			$targ_w,$targ_h,$_POST['w'],$_POST['h']);
-
-		header('Content-type: image/jpeg');
-		imagejpeg($dst_r, null, $jpeg_quality);
-	}
-}
-
-//add_action( 'init', 'image_resize' );
-
-
-/**
  * Регистрация скрипта для последующего вывода этого скрипта
  *
  * @param       $handle
@@ -553,7 +486,6 @@ function proverka() {
 			$update = "UPDATE `message` SET `content` = '{$new_message}' WHERE `id_message` = {$_POST['id_message']}";
 			do_query($update);
 		}
-
 	}
 }
 add_action( 'init', 'proverka' );
