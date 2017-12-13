@@ -550,7 +550,7 @@ function proverka() {
 	//  Замена старого сообщения в дб на новое, при прохождении проверки
 		if ( $row = 1 ) {
 			$new_message = $_POST['content'];
-			$update = "UPDATE `message` SET content = '{$new_message}' WHERE `id_message` = {$_POST['id_message']}";
+			$update = "UPDATE `message` SET `content` = '{$new_message}' WHERE `id_message` = {$_POST['id_message']}";
 			do_query($update);
 		}
 
