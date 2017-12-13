@@ -231,10 +231,6 @@ function upload_image() {
  */
 
 function image_resize() {
-	$str = 'Строка в кодировке UTF-8';
-	echo base64_encode($str);
-	print_r($_FILES);
-	//echo get_root_path();
 	if ( ! empty( $_POST['action'] ) && $_POST['action'] == 'upload' ) {
 		echo get_root_path();
 		echo basename( $_FILES['file_to_upload']['name'] );
@@ -246,25 +242,6 @@ function image_resize() {
 		$data = base64_decode($img);
 		$success = file_put_contents($target_file, $data);
 		print $success ? $target_file : 'Unable to save the file.';
-
-		echo $target_dir;
-
-		//header('Location: '.$_POST['return_url']);
-
-		/*
-		$targ_w = $targ_h = 200;
-		$jpeg_quality = 100;
-
-		$src = 'images/avatar.jpg';
-		$img_r = imagecreatefromjpeg($src);
-		$dst_r = ImageCreateTrueColor( $targ_w, $targ_h );
-
-		imagecopyresampled($dst_r,$img_r,0,0,$_POST['x'],$_POST['y'],
-			$targ_w,$targ_h,$_POST['w'],$_POST['h']);
-
-		header('Content-type: image/jpeg');
-		imagejpeg($dst_r, null, $jpeg_quality);
-		*/
 	}
 }
 
