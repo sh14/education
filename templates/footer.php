@@ -86,7 +86,6 @@
 
 					image( file, 200, 200 * aspectRatio )( function () {
 
-						// Оригинальное изображение
 						image( file, 300, 300 * aspectRatio );
 
 						processing            = false;
