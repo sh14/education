@@ -15,68 +15,65 @@ if ( is_user_logged_in() ) {
 }
 ?>
 
-<div class="page container">
-	<div class="row">
-		<div class="col-md-12 col-sm-12 col-xs-12">
-			<div class="col-md-9 col-sm-9 col-xs-9">
-				<div class="chat js-chat">
-					<div class="chat__messages" id="results_message">
-						<?php echo display_message(); ?>
-
-
+	<div class="page container">
+		<div class="row">
+			<div class="col-md-12 col-sm-12 col-xs-12">
+				<div class="col-md-9 col-sm-9 col-xs-9">
+					<div class="chat js-chat">
+						<div class="chat__messages" id="results_message">
+							<?php echo display_message(); ?>
 					</div>
                     <form action="" method="post" class="chat__form" id="message">
-                        <input type="text" class="form-control chat__title" placeholder="Тема сообщения"
+                        <input type="hidden" name="id_user" value="<?php get_current_user_id();?>">
+	                    <input type="text" class="form-control chat__title" placeholder="Тема сообщения"
                                name="title"
                                id="title" value="">
                         <textarea class="form-control chat__message" rows="1"
                                   placeholder="Текст сообщения"
                                   name="content" id="your_massage"></textarea>
-	                    <input type="hidden" type="datetime-local" name="datetime" value="<?php
+                        <input type="hidden" type="datetime-local" name="datetime" value="<?php
 	                    echo date( 'Y-m-d' ) . 'T' . date( 'H:i' );
 	                    ?>">
 	                    <input type="hidden" name="action" value="message_add">
 	                    <button class="btn btn-success chat__submit" type="submit"
                                 name="" data-event="btn_message">Отправить
                         </button>
+
                     </form>
 
-                    <script id="message-template" type="text/ejs">
-                        <div class="message<?php echo $atts['class']; ?>">
-                            <div class="message__box">
-                                <div class="message__user-avatar">
-                                    <a href="javascript:" class="message__user-image"<?php echo $atts['image']; ?>></a>
-                                </div>
-                                <div class="message__data">
-                                    <div class="message__data-box">
-                                        <a href="javascript:" class="message__user-name"><?php echo $atts['name']; ?></a>
-                                        <div class="message__title"><?php echo $atts['title']; ?></div>
-                                        <div class="message__text"><%=message%></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="message__date"><?php echo $atts['datetime']; ?></div>
-                        </div>
-                    </script>
-				</div>
-			</div>
 
-			<div class="col-md-3 col-sm-3 col-xs-3">
-				<div class="avatar">
-					<div class="avatar__image"></div>
-					<h3 class="avatar__name"><?php echo $name; ?></h3>
-					<div class="avatar__buttons">
-						<button type="button" class="btn btn-primary btn-block" data-toggle="modal"
-						        data-target="#modal-1">Мой профиль
-						</button>
-						<a href="<?php echo get_root_url() . '?p=logout'; ?>"
-						   class="btn btn-link btn-block">Выход</a>
+					</div>
+				</div>
+
+				<div class="col-md-3 col-sm-3 col-xs-3">
+					<div class="avatar">
+						<div class="avatar__image"></div>
+						<h3 class="avatar__name"><?php echo $name; ?></h3>
+						<div class="avatar__buttons">
+							<button type="button" class="btn btn-primary btn-block" data-toggle="modal"
+							        data-target="#modal-1">Мой профиль
+							</button>
+							<a href="<?php echo get_root_url() . '?p=logout'; ?>"
+							   class="btn btn-link btn-block">Выход</a>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-</div>
+
+<script id="message_template" type="text/html"><?php
+	echo get_template_part( 'message', [
+		'image',
+		'name',
+		'title',
+		'content',
+		'datetime',
+		'class_name',
+		'ID',
+		'id_message',
+	] );
+	?></script>
 
 <?php
 if ( is_user_logged_in() ) {
@@ -100,8 +97,8 @@ if ( is_user_logged_in() ) {
 	</div>
 	<?php
 }
-?>
 
+?>
 
 <script>
     /*var your_message = document.getElementById("your_massage");

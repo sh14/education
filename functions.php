@@ -325,7 +325,7 @@ function display_message() {
 				'title',
 				'content',
 				'datetime',
-				'class',
+				'class_name',
 				'ID',
 				'id_message',
 			] );
@@ -356,7 +356,7 @@ function display_message() {
 					'title'      => ! empty( $row['title'] ) ? $row['title'] : '',
 					'content'    => ! empty( $row['content'] ) ? $row['content'] : '',
 					'datetime'   => $datetime,
-					'class'      => $class,
+					'class_name'      => $class,
 					'ID'         => $row['ID'],
 					'id_message' => $row ['id_message']
 				] );
@@ -386,9 +386,6 @@ function enqueue_scripts() {
 	register_script( 'bootstrap', get_stylesheet_directory() . '/bootstrap/js/bootstrap.min.js', [ 'jquery' ], '', true );
 	enqueue_script( 'bootstrap' );
 
-	register_script( 'functions', get_stylesheet_directory() . '/js/functions.js', [ 'jquery' ], '', true );
-	enqueue_script( 'functions' );
-
 	register_script( 'fileapi', get_stylesheet_directory() . '/js/FileAPI/dist/FileAPI.min.js' );
 	enqueue_script( 'fileapi' );
 
@@ -404,8 +401,14 @@ function enqueue_scripts() {
 	register_script('jquery.modal', get_stylesheet_directory() . '/js/FileAPI/statics/jquery.modal.js');
 	enqueue_script('jquery.modal');
 
+	register_script( 'microtemplating', get_stylesheet_directory() . '/js/microtemplating.js', [ ], '', true );
+	enqueue_script( 'microtemplating' );
+
+	register_script( 'functions', get_stylesheet_directory() . '/js/functions.js', [ 'jquery' ], '', true );
+	enqueue_script( 'functions' );
+
 	register_script( 'vlad', get_stylesheet_directory() . '/js/vlad.js', [ 'jquery' ], '', true );
-	enqueue_script( 'vlad' );
+	//enqueue_script( 'vlad' );
 }
 
 add_action( 'init', 'enqueue_scripts' );

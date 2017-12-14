@@ -1,4 +1,4 @@
-<div class="message<?php echo $atts['class']; ?>">
+<div class="message<?php echo $atts['class_name']; ?>">
 	<div class="message__box">
 		<div class="message__user-avatar">
 			<a href="javascript:" class="message__user-image"<?php echo $atts['image']; ?>></a>
