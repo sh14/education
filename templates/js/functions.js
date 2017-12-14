@@ -46,32 +46,52 @@
 		chat_auto_height();
 	}, 250 ) );
 
-	$('.chat__submit').on('click',function(){
+	$( '.chat__submit' ).on( 'click', function ( event ) {
+		event.preventDefault();
 
-		let form = $(this).closest('form');
+		let form = $( this ).closest( 'form' );
 
-		let data = {
-			'title':form.find('[name="title"]'),
-			'content':form.find('[name="content"]'),
-			'id_user':form.find('[name="id_user"]'),
-		};
+		let data = form.serialize();
+		console.log( data );
+		console.log( form.serializeArray() );
+		//return '';
+		let jqxhr = $.post( "index.php", data )
+		             .done( function ( result ) {
+			             console.log( result );
 
-		$.post()
+			             result = JSON.parse( result );
+			             console.log( result );
+			             if ( result[ 'result' ] === 'success' ) {
+				             data         = form.serializeArray();
+				             let new_data = {
+					             'image' : '',
+					             'name' : '',
+					             'title' : '',
+					             'content' : '',
+					             'datetime' : '',
+					             'class_name' : '',
+					             'ID' : '',
+					             'id_message' : '',
+				             };
+				             $.each( data, function ( index, el ) {
+					             new_data[ el[ 'name' ] ] = el[ 'value' ];
+				             } );
+				             console.log( new_data );
 
-		let message = tmpl( 'message_template', {
-			//'image' : '1',
-			//'name' : '2',
-			'title' : '3',
-			'content' : '4',
-			//'datetime' : '5',
-			//'class_name' : '6',
-			'id_user' : '7',
-			//'id_message' : '8',
-		} );
+				             let message = tmpl( 'message_template', new_data );
+				             $( '.chat__messages' ).append( message );
+			             }
+			             /**/
+		             } )
+		             .fail( function () {
+
+		             } )
+		             .always( function () {
+
+		             } );
 
 
-
-	});
+	} );
 
 
 })( jQuery );

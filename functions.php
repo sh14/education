@@ -209,9 +209,15 @@ function register_script( $handle, $src, $deps = array(), $ver = false, $in_foot
 		$ver = '';
 	}
 	$scripts[ $handle ] = [
-		'src'       => $src . $ver,
 		'in_footer' => $in_footer
 	];
+
+	// если $src является массивом, значит необходимо дописать $src перед регистрируемым скриптом
+	if ( is_array( $src ) ) {
+		$scripts[ $handle ]['src'] = implode( '', $src );
+	} else {
+		$scripts[ $handle ]['src'] = $src . $ver;
+	}
 
 	$reordered                 = [];
 	$i                         = 0;
@@ -237,20 +243,27 @@ function register_script( $handle, $src, $deps = array(), $ver = false, $in_foot
 }
 
 /**
- * Вывод скрипта в нужно месте
+ * Вывод скрипта в нужном месте
  *
  * @param $handle
  */
-function enqueue_script( $handle ) {
+function enqueue_script( $handle, $object_name = '' ) {
 	global $scripts;
 
 	if ( ! empty( $scripts[ $handle ] ) ) {
-		$out = '<script src="' . $scripts[ $handle ]['src'] . '"></script>';
+
 
 		if ( $scripts[ $handle ]['in_footer'] === true ) {
 			$action = 'footer';
 		} else {
 			$action = 'head';
+		}
+
+		// если не указан $object_name, необходимо подключить скрипт
+		if ( empty( $object_name ) ) {
+			$out = '<script src="' . $scripts[ $handle ]['src'] . '"></script>';
+		} else {
+			$out = '<script>' . $scripts[ $handle ]['src'] . '</script>';
 		}
 
 		add_action( $action, function () use ( $out ) {
@@ -259,6 +272,31 @@ function enqueue_script( $handle ) {
 
 	}
 }
+
+/**
+ * Вывод переменной
+ *
+ * @param $handle
+ * @param $object_name
+ * @param $l10n
+ */
+function wp_localize_script( $handle, $object_name, $l10n ) {
+	$out   = [];
+	$out[] = 'var '.$object_name . '= {';
+
+	foreach ( $l10n as $key => $value ) {
+		if ( is_string( $value ) ) {
+			$value = "'{$value}'";
+		}
+		$out[] = "'$key':{$value},";
+	}
+	$out[] = '};';
+
+	$out = implode( "\n", $out );
+	register_script( $handle . $object_name, [ $out ] );
+	enqueue_script( $handle . $object_name, $object_name );
+}
+
 
 /**
  * Вывод сообщений на дисплей
@@ -308,7 +346,7 @@ function display_message() {
 					'title'      => ! empty( $row['title'] ) ? $row['title'] : '',
 					'content'    => ! empty( $row['content'] ) ? $row['content'] : '',
 					'datetime'   => $datetime,
-					'class_name'      => $class,
+					'class_name' => $class,
 					'ID'         => $row['ID'],
 					'id_message' => $row ['id_message']
 				] );
@@ -353,17 +391,20 @@ function enqueue_scripts() {
 	register_script( 'jquery.modal', get_stylesheet_directory() . '/js/FileAPI/statics/jquery.modal.js' );
 	enqueue_script( 'jquery.modal' );
 
-	register_script( 'microtemplating', get_stylesheet_directory() . '/js/microtemplating.js', [ ], '', true );
+	register_script( 'microtemplating', get_stylesheet_directory() . '/js/microtemplating.js', [], '', true );
 	enqueue_script( 'microtemplating' );
 
 	register_script( 'functions', get_stylesheet_directory() . '/js/functions.js', [ 'jquery' ], '', true );
+
 	enqueue_script( 'functions' );
 
-	register_script( 'vlad', get_stylesheet_directory() . '/js/vlad.js', [ 'jquery' ], '', true );
-	//enqueue_script( 'vlad' );
+	wp_localize_script( 'functions', 'shlo', [
+		'current_user_id' => get_current_user_id(),
+	] );
 }
 
 add_action( 'init', 'enqueue_scripts' );
+
 
 /*
  * это недоработанная функция сохраниня пользователя
@@ -478,18 +519,19 @@ function proverka() {
 //	$_POST['id_message'] = 4;
 //	$_POST['id_user'] = 2;
 	// Проверка на наличие и значение атрибута 'event'
-	if ( ! empty($_POST['event'] && $_POST['event']=='message_update')) {
+	if ( ! empty( $_POST['event'] && $_POST['event'] == 'message_update' ) ) {
 		$sql    = "SELECT COUNT(*) FROM `message` WHERE `id_message` = {$_POST['id_message']} AND  `id_user` = {$_POST['id_user']}";
 		$result = do_query( $sql );
 		$row    = $result->fetch_row();
-	//	pr( $row );
-	//  Замена старого сообщения в дб на новое, при прохождении проверки
+		//	pr( $row );
+		//  Замена старого сообщения в дб на новое, при прохождении проверки
 		if ( $row = 1 ) {
 			$new_message = $_POST['content'];
-			$update = "UPDATE `message` SET `content` = '{$new_message}' WHERE `id_message` = {$_POST['id_message']}";
-			do_query($update);
+			$update      = "UPDATE `message` SET `content` = '{$new_message}' WHERE `id_message` = {$_POST['id_message']}";
+			do_query( $update );
 		}
 	}
 }
+
 add_action( 'init', 'proverka' );
 

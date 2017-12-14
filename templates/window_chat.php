@@ -24,7 +24,7 @@ if ( is_user_logged_in() ) {
 							<?php echo display_message(); ?>
 					</div>
                     <form action="" method="post" class="chat__form" id="message">
-                        <input type="hidden" name="id_user" value="<?php get_current_user_id();?>">
+                        <input type="hidden" name="id_user" value="<?php echo get_current_user_id();?>">
 	                    <input type="text" class="form-control chat__title" placeholder="Тема сообщения"
                                name="title"
                                id="title" value="">
@@ -36,7 +36,7 @@ if ( is_user_logged_in() ) {
 	                    ?>">
 	                    <input type="hidden" name="action" value="message_add">
 	                    <button class="btn btn-success chat__submit" type="submit"
-                                name="" data-event="btn_message">Отправить
+                                data-event="btn_message">Отправить
                         </button>
 
                     </form>
