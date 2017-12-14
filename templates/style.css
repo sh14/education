@@ -343,3 +343,6 @@ div:after {
   height: 200px;
   overflow: hidden;
 }
+.profile .modal-preview {
+  display: inline-block;
+}

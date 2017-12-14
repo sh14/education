@@ -2,7 +2,7 @@
 
 <script type="text/javascript">
 	$( document ).ready( function () {
-		/* Информирование пользователя о том, что пароли совпадают или не совпадают */
+
 		$( '.password, .confirm_password' ).on( 'keyup', function () {
 			if ( $( '.password' ).val() === $( '.confirm_password' ).val() ) {
 				if ( $( '.password, .confirm_password' ).val() != '' ) {
@@ -14,59 +14,15 @@
 				$( '.message' ).html( 'Пароли не совпадают' ).css( 'color', 'red' );
 			}
 		} );
-		/* Отправка формы добавления изображения при загрузке изображения */
-		/*$( '.file-avatar' ).on( 'change', function () {
-			$( '.form-avatar' ).submit();
-		} );*/
+
+		$( '.save_avatar' ).on( 'click', function () {
+			var canvas = $('.avatar__preview canvas');
+			$('.form-avatar input[name=image]').val(canvas[0].toDataURL());
+		} );
 
 
 		$( '#img-preview' ).modal( { show : false } );
 
-		//$( '#popup' ).Jcrop();
-
-		/*$('#avatar').fileapi({
-			url: //echo "'".get_stylesheet_directory().'/js/FileAPI/server/ctrl.php'."'",
-			accept: 'image/*',
-			imageSize: { minWidth: 200, minHeight: 200 },
-			elements: {
-				active: { show: '.js-upload', hide: '.js-browse' },
-				preview: {
-					el: '.js-preview',
-					width: 200,
-					height: 200
-				},
-				progress: '.js-progress'
-			},
-			onSelect: function (evt, ui){
-				var file = ui.files[0];
-				console.log(file);
-				if( !FileAPI.support.transform ) {
-					alert('Ваш браузер не поддерживает Flash');
-				}
-				else if( file ){
-					$('#popup').modal({
-						closeOnEsc: true,
-						closeOnOverlayClick: false,
-						onOpen: function (overlay){
-							$(overlay).on('click', '.js-upload', function (){
-								$.modal().close();
-								$('#avatar').fileapi('upload');
-							});
-							$('.js-img', overlay).cropper({
-								file: file,
-								bgColor: '#f00',
-								maxSize: [$(window).width()-100, $(window).height()-100],
-								minSize: [200, 200],
-								selection: '90%',
-								onSelect: function (coords){
-									$('#avatar').fileapi('crop', file, coords);
-								}
-							});
-						}
-					}).open();
-				}
-			}
-		});*/
 
 		var processing = false;
 
@@ -80,7 +36,6 @@
 			var image = FileAPI.Image( file ), callback;
 
 			if ( type ) {
-				//label += ' ('+type+')';
 				image.resize( width, height, type );
 			} else if ( width ) {
 				image.preview( width, height );
@@ -131,7 +86,6 @@
 
 					image( file, 200, 200 * aspectRatio )( function () {
 
-						// Оригинальное изображение
 						image( file, 300, 300 * aspectRatio );
 
 						processing            = false;

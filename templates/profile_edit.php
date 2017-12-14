@@ -54,7 +54,7 @@ $user = get_user_info();
 								<p>Some text in the modal.</p>
 							</div>
 							<div class="modal-footer">
-								<button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+								<button type="submit" class="save_avatar btn btn-default">Сохранить</button>
 							</div>
 						</div>
 
@@ -64,6 +64,7 @@ $user = get_user_info();
 			</div>
 		</div>
 
+		<input type="hidden" name="image" value="upload">
 		<input type="hidden" name="action" value="upload">
 	</form>
 

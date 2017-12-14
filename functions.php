@@ -190,54 +190,6 @@ function encript_password( $password ) {
 }
 
 /**
- * Функция загрузки фотографии пользователя
- */
-function upload_image() {
-	if ( ! empty( $_POST['action'] ) && $_POST['action'] == 'upload' ) {
-		$target_dir      = '/images/';
-		$target_file     = get_root_path() . $target_dir . basename( $_FILES['file_to_upload']['name'] );
-		$upload_ok       = 1;
-		$image_file_type = pathinfo( $target_file, PATHINFO_EXTENSION );
-		if ( isset( $_POST['submit'] ) ) {
-			$check = getimagesize( $_FILES['file_to_upload']['tmp_name'] );
-			if ( $check !== false ) {
-				echo 'Файл ' . $check['mime'] . ' является изображением.';
-				$upload_ok = 1;
-			} else {
-				echo 'Файл не является изображением.';
-				$upload_ok = 0;
-			}
-		}
-
-		if ( file_exists( $target_file ) ) {
-			echo 'Файл уже существует.';
-			$upload_ok = 0;
-		}
-		if ( $_FILES['file_to_upload']['size'] > 500000 ) {
-			echo 'Файл слишком большой.';
-			$upload_ok = 0;
-		}
-		if ( $image_file_type != "jpg" && $image_file_type != "png" && $image_file_type != "jpeg"
-		     && $image_file_type != "gif" ) {
-			echo 'Можно загружать только файлы JPG, JPEG, PNG & GIF.';
-			$upload_ok = 0;
-		}
-		if ( $upload_ok == 0 ) {
-			echo 'Файл не загружен.';
-		} else {
-			if ( move_uploaded_file( $_FILES['file_to_upload']['tmp_name'], $target_file ) ) {
-				echo 'Файл ' . basename( $_FILES['file_to_upload']['name'] ) . ' успешно загружен.';
-			} else {
-				echo 'При загрузке файла произошла ошибка.';
-			}
-		}
-	}
-}
-
-//add_action( 'init', 'upload_image' );
-
-
-/**
  * Регистрация скрипта для последующего вывода этого скрипта
  *
  * @param       $handle
@@ -398,8 +350,8 @@ function enqueue_scripts() {
 	register_script( 'jcrop', get_stylesheet_directory() . '/js/jcrop/js/jquery.Jcrop.min.js' );
 	enqueue_script( 'jcrop' );
 
-	register_script('jquery.modal', get_stylesheet_directory() . '/js/FileAPI/statics/jquery.modal.js');
-	enqueue_script('jquery.modal');
+	register_script( 'jquery.modal', get_stylesheet_directory() . '/js/FileAPI/statics/jquery.modal.js' );
+	enqueue_script( 'jquery.modal' );
 
 	register_script( 'microtemplating', get_stylesheet_directory() . '/js/microtemplating.js', [ ], '', true );
 	enqueue_script( 'microtemplating' );
@@ -517,3 +469,27 @@ function redirect_configuration_page() {
 		return false;
 	}
 }
+
+function proverka() {
+
+	//Получение данных из $_POST (от Влада)
+//	$_POST['content'] = 'ne jfuy';
+//	$_POST['event'] = 'message_update';
+//	$_POST['id_message'] = 4;
+//	$_POST['id_user'] = 2;
+	// Проверка на наличие и значение атрибута 'event'
+	if ( ! empty($_POST['event'] && $_POST['event']=='message_update')) {
+		$sql    = "SELECT COUNT(*) FROM `message` WHERE `id_message` = {$_POST['id_message']} AND  `id_user` = {$_POST['id_user']}";
+		$result = do_query( $sql );
+		$row    = $result->fetch_row();
+	//	pr( $row );
+	//  Замена старого сообщения в дб на новое, при прохождении проверки
+		if ( $row = 1 ) {
+			$new_message = $_POST['content'];
+			$update = "UPDATE `message` SET `content` = '{$new_message}' WHERE `id_message` = {$_POST['id_message']}";
+			do_query($update);
+		}
+	}
+}
+add_action( 'init', 'proverka' );
+
