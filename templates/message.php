@@ -8,6 +8,7 @@
 				<a href="javascript:" class="message__user-name"><?php echo $atts['name']; ?></a>
 				<div class="message__title"><?php echo $atts['title']; ?></div>
 				<div class="message__text" data-id_user="<?php echo $atts['ID']; ?>" data-id_message="<?php echo $atts['id_message']; ?>"><?php echo $atts['content']; ?></div>
+				<input type="button" class="btn-primary btn-message-edit" value="редактировать">
 			</div>
 		</div>
 	</div>
