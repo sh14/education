@@ -471,13 +471,33 @@ function emailValidation( $email ) {
  */
 
 function message_add() {
-	if ( ! empty( $_POST['action'] ) && $_POST['action'] == 'message_add' ) {
-		if ( is_user_logged_in() && ! empty( $_POST['content'] ) ) {
-			$user_id = get_current_user_id();
-			do_query( "INSERT INTO `message` ( `id_user`, `datetime`, `title`, `content` ) 
+// функция доавления или редактирования сообщения, почти работает(хардкод)
+	if ( ! empty( $_POST['action'] ) && $_POST['action'] == 'message_add') {
+
+		if ( !empty($_POST['id_message'] ) ) {
+		//	pr($_POST);die();
+			$sql    = "SELECT COUNT(*) FROM `message` WHERE `id_message` = {$_POST['id_message']} AND  `id_user` = {$_POST['id_user']}";
+			$result = do_query( $sql );
+			$row    = $result->fetch_row();
+
+			//  Замена старого сообщения в дб на новое, при прохождении проверки
+			if ( $row = 1 ) {
+
+				$new_message = $_POST['content'];
+				$update      = "UPDATE `message` SET `content` = '{$new_message}' WHERE `id_message` = {$_POST['id_message']}";
+				do_query( $update );
+			}
+
+		} else{
+
+			if ( is_user_logged_in() && ! empty( $_POST['content'] ) ) {
+				$user_id = get_current_user_id();
+				do_query( "INSERT INTO `message` ( `id_user`, `datetime`, `title`, `content` ) 
 			VALUES ({$user_id}, '{$_POST['datetime']}', '{$_POST['title']}', '{$_POST['content']}' )" );
-			header( 'location: index.php' );
+
+			}
 		}
+		header( 'location: index.php' );
 	}
 }
 
@@ -511,9 +531,9 @@ function redirect_configuration_page() {
 	}
 }
 
-function proverka() {
+//function proverka() {
 
-	//Получение данных из $_POST (от Влада)
+/*	//Получение данных из $_POST (от Влада)
 //	$_POST['content'] = 'ne jfuy';
 //	$_POST['event'] = 'message_update';
 //	$_POST['id_message'] = 4;
@@ -523,8 +543,8 @@ function proverka() {
 		$sql    = "SELECT COUNT(*) FROM `message` WHERE `id_message` = {$_POST['id_message']} AND  `id_user` = {$_POST['id_user']}";
 		$result = do_query( $sql );
 		$row    = $result->fetch_row();
-		//	pr( $row );
-		//  Замена старого сообщения в дб на новое, при прохождении проверки
+	//	pr( $row );
+	//  Замена старого сообщения в дб на новое, при прохождении проверки
 		if ( $row = 1 ) {
 			$new_message = $_POST['content'];
 			$update      = "UPDATE `message` SET `content` = '{$new_message}' WHERE `id_message` = {$_POST['id_message']}";
@@ -534,4 +554,4 @@ function proverka() {
 }
 
 add_action( 'init', 'proverka' );
-
+*/

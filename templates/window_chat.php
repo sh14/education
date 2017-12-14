@@ -27,14 +27,15 @@ if ( is_user_logged_in() ) {
                         <input type="hidden" name="id_user" value="<?php echo get_current_user_id();?>">
 	                    <input type="text" class="form-control chat__title" placeholder="Тема сообщения"
                                name="title"
-                               id="title" value="">
+                               id="title" value="тест">
                         <textarea class="form-control chat__message" rows="1"
                                   placeholder="Текст сообщения"
-                                  name="content" id="your_massage"></textarea>
+                                  name="content" id="your_massage">фейхоа</textarea>
                         <input type="hidden" type="datetime-local" name="datetime" value="<?php
 	                    echo date( 'Y-m-d' ) . 'T' . date( 'H:i' );
 	                    ?>">
 	                    <input type="hidden" name="action" value="message_add">
+	                    <input type="hidden" name="id_message" value="">
 	                    <button class="btn btn-success chat__submit" type="submit"
                                 data-event="btn_message">Отправить
                         </button>
