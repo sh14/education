@@ -481,7 +481,7 @@ function message_add() {
 			$row    = $result->fetch_row();
 
 			//  Замена старого сообщения в дб на новое, при прохождении проверки
-			if ( $row = 1 ) {
+			if ( $row[0] = 1 ) {
 
 				$new_message = $_POST['content'];
 				$update      = "UPDATE `message` SET `content` = '{$new_message}' WHERE `id_message` = {$_POST['id_message']}";
