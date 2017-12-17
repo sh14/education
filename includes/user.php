@@ -176,53 +176,6 @@ function is_user_logged_in() {
 }
 
 /**
- * Функция загрузки фотографии пользователя
- */
-function upload_image() {
-	if ( ! empty( $_POST['action'] ) && $_POST['action'] == 'upload' ) {
-		$target_dir      = '/images/';
-		$target_file     = get_root_path() . $target_dir . basename( $_FILES['file_to_upload']['name'] );
-		$upload_ok       = 1;
-		$image_file_type = pathinfo( $target_file, PATHINFO_EXTENSION );
-		if ( isset( $_POST['submit'] ) ) {
-			$check = getimagesize( $_FILES['file_to_upload']['tmp_name'] );
-			if ( $check !== false ) {
-				echo 'Файл ' . $check['mime'] . ' является изображением.';
-				$upload_ok = 1;
-			} else {
-				echo 'Файл не является изображением.';
-				$upload_ok = 0;
-			}
-		}
-
-		if ( file_exists( $target_file ) ) {
-			echo 'Файл уже существует.';
-			$upload_ok = 0;
-		}
-		if ( $_FILES['file_to_upload']['size'] > 500000 ) {
-			echo 'Файл слишком большой.';
-			$upload_ok = 0;
-		}
-		if ( $image_file_type != "jpg" && $image_file_type != "png" && $image_file_type != "jpeg"
-		     && $image_file_type != "gif" ) {
-			echo 'Можно загружать только файлы JPG, JPEG, PNG & GIF.';
-			$upload_ok = 0;
-		}
-		if ( $upload_ok == 0 ) {
-			echo 'Файл не загружен.';
-		} else {
-			if ( move_uploaded_file( $_FILES['file_to_upload']['tmp_name'], $target_file ) ) {
-				echo 'Файл ' . basename( $_FILES['file_to_upload']['name'] ) . ' успешно загружен.';
-			} else {
-				echo 'При загрузке файла произошла ошибка.';
-			}
-		}
-	}
-}
-
-//add_action( 'init', 'upload_image' );
-
-/**
  * Функция загрузки изображения canvas
  */
 function image_resize() {
@@ -238,7 +191,7 @@ function image_resize() {
 		$img         = str_replace( ' ', '+', $img );
 		$data        = base64_decode( $img );
 		$success     = file_put_contents( $target_file, $data );
-		print $success ? basename( $_FILES['file_to_upload']['name'] ).' успешно сохранён' : 'Невозможно сохранить файл.';
+		print $success ? basename( $_FILES['file_to_upload']['name'] ) . ' успешно сохранён' : 'Невозможно сохранить файл.';
 	}
 }
 
@@ -250,9 +203,9 @@ add_action( 'init', 'image_resize' );
 function get_actual_photo() {
 	if ( is_user_logged_in() ) {
 		if ( ! empty( $_FILES['file_to_upload']['name'] ) ) {
-			$ID = get_current_user_id();
+			$ID          = get_current_user_id();
 			$target_path = get_root_path() . '\images\users\\' . get_current_user_id() . '\\' . basename( $_FILES['file_to_upload']['name'] );
-			$target_path = str_replace('\\','\\\\',$target_path);
+			$target_path = str_replace( '\\', '\\\\', $target_path );
 			$sql_message = "UPDATE message SET photo = '{$target_path}' WHERE id_user = $ID";
 			$sql_users   = "UPDATE users SET photo = '{$target_path}' WHERE ID = $ID";
 			do_query( $sql_message );
