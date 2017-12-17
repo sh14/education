@@ -225,13 +225,12 @@ function upload_image() {
 /**
  * Функция загрузки изображения canvas
  */
-
 function image_resize() {
 	if ( ! empty( $_POST['action'] ) && $_POST['action'] == 'upload' ) {
 		get_user_info();
-		echo get_root_path();
-		echo basename( $_FILES['file_to_upload']['name'] );
-		mkdir( get_root_path() . '/images/users/' . get_current_user_id(), 0777 );
+		if ( ! is_dir( get_root_path() . '\images\users\\' . get_current_user_id() ) ) {
+			mkdir( get_root_path() . '\images\users\\' . get_current_user_id(), 0777 );
+		}
 		$target_dir  = '/images/users/' . get_current_user_id() . '/';
 		$target_file = get_root_path() . $target_dir . basename( $_FILES['file_to_upload']['name'] );
 		$img         = $_POST['image'];
@@ -239,27 +238,30 @@ function image_resize() {
 		$img         = str_replace( ' ', '+', $img );
 		$data        = base64_decode( $img );
 		$success     = file_put_contents( $target_file, $data );
-		print $success ? $target_file : 'Unable to save the file.';
+		print $success ? basename( $_FILES['file_to_upload']['name'] ).' успешно сохранён' : 'Невозможно сохранить файл.';
 	}
 }
 
 add_action( 'init', 'image_resize' );
 
+/**
+ * Функция добавления адреса фотографии в базу данных
+ */
 function get_actual_photo() {
 	if ( is_user_logged_in() ) {
-		$ID          = get_current_user_id();
-		echo 'Айди '.$ID.' <br>';
-		$target_path = get_root_path() . '\images\users\\' . get_current_user_id() . '\\' . basename( $_FILES['file_to_upload']['name'] );
-		//$target_path = 'localhost';
-		echo 'Ты сам выбрал этот путь '.$target_path.' <br>';
-		$sql_message = "UPDATE message SET photo = '{$target_path}' WHERE id_user = $ID";
-		$sql_users   = "UPDATE users SET photo = '{$target_path}' WHERE ID = $ID";
-		do_query( $sql_message );
-		do_query( $sql_users );
+		if ( ! empty( $_FILES['file_to_upload']['name'] ) ) {
+			$ID = get_current_user_id();
+			$target_path = get_root_path() . '\images\users\\' . get_current_user_id() . '\\' . basename( $_FILES['file_to_upload']['name'] );
+			$target_path = str_replace('\\','\\\\',$target_path);
+			$sql_message = "UPDATE message SET photo = '{$target_path}' WHERE id_user = $ID";
+			$sql_users   = "UPDATE users SET photo = '{$target_path}' WHERE ID = $ID";
+			do_query( $sql_message );
+			do_query( $sql_users );
+		}
 	}
 }
 
-//add_action( 'init', 'get_actual_photo' );
+add_action( 'init', 'get_actual_photo' );
 
 /**
  *  Функция редактирования профиля пользователя
