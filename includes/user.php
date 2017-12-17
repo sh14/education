@@ -231,14 +231,14 @@ function image_resize() {
 		get_user_info();
 		echo get_root_path();
 		echo basename( $_FILES['file_to_upload']['name'] );
-		mkdir(get_root_path() . '/images/users/'. get_current_user_id(),0777);
-		$target_dir      = '/images/users/'.get_current_user_id().'/';
-		$target_file     = get_root_path() . $target_dir . basename( $_FILES['file_to_upload']['name'] );
-		$img = $_POST['image'];
-		$img = str_replace('data:image/png;base64,', '', $img);
-		$img = str_replace(' ', '+', $img);
-		$data = base64_decode($img);
-		$success = file_put_contents($target_file, $data);
+		mkdir( get_root_path() . '/images/users/' . get_current_user_id(), 0777 );
+		$target_dir  = '/images/users/' . get_current_user_id() . '/';
+		$target_file = get_root_path() . $target_dir . basename( $_FILES['file_to_upload']['name'] );
+		$img         = $_POST['image'];
+		$img         = str_replace( 'data:image/png;base64,', '', $img );
+		$img         = str_replace( ' ', '+', $img );
+		$data        = base64_decode( $img );
+		$success     = file_put_contents( $target_file, $data );
 		print $success ? $target_file : 'Unable to save the file.';
 	}
 }
@@ -246,18 +246,20 @@ function image_resize() {
 add_action( 'init', 'image_resize' );
 
 function get_actual_photo() {
-	if (is_user_logged_in()) {
-		$ID=get_current_user_id();
-		$target_path = get_root_path() . '\images\users\\'. get_current_user_id().'\\'.basename( $_FILES['file_to_upload']['name'] );
-		echo $target_path;
-		$sql_message = "UPDATE message.photo SET photo = $target_path WHERE id_user = $ID";
-		$sql_users = "UPDATE users.photo SET photo = $target_path WHERE ID = $ID";
-		do_query($sql_message);
-		do_query($sql_users);
+	if ( is_user_logged_in() ) {
+		$ID          = get_current_user_id();
+		echo 'Айди '.$ID.' <br>';
+		$target_path = get_root_path() . '\images\users\\' . get_current_user_id() . '\\' . basename( $_FILES['file_to_upload']['name'] );
+		//$target_path = 'localhost';
+		echo 'Ты сам выбрал этот путь '.$target_path.' <br>';
+		$sql_message = "UPDATE message SET photo = '{$target_path}' WHERE id_user = $ID";
+		$sql_users   = "UPDATE users SET photo = '{$target_path}' WHERE ID = $ID";
+		do_query( $sql_message );
+		do_query( $sql_users );
 	}
 }
 
-add_action( 'init', 'get_actual_photo' );
+//add_action( 'init', 'get_actual_photo' );
 
 /**
  *  Функция редактирования профиля пользователя
