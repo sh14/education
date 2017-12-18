@@ -204,8 +204,7 @@ function get_actual_photo() {
 	if ( is_user_logged_in() ) {
 		if ( ! empty( $_FILES['file_to_upload']['name'] ) ) {
 			$ID          = get_current_user_id();
-			$target_path = get_root_path() . '\images\users\\' . get_current_user_id() . '\\' . basename( $_FILES['file_to_upload']['name'] );
-			$target_path = str_replace( '\\', '\\\\', $target_path );
+			$target_path = 'users/' . get_current_user_id() . '/' . basename( $_FILES['file_to_upload']['name'] );
 			$sql_message = "UPDATE message SET photo = '{$target_path}' WHERE id_user = $ID";
 			$sql_users   = "UPDATE users SET photo = '{$target_path}' WHERE ID = $ID";
 			do_query( $sql_message );
@@ -215,6 +214,22 @@ function get_actual_photo() {
 }
 
 add_action( 'init', 'get_actual_photo' );
+
+/**
+ * Функция добавления аватара пользователя
+ */
+function display_avatar() {
+	$ID     = get_current_user_id();
+	$sql    = "SELECT photo FROM users WHERE ID = $ID";
+	$result = do_query( $sql );
+	$row    = $result->fetch_row();
+	if ( ! empty( $row[0] ) ) {
+		$image = ' style="background-image:url(' . get_root_url() . '/images/' . $row[0] . ');"';
+		return $image;
+	} else {
+		return false;
+	}
+}
 
 /**
  *  Функция редактирования профиля пользователя
