@@ -184,7 +184,7 @@ function image_resize() {
 		if ( ! is_dir( get_root_path() . '\images\users\\' . get_current_user_id() ) ) {
 			mkdir( get_root_path() . '\images\users\\' . get_current_user_id(), 0777 );
 		}
-		$target_dir  = '/images/users/' . get_current_user_id() . '/';
+		$target_dir  = '\images\users\\' . get_current_user_id() . '\\';
 		$target_file = get_root_path() . $target_dir . basename( $_FILES['file_to_upload']['name'] );
 		$img         = $_POST['image'];
 		$img         = str_replace( 'data:image/png;base64,', '', $img );
