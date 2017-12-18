@@ -190,8 +190,7 @@ function image_resize() {
 		$img         = str_replace( 'data:image/png;base64,', '', $img );
 		$img         = str_replace( ' ', '+', $img );
 		$data        = base64_decode( $img );
-		$success     = file_put_contents( $target_file, $data );
-		print $success ? basename( $_FILES['file_to_upload']['name'] ) . ' успешно сохранён' : 'Невозможно сохранить файл.';
+		file_put_contents( $target_file, $data );
 	}
 }
 
