@@ -223,7 +223,7 @@ function display_avatar() {
 	$result = do_query( $sql );
 	$row    = $result->fetch_row();
 	if ( ! empty( $row[0] ) ) {
-		$image = ' style="background-image:url(' . get_root_url() . '/images/' . $row[0] . ');"';
+		$image = ' style="background-image:url(' . get_root_url() . '/images/users/' . $row[0] . ');"';
 
 		return $image;
 	} else {
