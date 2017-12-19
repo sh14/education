@@ -170,7 +170,7 @@
 	$( '[name="content"]' ).on( 'keypress', function ( event ) {
 
 		if ( event.which === 13 && event.altKey ) {
-			console.log('sad');
+			console.log( 'sad' );
 			message_add( this );
 		}
 	} );
@@ -186,37 +186,24 @@
 
 	/*Код жулинского для всплывающего окна*/
 
-    function window_move_auto_height() {
-        let height = parseInt( $( window ).height() ) - 20;
-        console.log(height);
-        $( '.move_window' ).height( height );
-    }
 
-    window_move_auto_height();
+	function Show() {
+		$( '.massive' ).addClass( "left" );
+		$( '#mex' ).addClass( "active" );
+	}
 
-    $( window ).on( 'resize', function () {
-        chat_auto_height();
-    } );
+	function Hide() {
+		$( '.massive' ).removeClass( "left" );
+		$( '#mex' ).removeClass( "active" );
+	}
 
-    $( window ).on( 'resize', debounce( function () {
-        window_move_auto_height();
-    }, 250 ) );
-
-		function Show(){
-			document.querySelector('.massive').classList.add("left");
-			document.querySelector('#mex').classList.add("active");
+	$( '#mex' ).on( 'click', function () {
+		if ( $( '.massive' ).hasClass( "left" ) ) {
+			Hide();
+		} else {
+			Show();
 		}
-		function Hide(){
-			document.querySelector('.massive').classList.remove("left");
-			document.querySelector('#mex').classList.remove("active");
-		}
-		document.querySelector('#mex').onclick = function(){
-			if(document.querySelector('.massive').classList.contains("left")){
-				Hide();
-			} else {
-				Show();
-			}
-		}
+	});
 
 
 	/*Конец кода Жулинского*/
