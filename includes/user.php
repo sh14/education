@@ -181,7 +181,6 @@ function is_user_logged_in() {
 function image_resize() {
 	if ( ! empty( $_POST['action'] ) && $_POST['action'] == 'upload' ) {
 		get_user_info();
-
 		$target_dir  = '/images/users/';
 		$path        = $_FILES['file_to_upload']['name'];
 		$ext         = pathinfo( $path, PATHINFO_EXTENSION );
