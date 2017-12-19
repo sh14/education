@@ -1,5 +1,6 @@
 body {
   background: #eeeeee;
+  overflow: hidden;
 }
 div:before,
 div:after {
@@ -303,12 +304,13 @@ div:after {
   z-index: 2000;
   left: -240px;
   float: left;
+  margin: 0 10px;
 }
-#preview-pane .preview-container {
-  width: 200px;
-  height: 200px;
-  overflow: hidden;
+.adapchat-item .adapchat-text .adapchat-message {
+  font-size: 1.3em;
 }
-.profile .modal-preview {
-  display: inline-block;
+.adapchat-item .adapchat-text .adapchat-date {
+  font-size: 0.7em;
+  float: right;
+  margin-top: 5px;
 }
