@@ -284,3 +284,7 @@ function profile_edit() {
 }
 
 add_action( 'init', 'profile_edit' );
+
+function asdfg(){
+
+}
