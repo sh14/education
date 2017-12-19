@@ -134,10 +134,6 @@ function autorization_user() {
 		$sql      = "SELECT COUNT(*) FROM users WHERE email='{$email}' AND password='{$password}'";
 		$result   = do_query( $sql );
 		$rows     = $result->fetch_row();
-		$password = md5( md5( trim( $_POST['password_login'] ) ) );
-		$sql      = "SELECT COUNT(*) FROM users WHERE email='{$email}' AND password='{$password}'";
-		$result   = do_query( $sql );
-		$rows     = $result->fetch_row();
 
 		if ( $rows[0] == 1 ) {
 			setcookie( 'shlo_chat', implode( ';', [ $email, $password ] ), time() + 60 * 60 * 24 );

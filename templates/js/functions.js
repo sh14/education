@@ -1,9 +1,8 @@
 // Simple JavaScript Templating
 // John Resig - http://ejohn.org/ - MIT Licensed
 
-
 (function ( $ ) {
-	//"use strict";
+	"use strict";
 
 	/**
 	 * Функция задержки, помогает не "положить" браузер под нагрузкой пересчетов размера окна
@@ -35,9 +34,120 @@
 		let height = parseInt( $( window ).height() ) - 20;
 		console.log( height );
 		$( '.js-chat' ).height( height );
+		$( '.chat__messages-box' ).height( (height - $( '.chat__form' ).height()) );
 	}
 
+	/**
+	 * Функция отправляет введенные пользователем данные и если передача прошла успешно, выводит сообщение в чат
+	 *
+	 * @param obj
+	 */
+	function message_add( obj ) {
+
+		let form = $( obj ).closest( 'form' );
+
+		let data = form.serialize();
+
+		$.post( shlo[ 'ajax_url' ], data + '&action=message_add' )
+		 .done( function ( result ) {
+
+			 result = JSON.parse( result );
+
+			 if ( result[ 'error' ] === undefined ) {
+				 data         = form.serializeArray();
+				 let new_data = {
+					 'image' : shlo[ 'image' ],
+					 'name' : shlo[ 'name' ],
+					 'title' : '',
+					 'content' : '',
+					 'datetime' : '',
+					 'class_name' : '',
+					 'id_user' : '',
+					 'id_message' : '',
+				 };
+				 $.each( data, function ( index, el ) {
+					 if ( !el[ 'value' ].empty ) {
+						 new_data[ el[ 'name' ] ] = el[ 'value' ];
+					 }
+
+				 } );
+
+				 new_data[ 'id_user' ]  = result[ 'id_user' ];
+				 new_data[ 'datetime' ] = format_date( result[ 'datetime' ] );
+				 new_data[ 'image' ]    = ' style="background-image:url(' + new_data[ 'image' ] + ');"';
+
+				 // вставка значений в шаблон сообщения
+				 let message = tmpl( 'message_template', new_data );
+
+				 // добавление сформированного сообщения в окно чата
+				 $( '.chat__messages-box' ).append( message );
+
+				 scroll_to_last_message();
+
+				 // очистка полей формы
+				 $( '[name=title]' ).val( '' );
+				 $( '[name=content]' ).val( '' );
+				 $( '[name=id_message]' ).val( '' );
+			 } else {
+				 console.log( result[ 'error' ] );
+			 }
+		 } )
+		 .fail( function () {
+
+		 } )
+		 .always( function () {
+
+		 } );
+	}
+
+	/**
+	 * скрол чата к последнему элементу
+	 */
+	function scroll_to_last_message() {
+		let box  = $( '.chat__messages-box' );
+		let item = box.find( '.message:last-child' );
+
+		// скрол к последнему элементу
+		box.scrollTop( box.scrollTop() + item.position().top );
+	}
+
+	/**
+	 * Функция перевода timestamp в формат даты yyyy-mm-dd
+	 *
+	 * @param date
+	 * @returns {string}
+	 */
+	function format_date( date ) {
+
+		if ( date === undefined ) {
+			date = new Date();
+		} else {
+			date = new Date( date );
+		}
+
+		return ('0' + date.getHours()).slice( -2 ) + ':' + ('0' + date.getMinutes()).slice( -2 ) + ':' + date.getSeconds()
+			+ ', ' + ('0' + date.getDate()).slice( -2 ) + '.' + ('0' + (date.getMonth() + 1)).slice( -2 ) + '.' + date.getFullYear();
+	}
+
+	/**
+	 * Функция отображения поля ввода заголовка при вводе сообщения больше указанной длинны
+	 */
+	function show_title( obj, limit ) {
+		let form   = $( obj ).closest( 'form' );
+		let length = $( obj ).val().length;
+		console.log( length );
+		if ( length > limit ) {
+			form.find( '[name="title"]' ).removeClass( 'hidden' );
+		} else {
+			form.find( '[name="title"]' ).addClass( 'hidden' );
+		}
+	}
+
+	// авто размер чата
 	chat_auto_height();
+
+	// скрол к последнему сообщению
+	scroll_to_last_message();
 
 	/**
 	 * Изменение размера окна чата при изменении размера окна с задержкой
@@ -46,51 +156,28 @@
 		chat_auto_height();
 	}, 250 ) );
 
+	/**
+	 * Отслеживание ввода сообщения
+	 */
+	$( '[name="content"]' ).on( 'input', function ( event ) {
+		show_title( this, 10 );
+	} );
+	/**
+	 * отслеживание отправки сообщения
+	 */
+	$( '[name="content"]' ).on( 'keypress', function ( event ) {
+
+		if ( event.which === 13 && event.altKey ) {
+			message_add( this );
+		}
+	} );
+
+	/**
+	 * Отправка сообщения по клику на кнопке
+	 */
 	$( '.chat__submit' ).on( 'click', function ( event ) {
 		event.preventDefault();
-
-		let form = $( this ).closest( 'form' );
-
-		let data = form.serialize();
-		console.log( data );
-		console.log( form.serializeArray() );
-		//return '';
-		let jqxhr = $.post( "index.php", data )
-		             .done( function ( result ) {
-			             console.log( result );
-
-			             result = JSON.parse( result );
-			             console.log( result );
-			             if ( result[ 'result' ] === 'success' ) {
-				             data         = form.serializeArray();
-				             let new_data = {
-					             'image' : '',
-					             'name' : '',
-					             'title' : '',
-					             'content' : '',
-					             'datetime' : '',
-					             'class_name' : '',
-					             'ID' : '',
-					             'id_message' : '',
-				             };
-				             $.each( data, function ( index, el ) {
-					             new_data[ el[ 'name' ] ] = el[ 'value' ];
-				             } );
-				             console.log( new_data );
-
-				             let message = tmpl( 'message_template', new_data );
-				             $( '.chat__messages' ).append( message );
-			             }
-			             /**/
-		             } )
-		             .fail( function () {
-
-		             } )
-		             .always( function () {
-
-		             } );
-
-
+		message_add( this );
 	} );
 
 

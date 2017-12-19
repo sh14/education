@@ -26,9 +26,9 @@ function add_default_data() {
 	$sql_check_tables[] = "SELECT * FROM `users`";
 
 	$sql   = [];
-	$sql[] = "INSERT INTO `message`( `id_user`, `datetime`, `title`, `content`, `photo`) 
+	$sql[] = "INSERT INTO `message`( `id_user`, `datetime`, `title`, `content`, `image`) 
 	VALUES (1,'2017-11-12 12:00:00','Привет, мир!','Это тестовая публикация!','character-designer.png')";
-	$sql[] = "INSERT INTO `users`( `nickname`, `email`, `password`, `first_name`, `last_name`, `photo`)
+	$sql[] = "INSERT INTO `users`( `nickname`, `email`, `password`, `first_name`, `last_name`, `image`)
 	VALUES ('admin','test@tes.ru','{$password}','Админ','Админов','character-designer.png')";
 
 	$sql_set_id     = [];

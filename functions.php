@@ -61,7 +61,7 @@ function pr( $data, $debug_backtrace = false ) {
  *
  * @param $query
  *
- * @return bool|mysqli_result
+ * @return bool|mysqli_result|string
  */
 function do_query( $query ) {
 	global $link;
@@ -70,11 +70,13 @@ function do_query( $query ) {
 
 		$result = mysqli_query( $link, $query );
 		if ( ! $result ) {
-			die( 'Неверный запрос: ' . mysqli_error( $link ) );
+			return mysqli_error( $link );
 		}
 
 		return $result;
 	}
+
+	return false;
 }
 
 /**
@@ -282,7 +284,7 @@ function enqueue_script( $handle, $object_name = '' ) {
  */
 function wp_localize_script( $handle, $object_name, $l10n ) {
 	$out   = [];
-	$out[] = 'var '.$object_name . '= {';
+	$out[] = 'var ' . $object_name . '= {';
 
 	foreach ( $l10n as $key => $value ) {
 		if ( is_string( $value ) ) {
@@ -304,7 +306,7 @@ function wp_localize_script( $handle, $object_name, $l10n ) {
  */
 function display_message() {
 	if ( is_user_logged_in() ) {
-		$sql    = "SELECT * FROM message m LEFT JOIN users u ON u.ID = m.id_user ORDER BY datetime DESC LIMIT 3";
+		$sql    = "SELECT * FROM message m LEFT JOIN users u ON u.ID = m.id_user ORDER BY datetime ASC LIMIT 30";
 		$result = do_query( $sql );
 		$count  = mysqli_num_rows( $result );
 		if ( $count > 0 ) {
@@ -316,15 +318,15 @@ function display_message() {
 				'content',
 				'datetime',
 				'class_name',
-				'ID',
+				'id_user',
 				'id_message',
 			] );
 			$current_user_id = get_current_user_id();
 			while ( $row = mysqli_fetch_array( $result, MYSQLI_ASSOC ) ) {
-//pr($row);
+
 				$image = '';
-				if ( ! empty( $row['photo'] ) ) {
-					$image = ' style="background-image:url(' . get_root_url() . '/images/' . $row['photo'] . ');"';
+				if ( ! empty( $row['image'] ) ) {
+					$image = ' style="background-image:url(' . get_root_url() . '/images/users/' . $row['image'] . ');"';
 				}
 				$datetime = '';
 				if ( ! empty( $row['datetime'] ) ) {
@@ -337,7 +339,7 @@ function display_message() {
 				}
 
 				$class = '';
-				if ( $current_user_id != $row['ID'] ) {
+				if ( $current_user_id != $row['id_user'] ) {
 					$class = ' message_alien';
 				}
 				$message = get_template_string( $template, [
@@ -347,7 +349,7 @@ function display_message() {
 					'content'    => ! empty( $row['content'] ) ? $row['content'] : '',
 					'datetime'   => $datetime,
 					'class_name' => $class,
-					'ID'         => $row['ID'],
+					'id_user'    => $row['id_user'],
 					'id_message' => $row ['id_message']
 				] );
 				echo $message;
@@ -397,10 +399,15 @@ function enqueue_scripts() {
 	register_script( 'functions', get_stylesheet_directory() . '/js/functions.js', [ 'jquery' ], '', true );
 
 	enqueue_script( 'functions' );
+	$shlo = get_user_info();
+	if ( ! empty( $shlo ) ) {
+		$shlo = array_merge( [], $shlo );
 
-	wp_localize_script( 'functions', 'shlo', [
-		'current_user_id' => get_current_user_id(),
-	] );
+		$shlo['ajax_url'] = get_root_url() . '/ajax.php';
+		$shlo['name']     = $shlo['first_name'] . ' ' . $shlo['last_name'];
+		$shlo['image']    = get_root_url() . '/images/users/' . $shlo['image'];
+		wp_localize_script( 'functions', 'shlo', $shlo );
+	}
 }
 
 add_action( 'init', 'enqueue_scripts' );
@@ -467,41 +474,57 @@ function emailValidation( $email ) {
 
 
 /**
- * Функция добавления сообщений в БД
+ * Функция добавления или редактирования  сообщения в БД
  */
-
 function message_add() {
-// функция доавления или редактирования сообщения, почти работает(хардкод)
-	if ( ! empty( $_POST['action'] ) && $_POST['action'] == 'message_add') {
+	global $link;
+	if ( ! empty( $_POST['action'] ) && $_POST['action'] == 'message_add' ) {
 
-		if ( !empty($_POST['id_message'] ) ) {
-		//	pr($_POST);die();
-			$sql    = "SELECT COUNT(*) FROM `message` WHERE `id_message` = {$_POST['id_message']} AND  `id_user` = {$_POST['id_user']}";
-			$result = do_query( $sql );
-			$row    = $result->fetch_row();
+		$data    = $_POST;
+		$user_id = get_current_user_id();
+		$errors  = [];
 
-			//  Замена старого сообщения в дб на новое, при прохождении проверки
-			if ( $row = 1 ) {
+		if ( is_user_logged_in() && ! empty( $data['content'] ) ) {
 
-				$new_message = $_POST['content'];
-				$update      = "UPDATE `message` SET `content` = '{$new_message}' WHERE `id_message` = {$_POST['id_message']}";
-				do_query( $update );
+			// указан id сообщения6 которое необходимо обновить
+			if ( ! empty( $data['id_message'] ) ) {
+
+				$sql = "UPDATE `message` SET `content` = '{$data['content']}' " .
+				       "WHERE `id_message` = {$data['id_message']} " .
+				       "AND `id_user` = {$user_id}";
+			} else {
+
+				$datetime = date( 'Y-m-d H:i:s' );
+				$sql      = "INSERT INTO `message` " .
+				            "( `id_user`, `datetime`, `title`, `content` ) " .
+				            "VALUES ({$user_id}, '{$datetime}', '{$data['title']}', '{$data['content']}' )";
 			}
-
-		} else{
-
-			if ( is_user_logged_in() && ! empty( $_POST['content'] ) ) {
-				$user_id = get_current_user_id();
-				do_query( "INSERT INTO `message` ( `id_user`, `datetime`, `title`, `content` ) 
-			VALUES ({$user_id}, '{$_POST['datetime']}', '{$_POST['title']}', '{$_POST['content']}' )" );
-
-			}
+			$m = mysqli_insert_id( $link );
+		} else {
+			$errors[] = 'Сообщение не указано';
 		}
-		header( 'location: index.php' );
+
+		$data             = [];
+		$data['m']        = $m;
+		$data['datetime'] = $datetime;
+		$data['id_user']  = $user_id;
+
+		if ( ! do_query( $sql ) ) {
+			$errors[] = 'Что-то пошло не так';
+		}
+
+		if ( ! empty( $errors ) ) {
+			$data['errors'] = $errors;
+		}
+
+		if ( ! empty( $_POST['action'] ) ) {
+			echo json_encode( $data );
+			die();
+		} else {
+			header( 'location: index.php' );
+		}
 	}
 }
-
-add_action( 'init', 'message_add' );
 
 // Функция получения последних n сообщений и конвертация их в формат json
 function get_last_messages() {

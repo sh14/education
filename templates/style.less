@@ -14,6 +14,129 @@ div:before, div:after {
 	display: block;
 	clear: both;
 }
+.page {
+	padding: 10px 0;
+}
+.chat {
+	display: table;
+	width: 100%;
+	height: 300px;
+	background-color: @chat_bg;
+	border-radius: 4px;
+
+
+	&__messages {
+		height: 100%;
+		display: table-row;
+		padding: 0 20px;
+	}
+	&__form {
+		display: table-row;
+		margin: 0;
+	}
+	&__title {
+		display: block;
+		box-shadow: none;
+		border-radius: 0;
+		border-color: transparent;
+		border-top-color: #ccc;
+		&:hover, &:focus {
+			outline: none;
+			box-shadow: none;
+			border-color: transparent;
+			border-top-color: #ccc;
+		}
+	}
+	&__message {
+		border-radius: 0 0 4px 4px;
+		border-width: 1px 0 1px 0;
+		border-color: transparent;
+		border-top-color: #ccc;
+		box-shadow: none;
+		&:hover, &:focus {
+			outline: none;
+			box-shadow: none;
+			border-color: transparent;
+			border-top-color: #ccc;
+		}
+	}
+	&__messages-box {
+		overflow-y: scroll;
+	}
+	&__submit {
+		float: right;
+		margin-top: -34px;
+		border-radius: 0 0 4px 0;
+	}
+}
+
+.message {
+	padding: 10px;
+
+	&__box {
+		float: left;
+		display: table;
+		width: 50%;
+	}
+	&__user {
+		&-avatar {
+			display: table-cell;
+			width: 10px;
+			padding-right: 10px;
+			vertical-align: top;
+		}
+		&-image {
+			display: block;
+			border-radius: 50%;
+			width: 50px;
+			height: 50px;
+			background: #e0e0e0 url(../images/user.svg) 50% 50% e('/') contain no-repeat;
+			margin: auto;
+		}
+		&-name {
+			display: inline-block;
+			font-weight: normal;
+			color: #3bf;
+			text-decoration: none;
+			&:hover, &:focus {
+				color: #3bf;
+				text-decoration: none;
+			}
+		}
+	}
+	&__data {
+		display: table-cell;
+		vertical-align: top;
+		&-box {
+			background: @message_bg;
+			padding: 5px 10px;
+			border-radius: 4px;
+			display: table;
+		}
+
+	}
+	&__title {
+		font-weight: bold;
+		&:empty {
+			display: none;
+		}
+	}
+	&__text {
+		color: rgba(0, 0, 0, 0.5);
+	}
+	&__date {
+		float: right;
+		font-size: .8em;
+		color: rgba(0, 0, 0, .4);
+	}
+
+	&_alien &__data-box {
+		background:#ddf1ff;
+	}
+	&_alien &__user-name {
+		color:#f93;
+	}
+}
 
 .avatar {
 	&__image {
@@ -159,155 +282,6 @@ div:before, div:after {
 	}
 }
 
-.page {
-	padding: 10px 0;
-}
-.chat {
-	display: table;
-	width: 100%;
-	height: 300px;
-	background-color: @chat_bg;
-	border-radius: 4px;
-
-
-	&__messages {
-		height: 100%;
-		display: table-row;
-		padding: 0 20px;
-	}
-	&__form {
-		display: table-row;
-		margin: 0;
-	}
-	&__title {
-		display: block;
-	}
-	&__message {
-		border-radius: 0 0 4px 4px;
-		border-width: 1px 0 1px 0;
-		border-color: transparent;
-		border-top-color: #ccc;
-		box-shadow: none;
-		&:hover, &:focus {
-			outline: none;
-			box-shadow: none;
-			border-color: transparent;
-			border-top-color: #ccc;
-		}
-	}
-	&__submit {
-		float: right;
-		margin-top: -34px;
-		border-radius: 0 0 4px 0;
-	}
-}
-
-.message {
-	padding: 10px;
-
-	&__box {
-		float: left;
-		display: table;
-		width: 50%;
-	}
-	&__user {
-		&-avatar {
-			display: table-cell;
-			width: 10px;
-			padding-right: 10px;
-			vertical-align: top;
-		}
-		&-image {
-			display: block;
-			border-radius: 50%;
-			width: 50px;
-			height: 50px;
-			background: #e0e0e0 url(../images/user.svg) 50% 50% e('/') contain no-repeat;
-			margin: auto;
-		}
-		&-name {
-			display: inline-block;
-			font-weight: normal;
-			color: #3bf;
-			text-decoration: none;
-			&:hover, &:focus {
-				color: #3bf;
-				text-decoration: none;
-			}
-		}
-	}
-	&__data {
-		display: table-cell;
-		vertical-align: top;
-		&-box {
-			background: @message_bg;
-			padding: 5px 10px;
-			border-radius: 4px;
-			display: table;
-		}
-
-	}
-	&__title {
-		font-weight: bold;
-		&:empty {
-			display: none;
-		}
-	}
-	&__text {
-		color: rgba(0, 0, 0, 0.5);
-	}
-	&__date {
-		float: right;
-		font-size: .8em;
-		color: rgba(0, 0, 0, .4);
-	}
-
-	&_alien &__data-box {
-		background:#ddf1ff;
-	}
-	&_alien &__user-name {
-		color:#f93;
-	}
-}
-
-.adapchat-item {
-	max-width: 90%;
-	margin: 10px auto;
-	padding: 10px;
-	display: table;
-
-	.adapchat-chater {
-		display: table-cell;
-		width: 100px;
-		height: 100px;
-		border-radius: 50px;
-		background-color: #0f0f0f;
-		background-image: url(../images/character-designer.png);
-		background-repeat: no-repeat;
-		background-size: 75% auto;
-		background-position: top;
-		float: left;
-	}
-	.adapchat-text {
-		box-shadow: 5px 5px 33px 0px rgba(0, 0, 0, 0.69);
-		-webkit-box-shadow: 5px 5px 33px 0px rgba(0, 0, 0, 0.69);
-		-moz-box-shadow: 5px 5px 33px 0px rgba(0, 0, 0, 0.69);
-		padding: 0px 20px 10px;
-		background-color: #ffe375;
-		border-radius: 10px;
-		float: left;
-		margin: 0 10px;
-		.adapchat-message {
-			font-size: 1.3em;
-		}
-		.adapchat-date {
-			font-size: 0.7em;
-			float: right;
-			margin-top: 5px;
-		}
-	}
-}
-
 
 .popup {
 	margin: 25px;
@@ -321,16 +295,6 @@ div:before, div:after {
 }
 
 .btn {
-	cursor: pointer;
-	display: inline-block;
-	*zoom: 1;
-	*display: inline;
-	position: relative;
-	overflow: hidden;
-	font-size: 20px;
-	font-family: Arial, Helvetica, sans-serif;
-	border-radius: 4px;
-	vertical-align: middle;
 
 	.progress {
 		top: 0;
