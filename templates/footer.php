@@ -16,8 +16,8 @@
 		} );
 
 		$( '.save_avatar' ).on( 'click', function () {
-			var canvas = $('.avatar__preview canvas');
-			$('.form-avatar input[name=image]').val(canvas[0].toDataURL());
+			var canvas = $( '.avatar__preview canvas' );
+			$( '.form-avatar input[name=image]' ).val( canvas[ 0 ].toDataURL() );
 		} );
 
 
@@ -84,7 +84,7 @@
 
 					$( '#img-preview' ).modal( 'show' );
 
-					image( file, 200, 200 * aspectRatio )( function () {
+					image( file, 200, 200 )( function () {
 
 						image( file, 300, 300 * aspectRatio );
 
@@ -100,33 +100,33 @@
 		} );
 
 
-		function updatePreview(c) {
-			if (parseInt(c.w) > 0) {
+		function updatePreview( c ) {
+			if ( parseInt( c.w ) > 0 ) {
 
-				var imageObj = $('.image_2 canvas')[0];
-				var canvas = $('.image_1 canvas')[0];
-				var context = canvas.getContext("2d");
+				var imageObj = $( '.image_2 canvas' )[ 0 ];
+				var canvas   = $( '.image_1 canvas' )[ 0 ];
+				var context  = canvas.getContext( "2d" );
 
-				if (imageObj != null && c.x != 0 && c.y != 0 && c.w != 0 && c.h != 0) {
-					context.drawImage(imageObj, c.x, c.y, c.w, c.h, 0, 0, canvas.width, canvas.height);
+				if ( imageObj != null && c.x != 0 && c.y != 0 && c.w != 0 && c.h != 0 ) {
+					context.drawImage( imageObj, c.x, c.y, c.w, c.h, 0, 0, canvas.width, canvas.height );
 				}
 			}
 		}
-		
 
-		$( '#img-preview' ).on( 'click', '#target canvas', function(){
-			$(this).Jcrop({
+
+		$( '#img-preview' ).on( 'click', '#target canvas', function () {
+			$( this ).Jcrop( {
 				keySupport : false,
-				bgColor: '#fff',
-				onChange: updatePreview,
-				onSelect: updatePreview,
-				allowSelect: true,
-				allowMove: true,
-				allowResize: true,
-				aspectRatio: 1
-			});
+				bgColor : '#fff',
+				onChange : updatePreview,
+				onSelect : updatePreview,
+				allowSelect : true,
+				allowMove : true,
+				allowResize : true,
+				aspectRatio : 1
+			} );
 
-		});
+		} );
 
 	} );
 

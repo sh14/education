@@ -38,22 +38,22 @@ if ( is_user_logged_in() ) {
 				</div>
 			</div>
 
-			<div class="col-md-3 col-sm-3 col-xs-3">
-				<div class="avatar">
-					<div class="avatar__image"></div>
-					<h3 class="avatar__name"><?php echo $name; ?></h3>
-					<div class="avatar__buttons">
-						<button type="button" class="btn btn-primary btn-block" data-toggle="modal"
-						        data-target="#modal-1">Мой профиль
-						</button>
-						<a href="<?php echo get_root_url() . '?p=logout'; ?>"
-						   class="btn btn-link btn-block">Выход</a>
+				<div class="col-md-3 col-sm-3 col-xs-3">
+					<div class="avatar">
+						<div class="avatar__image"<?php echo display_avatar(); ?>></div>
+						<h3 class="avatar__name"><?php echo $name; ?></h3>
+						<div class="avatar__buttons">
+							<button type="button" class="btn btn-primary btn-block" data-toggle="modal"
+							        data-target="#modal-1">Мой профиль
+							</button>
+							<a href="<?php echo get_root_url() . '?p=logout'; ?>"
+							   class="btn btn-link btn-block">Выход</a>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-</div>
 
 <script id="message_template" type="text/html"><?php
 	echo get_template_part( 'message', [
