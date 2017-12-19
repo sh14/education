@@ -181,11 +181,10 @@ function is_user_logged_in() {
 function image_resize() {
 	if ( ! empty( $_POST['action'] ) && $_POST['action'] == 'upload' ) {
 		get_user_info();
-		if ( ! is_dir( get_root_path() . '\images\users\\' . get_current_user_id() ) ) {
-			mkdir( get_root_path() . '\images\users\\' . get_current_user_id(), 0777 );
-		}
-		$target_dir  = '\images\users\\' . get_current_user_id() . '\\';
-		$target_file = get_root_path() . $target_dir . basename( $_FILES['file_to_upload']['name'] );
+		$target_dir  = '/images/users/';
+		$path        = $_FILES['file_to_upload']['name'];
+		$ext         = pathinfo( $path, PATHINFO_EXTENSION );
+		$target_file = get_root_path() . $target_dir . 'avatar_id' . get_current_user_id() . '.' . $ext;
 		$img         = $_POST['image'];
 		$img         = str_replace( 'data:image/png;base64,', '', $img );
 		$img         = str_replace( ' ', '+', $img );
@@ -203,10 +202,10 @@ function get_actual_photo() {
 	if ( is_user_logged_in() ) {
 		if ( ! empty( $_FILES['file_to_upload']['name'] ) ) {
 			$ID          = get_current_user_id();
-			$target_path = get_current_user_id() . '/' . basename( $_FILES['file_to_upload']['name'] );
-			$sql_message = "UPDATE message SET image = '{$target_path}' WHERE id_user = $ID";
+			$path        = $_FILES['file_to_upload']['name'];
+			$ext         = pathinfo( $path, PATHINFO_EXTENSION );
+			$target_path = 'avatar_id' . $ID . '.' . $ext;
 			$sql_users   = "UPDATE users SET image = '{$target_path}' WHERE ID = $ID";
-			do_query( $sql_message );
 			do_query( $sql_users );
 		}
 	}
@@ -218,17 +217,14 @@ add_action( 'init', 'get_actual_photo' );
  * Функция добавления аватара пользователя
  */
 function display_avatar() {
-	$ID     = get_current_user_id();
-	$sql    = "SELECT image FROM users WHERE ID = $ID";
-	$result = do_query( $sql );
-	$row    = $result->fetch_row();
-	if ( ! empty( $row[0] ) ) {
-		$image = ' style="background-image:url(' . get_root_url() . '/images/users/' . $row[0] . ');"';
+	$user = get_user_info();
+	if ( ! empty( $user['image'] ) ) {
+		$image = ' style="background-image:url(' . get_root_url() . '/images/users/' . $user['image'] . ');"';
 
 		return $image;
-	} else {
-		return false;
 	}
+
+	return '';
 }
 
 /**
