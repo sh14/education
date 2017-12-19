@@ -33,7 +33,7 @@ CREATE TABLE `users` (
   `password` text NOT NULL,
   `first_name` text,
   `last_name` text,
-  `photo` text,
+  `image` text,
   PRIMARY KEY (`ID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -74,7 +74,7 @@ CREATE TABLE `message` (
   `datetime` datetime,
   `title` text NOT NULL,
   `content` text NOT NULL,
-  `photo` text,
+  `image` text,
   PRIMARY KEY (`id_message`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
