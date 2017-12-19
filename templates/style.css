@@ -1,5 +1,6 @@
 body {
   background: #eeeeee;
+  overflow: hidden;
 }
 div:before,
 div:after {
