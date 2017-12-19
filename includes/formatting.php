@@ -15,6 +15,7 @@
  */
 function esc_sql( $string ) {
 	global $link;
-
-	return mysqli_real_escape_string( $link, $string );
+	if ( $link ) {
+		return mysqli_real_escape_string( $link, $string );
+	}
 }

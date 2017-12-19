@@ -7,14 +7,6 @@ include 'includes/installer.php';
 include 'includes/user.php';
 include 'includes/formatting.php';
 
-// объявление глобальной переменной
-global $link;
-
-// если $link - пуста
-if ( empty( $link ) ) {
-	$link = mysqli_connect( HOST, LOGIN, PASSWORD, DATABASE )
-	or die( 'Ошибка при подключении к серверу MySQL: ' . mysqli_connect_error() );
-}
 
 function init() {
 	do_action( 'init' );
@@ -69,19 +61,22 @@ function pr( $data, $debug_backtrace = false ) {
  *
  * @param $query
  *
- * @return bool|mysqli_result
+ * @return bool|mysqli_result|string
  */
 function do_query( $query ) {
 	global $link;
+	if ( $link ) {
+		mysqli_set_charset( $link, 'utf8' );
 
-	mysqli_set_charset( $link, 'utf8' );
+		$result = mysqli_query( $link, $query );
+		if ( ! $result ) {
+			return mysqli_error( $link );
+		}
 
-	$result = mysqli_query( $link, $query );
-	if ( ! $result ) {
-		die( 'Неверный запрос: ' . mysqli_error( $link ) );
+		return $result;
 	}
 
-	return $result;
+	return false;
 }
 
 /**
@@ -135,6 +130,7 @@ function get_template_part( $name, $atts = [] ) {
 				include $path;
 				$content = ob_get_contents();
 				ob_end_clean();
+				$content = implode( '', array_map( 'trim', explode( "\n", $content ) ) );
 
 				return $content;
 			} else {
@@ -196,54 +192,6 @@ function encript_password( $password ) {
 }
 
 /**
- * Функция загрузки фотографии пользователя
- */
-function upload_image() {
-	if ( ! empty( $_POST['action'] ) && $_POST['action'] == 'upload' ) {
-		$target_dir      = '/images/';
-		$target_file     = get_root_path() . $target_dir . basename( $_FILES['file_to_upload']['name'] );
-		$upload_ok       = 1;
-		$image_file_type = pathinfo( $target_file, PATHINFO_EXTENSION );
-		if ( isset( $_POST['submit'] ) ) {
-			$check = getimagesize( $_FILES['file_to_upload']['tmp_name'] );
-			if ( $check !== false ) {
-				echo 'Файл ' . $check['mime'] . ' является изображением.';
-				$upload_ok = 1;
-			} else {
-				echo 'Файл не является изображением.';
-				$upload_ok = 0;
-			}
-		}
-
-		if ( file_exists( $target_file ) ) {
-			echo 'Файл уже существует.';
-			$upload_ok = 0;
-		}
-		if ( $_FILES['file_to_upload']['size'] > 500000 ) {
-			echo 'Файл слишком большой.';
-			$upload_ok = 0;
-		}
-		if ( $image_file_type != "jpg" && $image_file_type != "png" && $image_file_type != "jpeg"
-		     && $image_file_type != "gif" ) {
-			echo 'Можно загружать только файлы JPG, JPEG, PNG & GIF.';
-			$upload_ok = 0;
-		}
-		if ( $upload_ok == 0 ) {
-			echo 'Файл не загружен.';
-		} else {
-			if ( move_uploaded_file( $_FILES['file_to_upload']['tmp_name'], $target_file ) ) {
-				echo 'Файл ' . basename( $_FILES['file_to_upload']['name'] ) . ' успешно загружен.';
-			} else {
-				echo 'При загрузке файла произошла ошибка.';
-			}
-		}
-	}
-}
-
-add_action( 'init', 'upload_image' );
-
-
-/**
  * Регистрация скрипта для последующего вывода этого скрипта
  *
  * @param       $handle
@@ -263,9 +211,15 @@ function register_script( $handle, $src, $deps = array(), $ver = false, $in_foot
 		$ver = '';
 	}
 	$scripts[ $handle ] = [
-		'src'       => $src . $ver,
 		'in_footer' => $in_footer
 	];
+
+	// если $src является массивом, значит необходимо дописать $src перед регистрируемым скриптом
+	if ( is_array( $src ) ) {
+		$scripts[ $handle ]['src'] = implode( '', $src );
+	} else {
+		$scripts[ $handle ]['src'] = $src . $ver;
+	}
 
 	$reordered                 = [];
 	$i                         = 0;
@@ -291,20 +245,27 @@ function register_script( $handle, $src, $deps = array(), $ver = false, $in_foot
 }
 
 /**
- * Вывод скрипта в нужно месте
+ * Вывод скрипта в нужном месте
  *
  * @param $handle
  */
-function enqueue_script( $handle ) {
+function enqueue_script( $handle, $object_name = '' ) {
 	global $scripts;
 
 	if ( ! empty( $scripts[ $handle ] ) ) {
-		$out = '<script src="' . $scripts[ $handle ]['src'] . '"></script>';
+
 
 		if ( $scripts[ $handle ]['in_footer'] === true ) {
 			$action = 'footer';
 		} else {
 			$action = 'head';
+		}
+
+		// если не указан $object_name, необходимо подключить скрипт
+		if ( empty( $object_name ) ) {
+			$out = '<script src="' . $scripts[ $handle ]['src'] . '"></script>';
+		} else {
+			$out = '<script>' . $scripts[ $handle ]['src'] . '</script>';
 		}
 
 		add_action( $action, function () use ( $out ) {
@@ -315,12 +276,37 @@ function enqueue_script( $handle ) {
 }
 
 /**
+ * Вывод переменной
+ *
+ * @param $handle
+ * @param $object_name
+ * @param $l10n
+ */
+function wp_localize_script( $handle, $object_name, $l10n ) {
+	$out   = [];
+	$out[] = 'var ' . $object_name . '= {';
+
+	foreach ( $l10n as $key => $value ) {
+		if ( is_string( $value ) ) {
+			$value = "'{$value}'";
+		}
+		$out[] = "'$key':{$value},";
+	}
+	$out[] = '};';
+
+	$out = implode( "\n", $out );
+	register_script( $handle . $object_name, [ $out ] );
+	enqueue_script( $handle . $object_name, $object_name );
+}
+
+
+/**
  * Вывод сообщений на дисплей
  *
  */
 function display_message() {
 	if ( is_user_logged_in() ) {
-		$sql    = "SELECT * FROM message m LEFT JOIN users u ON u.ID = m.id_user ORDER BY datetime DESC LIMIT 3";
+		$sql    = "SELECT * FROM message m LEFT JOIN users u ON u.ID = m.id_user ORDER BY datetime ASC LIMIT 30";
 		$result = do_query( $sql );
 		$count  = mysqli_num_rows( $result );
 		if ( $count > 0 ) {
@@ -331,16 +317,16 @@ function display_message() {
 				'title',
 				'content',
 				'datetime',
-				'class',
-				'ID',
+				'class_name',
+				'id_user',
 				'id_message',
 			] );
 			$current_user_id = get_current_user_id();
 			while ( $row = mysqli_fetch_array( $result, MYSQLI_ASSOC ) ) {
-//pr($row);
+
 				$image = '';
-				if ( ! empty( $row['photo'] ) ) {
-					$image = ' style="background-image:url(' . get_root_url() . '/images/' . $row['photo'] . ');"';
+				if ( ! empty( $row['image'] ) ) {
+					$image = ' style="background-image:url(' . get_root_url() . '/images/users/' . $row['image'] . ');"';
 				}
 				$datetime = '';
 				if ( ! empty( $row['datetime'] ) ) {
@@ -353,17 +339,17 @@ function display_message() {
 				}
 
 				$class = '';
-				if ( $current_user_id != $row['ID'] ) {
+				if ( $current_user_id != $row['id_user'] ) {
 					$class = ' message_alien';
 				}
 				$message = get_template_string( $template, [
-					'image'    => $image,
-					'name'     => $name,
-					'title'    => ! empty( $row['title'] ) ? $row['title'] : '',
-					'content'  => ! empty( $row['content'] ) ? $row['content'] : '',
-					'datetime' => $datetime,
-					'class'    => $class,
-					'ID' => $row['ID'],
+					'image'      => $image,
+					'name'       => $name,
+					'title'      => ! empty( $row['title'] ) ? $row['title'] : '',
+					'content'    => ! empty( $row['content'] ) ? $row['content'] : '',
+					'datetime'   => $datetime,
+					'class_name' => $class,
+					'id_user'    => $row['id_user'],
 					'id_message' => $row ['id_message']
 				] );
 				echo $message;
@@ -392,11 +378,41 @@ function enqueue_scripts() {
 	register_script( 'bootstrap', get_stylesheet_directory() . '/bootstrap/js/bootstrap.min.js', [ 'jquery' ], '', true );
 	enqueue_script( 'bootstrap' );
 
+	register_script( 'fileapi', get_stylesheet_directory() . '/js/FileAPI/dist/FileAPI.min.js' );
+	enqueue_script( 'fileapi' );
+
+	register_script( 'fileapi.exif', get_stylesheet_directory() . '/js/FileAPI/plugins/FileAPI.exif.js' );
+	enqueue_script( 'fileapi.exif' );
+
+	register_script( 'jquery.fileapi', get_stylesheet_directory() . '/js/FileAPI/jquery.fileapi.js' );
+	enqueue_script( 'jquery.fileapi' );
+
+	register_script( 'jcrop', get_stylesheet_directory() . '/js/jcrop/js/jquery.Jcrop.min.js' );
+	enqueue_script( 'jcrop' );
+
+	register_script( 'jquery.modal', get_stylesheet_directory() . '/js/FileAPI/statics/jquery.modal.js' );
+	enqueue_script( 'jquery.modal' );
+
+	register_script( 'microtemplating', get_stylesheet_directory() . '/js/microtemplating.js', [], '', true );
+	enqueue_script( 'microtemplating' );
+
 	register_script( 'functions', get_stylesheet_directory() . '/js/functions.js', [ 'jquery' ], '', true );
+
 	enqueue_script( 'functions' );
+	$shlo = get_user_info();
+	if ( ! empty( $shlo ) ) {
+		$shlo = array_merge( [], $shlo );
+
+		$shlo['ajax_url'] = get_root_url() . '/ajax.php';
+		$shlo['name']     = $shlo['first_name'] . ' ' . $shlo['last_name'];
+		$shlo['image']    = get_root_url() . '/images/users/' . $shlo['image'];
+
+		wp_localize_script( 'functions', 'shlo', $shlo );
+	}
 }
 
 add_action( 'init', 'enqueue_scripts' );
+
 
 /*
  * это недоработанная функция сохраниня пользователя
@@ -458,17 +474,58 @@ function emailValidation( $email ) {
 //echo emailValidation($email);
 
 
-//Функция добавления сообщений в БД
-
+/**
+ * Функция добавления или редактирования  сообщения в БД
+ */
 function message_add() {
-	if ( is_user_logged_in() && ! empty( $_POST['content'] ) ) {
+	global $link;
+	if ( ! empty( $_POST['action'] ) && $_POST['action'] == 'message_add' ) {
+
+		$data    = $_POST;
 		$user_id = get_current_user_id();
-		do_query( "INSERT INTO `message` ( `title`, `id_user`, `content` ) VALUES ('{$_POST['title']}',{$user_id}, '{$_POST['content']}' )" );
-		header( 'location: index.php' );
+		$errors  = [];
+
+		if ( is_user_logged_in() && ! empty( $data['content'] ) ) {
+
+			// указан id сообщения6 которое необходимо обновить
+			if ( ! empty( $data['id_message'] ) ) {
+
+				$sql = "UPDATE `message` SET `content` = '{$data['content']}' " .
+				       "WHERE `id_message` = {$data['id_message']} " .
+				       "AND `id_user` = {$user_id}";
+			} else {
+
+				$datetime = date( 'Y-m-d H:i:s' );
+				$sql      = "INSERT INTO `message` " .
+				            "( `id_user`, `datetime`, `title`, `content` ) " .
+				            "VALUES ({$user_id}, '{$datetime}', '{$data['title']}', '{$data['content']}' )";
+			}
+		} else {
+			$errors[] = 'Сообщение не указано';
+		}
+
+
+		if ( ! do_query( $sql ) ) {
+			$errors[] = 'Что-то пошло не так';
+		} else {
+			$data               = [];
+			$data['id_message'] = mysqli_insert_id( $link );
+			$data['datetime']   = $datetime;
+			$data['id_user']    = $user_id;
+		}
+
+		if ( ! empty( $errors ) ) {
+			$data['errors'] = $errors;
+		}
+
+		if ( ! empty( $_POST['action'] ) ) {
+			echo json_encode( $data );
+			die();
+		} else {
+			header( 'location: index.php' );
+		}
 	}
 }
-
-add_action( 'init', 'message_add' );
 
 // Функция получения последних n сообщений и конвертация их в формат json
 function get_last_messages() {
@@ -488,3 +545,37 @@ function get_last_messages() {
 }
 
 add_action( 'init', 'get_last_messages' );
+
+function redirect_configuration_page() {
+	global $redirect;
+	if ( $redirect === true ) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+//function proverka() {
+
+/*	//Получение данных из $_POST (от Влада)
+//	$_POST['content'] = 'ne jfuy';
+//	$_POST['event'] = 'message_update';
+//	$_POST['id_message'] = 4;
+//	$_POST['id_user'] = 2;
+	// Проверка на наличие и значение атрибута 'event'
+	if ( ! empty( $_POST['event'] && $_POST['event'] == 'message_update' ) ) {
+		$sql    = "SELECT COUNT(*) FROM `message` WHERE `id_message` = {$_POST['id_message']} AND  `id_user` = {$_POST['id_user']}";
+		$result = do_query( $sql );
+		$row    = $result->fetch_row();
+	//	pr( $row );
+	//  Замена старого сообщения в дб на новое, при прохождении проверки
+		if ( $row = 1 ) {
+			$new_message = $_POST['content'];
+			$update      = "UPDATE `message` SET `content` = '{$new_message}' WHERE `id_message` = {$_POST['id_message']}";
+			do_query( $update );
+		}
+	}
+}
+
+add_action( 'init', 'proverka' );
+*/

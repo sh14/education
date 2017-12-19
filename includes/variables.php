@@ -8,11 +8,17 @@
 
 // объявление глобальной переменной
 global $link;
+global $redirect;
 
 // если $link - пуста
 if ( empty( $link ) ) {
-	$link = mysqli_connect( HOST, LOGIN, PASSWORD, DATABASE )
-	or die( 'Ошибка при подключении к серверу MySQL: ' . mysqli_connect_error() );
+	$link     = mysqli_connect( HOST, LOGIN, PASSWORD, DATABASE );
+	$redirect = false;
+	if ( ! $link ) {
+		print( 'Ошибка при подключении к серверу MySQL: ' . mysqli_connect_error() );
+		redirect_configuration_page();
+		$redirect = true;
+	}
 }
 
 global $global_actions;

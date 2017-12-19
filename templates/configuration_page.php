@@ -8,6 +8,11 @@
 ?>
 <form method="post">
 	<div class="form-group" class="form-horizontal">
+		<h4 class="col-lg-8">
+			<strong>Заполните все поля помеченные звёздочкой</strong>
+		</h4>
+	</div>
+	<div class="form-group" class="form-horizontal">
 		<label class="col-lg-3 control-label">Введите имя хоста:*</label>
 		<div class="col-lg-8">
 			<input class="form-control" type="text" name="host" value="">

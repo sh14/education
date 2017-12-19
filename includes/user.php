@@ -134,10 +134,6 @@ function autorization_user() {
 		$sql      = "SELECT COUNT(*) FROM users WHERE email='{$email}' AND password='{$password}'";
 		$result   = do_query( $sql );
 		$rows     = $result->fetch_row();
-		$password = md5( md5( trim( $_POST['password_login'] ) ) );
-		$sql      = "SELECT COUNT(*) FROM users WHERE email='{$email}' AND password='{$password}'";
-		$result   = do_query( $sql );
-		$rows     = $result->fetch_row();
 
 		if ( $rows[0] == 1 ) {
 			setcookie( 'shlo_chat', implode( ';', [ $email, $password ] ), time() + 60 * 60 * 24 );
@@ -158,25 +154,82 @@ add_action( 'init', 'autorization_user' );
  *
  */
 function is_user_logged_in() {
+	global $link;
+	if ( $link ) {
+		if ( ! empty( $_COOKIE['shlo_chat'] ) ) {
 
-	if ( ! empty( $_COOKIE['shlo_chat'] ) ) {
+			list( $email, $password ) = explode( ';', esc_sql( $_COOKIE['shlo_chat'] ) );
 
-		list( $email, $password ) = explode( ';', esc_sql( $_COOKIE['shlo_chat'] ) );
+			if ( ! empty( $email ) && ! empty( $password ) ) {
+				$sql    = "SELECT COUNT(*) FROM users WHERE email='{$email}' AND password='{$password}'";
+				$result = do_query( $sql );
+				$rows   = $result->fetch_row();
 
-		if ( ! empty( $email ) && ! empty( $password ) ) {
-			$sql    = "SELECT COUNT(*) FROM users WHERE email='{$email}' AND password='{$password}'";
-			$result = do_query( $sql );
-			$rows   = $result->fetch_row();
-
-			if ( $rows[0] == 1 ) {
-				return true;
+				if ( $rows[0] == 1 ) {
+					return true;
+				}
 			}
 		}
-	}
 
-	return false;
+		return false;
+	}
 }
 
+/**
+ * Функция загрузки изображения canvas
+ */
+function image_resize() {
+	if ( ! empty( $_POST['action'] ) && $_POST['action'] == 'upload' ) {
+		get_user_info();
+		if ( ! is_dir( get_root_path() . '\images\users\\' . get_current_user_id() ) ) {
+			mkdir( get_root_path() . '\images\users\\' . get_current_user_id(), 0777 );
+		}
+		$target_dir  = '\images\users\\' . get_current_user_id() . '\\';
+		$target_file = get_root_path() . $target_dir . basename( $_FILES['file_to_upload']['name'] );
+		$img         = $_POST['image'];
+		$img         = str_replace( 'data:image/png;base64,', '', $img );
+		$img         = str_replace( ' ', '+', $img );
+		$data        = base64_decode( $img );
+		file_put_contents( $target_file, $data );
+	}
+}
+
+add_action( 'init', 'image_resize' );
+
+/**
+ * Функция добавления адреса фотографии в базу данных
+ */
+function get_actual_photo() {
+	if ( is_user_logged_in() ) {
+		if ( ! empty( $_FILES['file_to_upload']['name'] ) ) {
+			$ID          = get_current_user_id();
+			$target_path = get_current_user_id() . '/' . basename( $_FILES['file_to_upload']['name'] );
+			$sql_message = "UPDATE message SET image = '{$target_path}' WHERE id_user = $ID";
+			$sql_users   = "UPDATE users SET image = '{$target_path}' WHERE ID = $ID";
+			do_query( $sql_message );
+			do_query( $sql_users );
+		}
+	}
+}
+
+add_action( 'init', 'get_actual_photo' );
+
+/**
+ * Функция добавления аватара пользователя
+ */
+function display_avatar() {
+	$ID     = get_current_user_id();
+	$sql    = "SELECT image FROM users WHERE ID = $ID";
+	$result = do_query( $sql );
+	$row    = $result->fetch_row();
+	if ( ! empty( $row[0] ) ) {
+		$image = ' style="background-image:url(' . get_root_url() . '/images/users/' . $row[0] . ');"';
+
+		return $image;
+	} else {
+		return false;
+	}
+}
 
 /**
  *  Функция редактирования профиля пользователя
@@ -208,7 +261,7 @@ function profile_edit() {
 			}
 		}
 
-		$vars = array_combine( array_keys( $values ), array_values( $vars ) );
+		$vars       = array_combine( array_keys( $values ), array_values( $vars ) );
 		$num_values = count( $values );
 		for ( $i = 0; $i < $num_values; $i ++ ) {
 			$values[ $i ] = $vars[ $i ] . '=' . $values[ $i ];
