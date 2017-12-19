@@ -203,7 +203,7 @@ function get_actual_photo() {
 	if ( is_user_logged_in() ) {
 		if ( ! empty( $_FILES['file_to_upload']['name'] ) ) {
 			$ID          = get_current_user_id();
-			$target_path = 'users/' . get_current_user_id() . '/' . basename( $_FILES['file_to_upload']['name'] );
+			$target_path = get_current_user_id() . '/' . basename( $_FILES['file_to_upload']['name'] );
 			$sql_message = "UPDATE message SET image = '{$target_path}' WHERE id_user = $ID";
 			$sql_users   = "UPDATE users SET image = '{$target_path}' WHERE ID = $ID";
 			do_query( $sql_message );
@@ -224,6 +224,7 @@ function display_avatar() {
 	$row    = $result->fetch_row();
 	if ( ! empty( $row[0] ) ) {
 		$image = ' style="background-image:url(' . get_root_url() . '/images/' . $row[0] . ');"';
+
 		return $image;
 	} else {
 		return false;
