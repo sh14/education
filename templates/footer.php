@@ -133,6 +133,12 @@
 
 </script>
 
+
+
+
+<?php
+if ( is_user_logged_in() ) {
+?>
 <div class="massive">
 	<div class="move_window">
 		<div class="round">
@@ -141,7 +147,12 @@
 		<div class="head_window">
 			<p>Редактрования профиля</p>
 		</div>
-		<div class="photoUser_window">
+
+       <div class="all">
+           <?php
+           get_template_part( 'profile_edit' );
+           ?>
+		<!--<div class="photoUser_window">
 			<p>Фото профиля</p>
 		</div>
 		<div class="head_btn">
@@ -176,9 +187,15 @@
 		</div>
 		<div class="form_btn">
 				<button id="form_window-Btn">Сохранить изменения</button>
-		</div>
+		</div>-->
+
+        </div>
 	</div>
 </div>
+    <?php
+}
+
+?>
 <?php
 do_action( 'footer' );
 ?>
