@@ -29,7 +29,7 @@ function add_default_data() {
 	$sql[] = "INSERT INTO `message`( `id_user`, `datetime`, `title`, `content`, `image`) 
 	VALUES (1,'2017-11-12 12:00:00','Привет, мир!','Это тестовая публикация!','character-designer.png')";
 	$sql[] = "INSERT INTO `users`( `email`, `password`, `first_name`, `last_name`, `image`)
-	VALUES ('admin','test@tes.ru','{$password}','Админ','Админов','character-designer.png')";
+	VALUES ('test@tes.ru','{$password}','Админ','Админов','character-designer.png')";
 
 	$sql_set_id     = [];
 	$sql_reset_id   = [];
