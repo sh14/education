@@ -54,6 +54,7 @@
 			 result = JSON.parse( result );
 
 			 if ( result[ 'error' ] === undefined ) {
+				 console.log( result );
 				 data         = form.serializeArray();
 				 let new_data = {
 					 'image' : shlo[ 'image' ],
@@ -106,9 +107,10 @@
 	function scroll_to_last_message() {
 		let box  = $( '.chat__messages-box' );
 		let item = box.find( '.message:last-child' );
-
-		// скрол к последнему элементу
-		box.scrollTop( box.scrollTop() + item.position().top );
+		if ( item.length > 0 ) {
+			// скрол к последнему элементу
+			box.scrollTop( box.scrollTop() + item.position().top );
+		}
 	}
 
 	/**
@@ -168,6 +170,7 @@
 	$( '[name="content"]' ).on( 'keypress', function ( event ) {
 
 		if ( event.which === 13 && event.altKey ) {
+			console.log('sad');
 			message_add( this );
 		}
 	} );

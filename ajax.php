@@ -7,9 +7,9 @@
  */
 require 'functions.php';
 
-function do_ajax(){
+function do_ajax() {
 
-	if(!empty($_POST['action'])){
+	if ( ! empty( $_POST['action'] ) ) {
 		$function_name = $_POST['action'];
 		$function_name();
 	}

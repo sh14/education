@@ -499,13 +499,13 @@ function message_add() {
 				            "( `id_user`, `datetime`, `title`, `content` ) " .
 				            "VALUES ({$user_id}, '{$datetime}', '{$data['title']}', '{$data['content']}' )";
 			}
-			$m = mysqli_insert_id( $link );
+			//$m = mysqli_insert_id( $link );
 		} else {
 			$errors[] = 'Сообщение не указано';
 		}
 
 		$data             = [];
-		$data['m']        = $m;
+		//$data['m']        = $m;
 		$data['datetime'] = $datetime;
 		$data['id_user']  = $user_id;
 
