@@ -406,6 +406,7 @@ function enqueue_scripts() {
 		$shlo['ajax_url'] = get_root_url() . '/ajax.php';
 		$shlo['name']     = $shlo['first_name'] . ' ' . $shlo['last_name'];
 		$shlo['image']    = get_root_url() . '/images/users/' . $shlo['image'];
+
 		wp_localize_script( 'functions', 'shlo', $shlo );
 	}
 }
@@ -499,18 +500,18 @@ function message_add() {
 				            "( `id_user`, `datetime`, `title`, `content` ) " .
 				            "VALUES ({$user_id}, '{$datetime}', '{$data['title']}', '{$data['content']}' )";
 			}
-			//$m = mysqli_insert_id( $link );
 		} else {
 			$errors[] = 'Сообщение не указано';
 		}
 
-		$data             = [];
-		//$data['m']        = $m;
-		$data['datetime'] = $datetime;
-		$data['id_user']  = $user_id;
 
 		if ( ! do_query( $sql ) ) {
 			$errors[] = 'Что-то пошло не так';
+		} else {
+			$data               = [];
+			$data['id_message'] = mysqli_insert_id( $link );
+			$data['datetime']   = $datetime;
+			$data['id_user']    = $user_id;
 		}
 
 		if ( ! empty( $errors ) ) {
