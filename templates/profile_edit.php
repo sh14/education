@@ -90,12 +90,6 @@ $user = get_user_info();
 			</div>
 		</div>
 		<div class="form-group">
-			<label class="col-md-3 control-label">Никнейм:</label>
-			<div class="col-md-8">
-				<input class="form-control" type="text" name="nickname" value="<?php echo $user['nickname']; ?>">
-			</div>
-		</div>
-		<div class="form-group">
 			<label class="col-md-3 control-label">Пароль:</label>
 			<div class="col-md-8">
 				<input class="form-control password" type="password" name="password">

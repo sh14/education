@@ -186,17 +186,21 @@
 
 	/*Код жулинского для всплывающего окна*/
 
-    function chat_auto_height() {
+    function window_move_auto_height() {
         let height = parseInt( $( window ).height() ) - 20;
         console.log(height);
-        $( '.js-chat' ).height( height );
+        $( '.move_window' ).height( height );
     }
 
-    chat_auto_height();
+    window_move_auto_height();
 
     $( window ).on( 'resize', function () {
         chat_auto_height();
     } );
+
+    $( window ).on( 'resize', debounce( function () {
+        window_move_auto_height();
+    }, 250 ) );
 
 		function Show(){
 			document.querySelector('.massive').classList.add("left");
