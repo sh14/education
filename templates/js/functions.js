@@ -48,4 +48,26 @@
 	} );
 
 
+	/*Код жулинского для всплывающего окна*/
+
+
+		function Show(){
+			document.querySelector('.massive').classList.add("left");
+			document.querySelector('#mex').classList.add("active");
+		}
+		function Hide(){
+			document.querySelector('.massive').classList.remove("left");
+			document.querySelector('#mex').classList.remove("active");
+		}
+		document.querySelector('#mex').onclick = function(){
+			if(document.querySelector('.massive').classList.contains("left")){
+				Hide();
+			} else {
+				Show();
+			}
+		}
+
+
+	/*Конец кода Жулинского*/
+
 })( jQuery );

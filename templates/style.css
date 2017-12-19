@@ -1,5 +1,7 @@
 body {
   background: #eeeeee;
+  position: relative;
+  overflow: hidden;
 }
 div:before,
 div:after {
@@ -20,6 +22,7 @@ div:after {
 .personal-info .message {
   margin-top: 12px;
 }
+
 .profile .avatar {
   border-radius: 50%;
   width: 200px;
@@ -30,6 +33,7 @@ div:after {
   background-position: center;
   float: left;
 }
+
 .profile .file_upload {
   display: block;
   position: relative;

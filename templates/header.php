@@ -8,6 +8,7 @@
 
 	<link rel="stylesheet" href="<?php echo get_stylesheet_directory(); ?>/bootstrap/css/bootstrap.min.css">
 	<link rel="stylesheet" href="<?php echo get_stylesheet_directory(); ?>/style.css">
+	<link rel="stylesheet" href="<?php echo get_stylesheet_directory(); ?>/move_window_style.css">
 	<title>Chat</title>
 	<?php
 	head();
