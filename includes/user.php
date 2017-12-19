@@ -204,8 +204,8 @@ function get_actual_photo() {
 		if ( ! empty( $_FILES['file_to_upload']['name'] ) ) {
 			$ID          = get_current_user_id();
 			$target_path = 'users/' . get_current_user_id() . '/' . basename( $_FILES['file_to_upload']['name'] );
-			$sql_message = "UPDATE message SET photo = '{$target_path}' WHERE id_user = $ID";
-			$sql_users   = "UPDATE users SET photo = '{$target_path}' WHERE ID = $ID";
+			$sql_message = "UPDATE message SET image = '{$target_path}' WHERE id_user = $ID";
+			$sql_users   = "UPDATE users SET image = '{$target_path}' WHERE ID = $ID";
 			do_query( $sql_message );
 			do_query( $sql_users );
 		}
@@ -219,7 +219,7 @@ add_action( 'init', 'get_actual_photo' );
  */
 function display_avatar() {
 	$ID     = get_current_user_id();
-	$sql    = "SELECT photo FROM users WHERE ID = $ID";
+	$sql    = "SELECT image FROM users WHERE ID = $ID";
 	$result = do_query( $sql );
 	$row    = $result->fetch_row();
 	if ( ! empty( $row[0] ) ) {
