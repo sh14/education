@@ -2,7 +2,7 @@
 global $link;
 global $redirect;
 
-if ( $redirect === true ) {
+if ( redirect_configuration_page() === true ) {
 	get_template_part( 'configuration_page' );
 } else {
 	// если пользователь авторизован

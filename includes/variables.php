@@ -16,7 +16,6 @@ if ( empty( $link ) ) {
 	$redirect = false;
 	if ( ! $link ) {
 		print( 'Ошибка при подключении к серверу MySQL: ' . mysqli_connect_error() );
-		redirect_configuration_page();
 		$redirect = true;
 	}
 }

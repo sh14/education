@@ -555,6 +555,8 @@ function redirect_configuration_page() {
 	}
 }
 
+add_action( 'init', 'redirect_configuration_page' );
+
 //function proverka() {
 
 /*	//Получение данных из $_POST (от Влада)
