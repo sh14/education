@@ -12,7 +12,7 @@ global $redirect;
 
 // если $link - пуста
 if ( empty( $link ) ) {
-	$link     = mysqli_connect( HOST, LOGIN, PASSWORD, DATABASE );
+	$link     = @mysqli_connect( HOST, LOGIN, PASSWORD, DATABASE );
 	$redirect = false;
 	if ( ! $link ) {
 		print( 'Ошибка при подключении к серверу MySQL: ' . mysqli_connect_error() );
