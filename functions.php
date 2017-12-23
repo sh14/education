@@ -397,8 +397,8 @@ function enqueue_scripts() {
 	enqueue_script( 'microtemplating' );
 
 	register_script( 'functions', get_stylesheet_directory() . '/js/functions.js', [ 'jquery' ], '', true );
-
 	enqueue_script( 'functions' );
+
 	$shlo = get_user_info();
 	if ( ! empty( $shlo ) ) {
 		$shlo = array_merge( [], $shlo );
