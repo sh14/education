@@ -134,7 +134,7 @@
 </script>
 
 
-/* Свайп окна профиля*/
+<!--Свайп окна профиля-->
         <div class="massive">
             <div class="round">
                 <img src="images/settings.png" alt="img" id="mex">
@@ -153,7 +153,7 @@
                 </div>
             </div>
         </div>
-/* Свайп окна профиля*/
+<!--Свайп окна профиля-->
 
 
 <?php
