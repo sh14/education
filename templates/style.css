@@ -8,6 +8,61 @@ div:after {
   display: block;
   clear: both;
 }
+
+
+/*код жулинского*/
+
+.massive{
+	width: 635px;
+	height: 734px;
+	position: absolute;
+	right: -600px;
+	top: 10px;
+	transition: 1s ease;
+}
+
+.move_window {
+	width: 600px;
+	height: 734px;
+	border: 1px solid silver;
+	border-radius: 10px 0 0 10px;
+	background-color: rgb(240, 245, 247);
+	box-sizing: border-box;
+	float: right;
+	overflow-y: scroll;
+}
+
+.left {
+	right: 0;
+}
+
+.round {
+	position: absolute;
+	top: 10px;
+	right: 600px;
+}
+
+#mex {
+	transition: 1.5s ease;
+}
+
+.active {
+	transform: rotate(-360deg);
+}
+
+.massive .head_window{
+  padding: 10px;
+}
+
+.massive  p {
+  font-family: Helvetica, sans-serif;
+  font-size: 1.5em;
+  letter-spacing: 1px;
+}
+
+/* код жулинского*/
+
+
 .page {
   padding: 10px 0;
 }
