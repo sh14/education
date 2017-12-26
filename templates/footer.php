@@ -132,6 +132,30 @@
 
 
 </script>
+
+
+<!--Свайп окна профиля-->
+        <div class="massive">
+            <div class="round">
+                <img src="images/settings.png" alt="img" id="mex">
+            </div>
+            <div class="move_window">
+                <div class="modal-header">
+                    <h4 class="modal-title">Редактирование профиля</h4>
+                    <button class="close" type="button" data-dismiss="modal">
+                        <i class="fa fa-close"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <?php
+                    get_template_part( 'profile_edit' );
+                    ?>
+                </div>
+            </div>
+        </div>
+<!--Свайп окна профиля-->
+
+
 <?php
 do_action( 'footer' );
 ?>
