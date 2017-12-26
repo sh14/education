@@ -397,8 +397,8 @@ function enqueue_scripts() {
 	enqueue_script( 'microtemplating' );
 
 	register_script( 'functions', get_stylesheet_directory() . '/js/functions.js', [ 'jquery' ], '', true );
-
 	enqueue_script( 'functions' );
+
 	$shlo = get_user_info();
 	if ( ! empty( $shlo ) ) {
 		$shlo = array_merge( [], $shlo );
@@ -554,6 +554,8 @@ function redirect_configuration_page() {
 		return false;
 	}
 }
+
+add_action( 'init', 'redirect_configuration_page' );
 
 //function proverka() {
 
