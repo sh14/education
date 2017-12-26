@@ -3,9 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="1aa73dd7-009c-4316-9da1-dd9eae869dd6" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/config_default.php" afterPath="$PROJECT_DIR$/config_default.php" />
-      <change beforePath="$PROJECT_DIR$/includes/variables.php" afterPath="$PROJECT_DIR$/includes/variables.php" />
-      <change beforePath="$PROJECT_DIR$/templates/header.php" afterPath="$PROJECT_DIR$/templates/header.php" />
       <change beforePath="$PROJECT_DIR$/templates/style.css" afterPath="$PROJECT_DIR$/templates/style.css" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -30,8 +27,8 @@
       <file leaf-file-name="style.css" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/templates/style.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-525">
-              <caret line="2" column="19" lean-forward="false" selection-start-line="2" selection-start-column="19" selection-end-line="2" selection-end-column="19" />
+            <state relative-caret-position="525">
+              <caret line="64" column="11" lean-forward="false" selection-start-line="64" selection-start-column="11" selection-end-line="64" selection-end-column="11" />
               <folding />
             </state>
           </provider>
@@ -104,7 +101,6 @@
         <option value="$PROJECT_DIR$/functions.php" />
         <option value="$PROJECT_DIR$/includes/user.php" />
         <option value="$PROJECT_DIR$/config.php" />
-        <option value="$PROJECT_DIR$/templates/style.css" />
         <option value="$PROJECT_DIR$/templates/move_window_style.css" />
         <option value="$PROJECT_DIR$/templates/window_chat.php" />
         <option value="$PROJECT_DIR$/templates/footer.php" />
@@ -112,6 +108,7 @@
         <option value="$PROJECT_DIR$/templates/js/functions.js" />
         <option value="$PROJECT_DIR$/config_default.php" />
         <option value="$PROJECT_DIR$/includes/variables.php" />
+        <option value="$PROJECT_DIR$/templates/style.css" />
       </list>
     </option>
   </component>
@@ -123,8 +120,8 @@
   </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
   <component name="ProjectFrameBounds">
-    <option name="x" value="367" />
-    <option name="y" value="17" />
+    <option name="x" value="108" />
+    <option name="y" value="7" />
     <option name="width" value="1400" />
     <option name="height" value="1000" />
   </component>
@@ -224,7 +221,7 @@
       <workItem from="1513482433327" duration="69000" />
       <workItem from="1513706439836" duration="4111000" />
       <workItem from="1513718396867" duration="1057000" />
-      <workItem from="1514305828307" duration="56000" />
+      <workItem from="1514305828307" duration="902000" />
     </task>
     <task id="LOCAL-00001" summary="Оптимизация кода">
       <created>1510682526936</created>
@@ -310,14 +307,35 @@
       <option name="project" value="LOCAL" />
       <updated>1513709511296</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="Добавление функции proverka, для редактирования сообщений">
+      <created>1514305892384</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1514305892384</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Добавление функции proverka, для редактирования сообщений">
+      <created>1514306004962</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1514306004962</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Добавление функции proverka, для редактирования сообщений">
+      <created>1514306016939</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1514306016939</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="102170000" />
+    <option name="totallyTimeSpent" value="103016000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="367" y="17" width="1400" height="1000" extended-state="0" />
+    <frame x="108" y="7" width="1400" height="1000" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.19898698" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -667,6 +685,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="168">
           <caret line="13" column="0" lean-forward="true" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -690,10 +709,10 @@
         <state relative-caret-position="21">
           <caret line="102" column="0" lean-forward="false" selection-start-line="102" selection-start-column="0" selection-end-line="102" selection-end-column="0" />
           <folding>
-            <marker date="1513706309598" expanded="true" signature="6009:6101" ph="SELECT * FRO... message" />
-            <marker date="1513706309598" expanded="true" signature="11421:11566" ph="UPDATE `message`... " />
-            <marker date="1513706309598" expanded="true" signature="11648:11835" ph="INSERT INTO `message`... " />
-            <marker date="1513706309598" expanded="true" signature="12550:12608" ph="SELECT * FRO... message" />
+            <marker date="1514305914304" expanded="true" signature="6009:6101" ph="SELECT * FRO... message" />
+            <marker date="1514305914304" expanded="true" signature="11421:11566" ph="UPDATE `message`... " />
+            <marker date="1514305914304" expanded="true" signature="11648:11835" ph="INSERT INTO `message`... " />
+            <marker date="1514305914304" expanded="true" signature="12550:12608" ph="SELECT * FRO... message" />
           </folding>
         </state>
       </provider>
@@ -716,8 +735,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/templates/style.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-525">
-          <caret line="2" column="19" lean-forward="false" selection-start-line="2" selection-start-column="19" selection-end-line="2" selection-end-column="19" />
+        <state relative-caret-position="525">
+          <caret line="64" column="11" lean-forward="false" selection-start-line="64" selection-start-column="11" selection-end-line="64" selection-end-column="11" />
           <folding />
         </state>
       </provider>
