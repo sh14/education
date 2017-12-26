@@ -55,7 +55,7 @@ add_action( 'init', 'get_user_info' );
  * Функция регистрации пользователя
  */
 function registration() {
-	if ( ! empty( $_POST['email'] ) && ! empty( $_POST['password'] ) && ! empty( $_POST['action'] == 'registration' ) ) {
+	if ( ! empty( $_POST['email'] ) && ! empty( $_POST['password'] ) && ! empty( $_POST['first_name'] ) && ! empty( $_POST['last_name'] ) && ! empty( $_POST['action'] == 'registration' ) ) {
 		$err = [];
 
 		if ( strlen( $_POST['email'] ) < 7 or strlen( $_POST['email'] ) > 255 ) {
@@ -72,11 +72,15 @@ function registration() {
 
 		if ( count( $err ) == 0 ) {
 
+			$first_name = $_POST['first_name'];
+
+			$last_name = $_POST['last_name'];
+
 			$email = $_POST['email'];
 
 			$password = encript_password( $_POST['password'] );
 
-			do_query( "INSERT INTO users SET email='" . $email . "', password='" . $password . "'" );
+			do_query( "INSERT INTO users SET email='" . $email . "', password='" . $password . "', first_name='" . $first_name . "', last_name='" . $last_name . "'" );
 			$query = do_query( "SELECT count(*) FROM users WHERE email='{$_POST['email']}'" );
 
 			if ( mysqli_num_rows( $query ) > 0 ) {

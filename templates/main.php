@@ -25,7 +25,11 @@
                         </div>
                         <div class="modal-body">
                          <form method="post">
-                                <label for="email">Введите Ваш email</label>
+		                            <label for="first_name">Введите Ваше имя</label>
+		                            <div class="form-group"><input class="form-control" type="text" name="first_name" id="first_name" placeholder="Ваше имя" required="required" ></div>
+		                            <label for="last_name">Введите Вашу фамилию</label>
+		                            <div class="form-group"><input class="form-control" type="text" name="last_name" id="last_name" placeholder="Ваша фамилия" required="required" ></div>
+	                            <label for="email">Введите Ваш email</label>
                                 <div class="form-group"><input class="form-control" type="email" name="email" id="email" placeholder="Email" required="required" ></div>
                                 <label for="password">Введите Ваш пароль</label>
                                 <div class="form-group"><input class="form-control" type="password" placeholder="Password" id="password" name="password" required="required" ></div>

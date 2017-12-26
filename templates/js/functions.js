@@ -80,6 +80,7 @@
 				 // вставка значений в шаблон сообщения
 				 let message = tmpl( 'message_template', new_data );
 
+
 				 // добавление сформированного сообщения в окно чата
 				 $( '.chat__messages-box' ).append( message );
 
