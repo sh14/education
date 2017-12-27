@@ -79,10 +79,11 @@
 				if ( info.width >= 200 && info.height >= 200 ) {
 					aspectRatio               = info.height / info.width;
 					processing                = true;
-					image_container.innerHTML = ''; // clear
+					image_container.innerHTML = '';
 					loading.style.display     = '';
 
 					$( '#img-preview' ).modal( 'show' );
+					$( '.profile .avatar' ).css( 'background-image', 'none' );
 
 					image( file, 200, 200 )( function () {
 
@@ -106,6 +107,7 @@
 				var imageObj = $( '.image_2 canvas' )[ 0 ];
 				var canvas   = $( '.image_1 canvas' )[ 0 ];
 				var context  = canvas.getContext( "2d" );
+				context.clearRect( 0, 0, canvas.width, canvas.height );
 
 				if ( imageObj != null && c.x != 0 && c.y != 0 && c.w != 0 && c.h != 0 ) {
 					context.drawImage( imageObj, c.x, c.y, c.w, c.h, 0, 0, canvas.width, canvas.height );
@@ -147,9 +149,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <?php
-                    get_template_part( 'profile_edit' );
-                    ?>
+                    <?php get_template_part( 'profile_edit' ); ?>
                 </div>
             </div>
         </div>
