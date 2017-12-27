@@ -25,7 +25,7 @@ $user = get_user_info();
 		<div class="row">
 			<div class="text-center col-md-5">
 
-				<div id="avatar" class="avatar">
+				<div id="avatar" class="avatar"<?php echo display_avatar(); ?>>
 					<div id="avatar__preview" class="js-preview avatar__preview"></div>
 				</div>
 
