@@ -25,7 +25,7 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                         <form method="post">
+	                        <form method="post">
 		                            <label for="first_name">Введите Ваше имя</label>
 		                            <div class="form-group"><input class="form-control" type="text" name="first_name" id="first_name" placeholder="Ваше имя" required="required" ></div>
 		                            <label for="last_name">Введите Вашу фамилию</label>
@@ -55,7 +55,7 @@
                         </div>
                         <div class="modal-body">
                             <div class="login_window">
-                                <form class="login" action="" method="post">
+                                <form class="login" method="post">
                                     <label for="email_login">Введите Ваш email</label>
                                     <div class="form-group"><input class="form-control login_input" type="email" name="email_login" id="email_login" placeholder="Email" required="required"/ ></div>
                                     <label for="password_login">Введите Ваш пароль</label>
