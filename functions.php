@@ -164,9 +164,15 @@ function get_root_path() {
  */
 function get_root_url() {
 	$protocol = stripos( $_SERVER['SERVER_PROTOCOL'], 'https' ) === true ? 'https://' : 'http://';
-	$port     = ! empty( $_SERVER['SERVER_PORT'] ) ? ':' . $_SERVER['SERVER_PORT'] : '';
 
-	return $protocol . $_SERVER["SERVER_NAME"] . $port . dirname( $_SERVER["SCRIPT_NAME"] );
+	$port = ! empty( $_SERVER['SERVER_PORT'] ) && $_SERVER['SERVER_PORT'] != 80 ? ':' . $_SERVER['SERVER_PORT'] : '';
+
+	$url = $protocol . $_SERVER["SERVER_NAME"] . $port . dirname( $_SERVER["SCRIPT_NAME"] );
+
+	// удаление последнего слэша в строке
+	$url = preg_replace( '{/$}', '', $url );
+
+	return $url;
 }
 
 /**
@@ -175,7 +181,9 @@ function get_root_url() {
  * @return string
  */
 function get_stylesheet_directory() {
-	return get_root_url() . '/templates';
+	$url = get_root_url() . '/templates';
+
+	return $url;
 }
 
 /**
@@ -375,23 +383,26 @@ function enqueue_scripts() {
 	register_script( 'jquery', get_stylesheet_directory() . '/js/jquery-3.2.1.min.js' );
 	enqueue_script( 'jquery' );
 
-	register_script( 'bootstrap', get_stylesheet_directory() . '/bootstrap/js/bootstrap.min.js', [ 'jquery' ], '', true );
-	enqueue_script( 'bootstrap' );
+/*	register_script( 'jquery.mobile', get_stylesheet_directory() . '/js/jquery.mobile.custom.min.js' );
+	enqueue_script( 'jquery.mobile' );*/
 
-	register_script( 'fileapi', get_stylesheet_directory() . '/js/FileAPI/dist/FileAPI.min.js' );
+	register_script( 'jquery.modal', get_stylesheet_directory() . '/js/jquery.modal.js' );
+	enqueue_script( 'jquery.modal' );
+
+	register_script( 'bootstrap', get_stylesheet_directory() . '/bootstrap/js/bootstrap.min.js', [ 'jquery' ], '', true );
+	//enqueue_script( 'bootstrap' );
+
+	register_script( 'fileapi', get_stylesheet_directory() . '/js/FileAPI/FileAPI.min.js', [],'', true );
 	enqueue_script( 'fileapi' );
 
-	register_script( 'fileapi.exif', get_stylesheet_directory() . '/js/FileAPI/plugins/FileAPI.exif.js' );
-	enqueue_script( 'fileapi.exif' );
-
-	register_script( 'jquery.fileapi', get_stylesheet_directory() . '/js/FileAPI/jquery.fileapi.js' );
+	register_script( 'jquery.fileapi', get_stylesheet_directory() . '/js/FileAPI/jquery.fileapi.min.js', ['fileapi'],'', true );
 	enqueue_script( 'jquery.fileapi' );
 
-	register_script( 'jcrop', get_stylesheet_directory() . '/js/jcrop/js/jquery.Jcrop.min.js' );
+	register_script( 'jcrop', get_stylesheet_directory() . '/js/jcrop/js/jquery.Jcrop.min.js', [],'', true );
 	enqueue_script( 'jcrop' );
 
-	register_script( 'jquery.modal', get_stylesheet_directory() . '/js/FileAPI/statics/jquery.modal.js' );
-	enqueue_script( 'jquery.modal' );
+	register_script( 'fileapi_functions', get_stylesheet_directory() . '/js/fileapi_functions.js', [],'', true );
+	enqueue_script( 'fileapi_functions' );
 
 	register_script( 'microtemplating', get_stylesheet_directory() . '/js/microtemplating.js', [], '', true );
 	enqueue_script( 'microtemplating' );
@@ -405,6 +416,7 @@ function enqueue_scripts() {
 
 		$shlo['ajax_url'] = get_root_url() . '/ajax.php';
 		$shlo['name']     = $shlo['first_name'] . ' ' . $shlo['last_name'];
+		$shlo['user_id']     = $shlo['ID'];
 		$shlo['image']    = get_root_url() . '/images/users/' . $shlo['image'];
 
 		wp_localize_script( 'functions', 'shlo', $shlo );

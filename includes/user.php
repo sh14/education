@@ -180,42 +180,26 @@ function is_user_logged_in() {
 }
 
 /**
- * Функция загрузки изображения canvas
+ * Загрузка изображения профиля, с добавлением информации в бд
  */
-function image_resize() {
-	if ( ! empty( $_POST['action'] ) && $_POST['action'] == 'upload' ) {
-		get_user_info();
-		$target_dir  = '/images/users/';
-		$path        = $_FILES['file_to_upload']['name'];
-		$ext         = pathinfo( $path, PATHINFO_EXTENSION );
-		$target_file = get_root_path() . $target_dir . 'avatar_id' . get_current_user_id() . '.' . $ext;
-		$img         = $_POST['image'];
-		$img         = str_replace( 'data:image/png;base64,', '', $img );
-		$img         = str_replace( ' ', '+', $img );
-		$data        = base64_decode( $img );
-		file_put_contents( $target_file, $data );
+function upload_file() {
+	get_user_info();
+	$uploaddir  = get_root_path() . '/images/users/';
+	$path       = $_FILES['filedata']['name'];
+	$ext        = pathinfo( $path, PATHINFO_EXTENSION );
+	$user_id = get_current_user_id();
+	$file_name = 'avatar_id' . $user_id . '.' . $ext;
+	$uploadfile = $uploaddir . $file_name;
+
+
+	if ( move_uploaded_file( $_FILES['filedata']['tmp_name'], $uploadfile ) ) {
+		$sql_users   = "UPDATE users SET image = '{$file_name}' WHERE ID = $user_id";
+		do_query( $sql_users );
 	}
+	echo json_encode( [] );
+	die();
 }
 
-add_action( 'init', 'image_resize' );
-
-/**
- * Функция добавления адреса фотографии в базу данных
- */
-function get_actual_photo() {
-	if ( is_user_logged_in() ) {
-		if ( ! empty( $_FILES['file_to_upload']['name'] ) ) {
-			$ID          = get_current_user_id();
-			$path        = $_FILES['file_to_upload']['name'];
-			$ext         = pathinfo( $path, PATHINFO_EXTENSION );
-			$target_path = 'avatar_id' . $ID . '.' . $ext;
-			$sql_users   = "UPDATE users SET image = '{$target_path}' WHERE ID = $ID";
-			do_query( $sql_users );
-		}
-	}
-}
-
-add_action( 'init', 'get_actual_photo' );
 
 /**
  * Функция добавления аватара пользователя

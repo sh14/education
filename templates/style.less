@@ -14,16 +14,17 @@ div:before, div:after {
 	display: block;
 	clear: both;
 }
+
 .page {
 	padding: 10px 0;
 }
+
 .chat {
 	display: table;
 	width: 100%;
 	height: 300px;
 	background-color: @chat_bg;
 	border-radius: 4px;
-
 
 	&__messages {
 		height: 100%;
@@ -131,10 +132,10 @@ div:before, div:after {
 	}
 
 	&_alien &__data-box {
-		background:#ddf1ff;
+		background: #ddf1ff;
 	}
 	&_alien &__user-name {
-		color:#f93;
+		color: #f93;
 	}
 }
 
@@ -161,79 +162,13 @@ div:before, div:after {
 }
 
 .profile {
-	.avatar {
-		border-radius: 50%;
-		width: 200px;
-		height: 200px;
-		background: #e0e0e0 url(../images/user.svg) 50% 50% e('/') contain no-repeat;
-		margin-left: 10px;
-		float: left;
-		&__preview {
-			position: absolute;
-		}
-		canvas {
-			border-radius: 50%;
-			width: 200px;
-			height: 200px;
-			overflow: hidden;
-		}
+	&__avatar {
 	}
-	.file_upload {
-		display: block;
-		position: relative;
-		overflow: hidden;
-		font-size: 1em;
-		height: 2.2em;
-		line-height: 2em;
-		padding-left: 15px;
-		padding-right: 15px;
-		& > .button {
-			display: block;
-			cursor: pointer;
-			box-sizing: border-box;
-			-moz-box-sizing: border-box;
-			width: 100%;
-			height: 100%;
-			text-align: center;
-			background: #7300df;
-			transition: background 0.2s;
-			border-width: 1px;
-			border-style: solid;
-			border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-			border-radius: 2px;
-			box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2) inset, 0 1px 2px rgba(0, 0, 0, 0.05);
-			color: @white;
-			text-shadow: #6200bd 0 -1px 0;
-			overflow: hidden;
-			white-space: nowrap;
-			text-overflow: ellipsis;
-		}
-		& > div {
-			padding-left: 1em;
+	&__message {
+		padding: 10px;
+
+		&:empty {
 			display: none;
-		}
-		input[type=file] {
-			width: 100%;
-			height: 100%;
-			position: absolute;
-			top: 0;
-			opacity: 0;
-			z-index: -1;
-		}
-		&.focus {
-			box-shadow: 0 0 5px rgba(0, 30, 255, 0.4);
-		}
-		&:hover {
-			& > .button {
-				background: #6200bd;
-				text-shadow: #5d00b3 0 -1px 0;
-			}
-		}
-		&:active {
-			& > .button {
-				background: #5d00b3;
-				box-shadow: 0 0 3px rgba(0, 0, 0, 0.3) inset;
-			}
 		}
 	}
 }
@@ -282,16 +217,50 @@ div:before, div:after {
 	}
 }
 
-
-.popup {
-	margin: 25px;
-	float: left;
-	display: inline-block;
-	box-shadow: 0 0 5px #000;
-	background-color: #fff;
+.modal {
+	&-avatar {
+		position: initial;
+	}
+	&-avatar &-dialog {
+		display: table;
+		width: auto;
+	}
 }
-.popup__body {
-	margin: 10px 10px 5px;
+
+.themodal-lock {
+	/* when modal is opened we're removing scrollbars from the main content */
+	overflow: hidden;
+}
+
+.themodal-overlay {
+	/* overlay will stay fixed and will take all the space available */
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	top: 0;
+	right: 0;
+	z-index: 100000;
+
+	/* if modal content doesn't fit inside the overlay, display scrollbars */
+	overflow: auto;
+
+	/* allow one-finger iPad scrolling */
+	-webkit-overflow-scrolling: touch;
+
+}
+
+/* fix for iPad glitches */
+.themodal-overlay > * {
+	-webkit-transform: translateZ(0px);
+}
+
+.themodal-overlay {
+	background: rgba(255, 255, 255, 0.5);
+	/* IE6–IE8 */
+	/*
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr = #7F000000, endColorstr = #7F000000);
+	*/
+	zoom: 1;
 }
 
 .btn {
@@ -314,43 +283,162 @@ div:before, div:after {
 	}
 }
 
-.btn_browse {
-	cursor: pointer;
-	border: 1px solid rgba(0,0,0,.2);
-	padding: 8px 20px;
-	background-color: #FFDC73;
-	background: -moz-linear-gradient(top,#FFE599 0%,#FFDC73);
-	background: -webkit-gradient(linear, left top, left bottom,from(#FFE599),to(#FFDC73));
-	box-shadow: 0 1px 1px rgba(255,255,255,.5);
-}
-.btn_browse_small {
-	padding: 5px 10px;
-	font-size: 16px;
-}
-.btn-text {
-	position: relative;
+.swipe {
+	width: 260px;
+	top: 0;
+	bottom: 0;
+	position: fixed;
+	right: 0;
+	transition: 300ms ease;
+	overflow: hidden;
+
+
+	&__container {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 30px;
+	}
+	&__button {
+		position: absolute;
+		top: 100px;
+		right: 100%;
+		background: #eee;
+		border-radius: 4px 0 0 4px;
+		z-index: 9;
+		margin-right: -1px;
+		border: 1px solid #ccc;
+		border-right-color: transparent;
+		padding: 10px 5px 10px 10px;
+		text-align: center;
+		cursor: pointer;
+	}
+
+	&__sign {
+		width: 1em;
+		word-break: break-all;
+	}
+	&__content {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		width: 230px;
+		padding: 15px;
+		border-left: 1px solid #ccc;
+		background-color: #eee;
+		box-sizing: border-box;
+		overflow-y: scroll;
+	}
+
+	&-hidden {
+		width: 30px;
+	}
 }
 
-.js-img {
-	background-image: url("../images/character-designer.png");
-}
+.upload-image {
+	@border-width: 2px;
 
-.img-modal {
-	overflow: visible!important;
-}
-#preview-pane {
-	display: block;
-	position: absolute;
-	z-index: 2000;
-	left: -240px;
-	float: left;
-}
-
-#preview-pane .preview-container {
 	width: 200px;
 	height: 200px;
+	margin: auto;
+	text-align: center;
+	background: #eee;
+	position: relative;
+	border-radius: 50%;
 	overflow: hidden;
+
+	&:before {
+		border: @border-width dashed #4af;
+		border-radius: 50%;
+		height: 100%;
+	}
+	&__preview {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background: url(data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7) 50% 50% e('/') cover no-repeat;
+		border-radius: 50%;
+		z-index: 2;
+	}
+	&__wrapper {
+		width: 100%;
+		height: 100%;
+		min-height: 100px;
+		display: table;
+		top: 0;
+		position: absolute;
+	}
+	&__browse {
+		text-align: center;
+		height: 100%;
+		display: table-cell;
+		vertical-align: middle;
+		position: relative;
+		z-index: 3;
+	}
+	&__sign {
+		position: relative;
+		display: inline-block;
+		vertical-align: middle;
+		border-radius: 50%;
+		background: rgba(255, 255, 255, 0.3);
+		width: 50px;
+		height: 50px;
+		opacity: 0;
+		transition: all 300ms;
+
+		&:before, &:after {
+			content: '';
+			display: block;
+			height: 50%;
+			width: 0;
+			border-width: 0 0 0 2px;
+			border-style: solid;
+			border-color: rgba(255, 255, 255, 0.5);
+			position: absolute;
+			top: 25%;
+			left: 50%;
+			margin: 0 0 0 -1px;
+		}
+		&:after {
+			height: 0;
+			width: 50%;
+			left: 25%;
+			top: 50%;
+			margin: -1px 0 0 0;
+			border-width: 2px 0 0 0;
+		}
+		.upload-image:hover & {
+			opacity: 1;
+		}
+	}
+	&__caption {
+		position: absolute;
+		left: 0;
+		width: 100%;
+		line-height: 1;
+		bottom: 10px;
+		text-align: center;
+		color: #555;
+		font-size: 12px;
+		font-family: sans-serif;
+	}
+	&__file, input&__file {
+		display: none;
+	}
+	&__upload {
+	}
+	&__progress {
+		&_bar {
+		}
+		&_caption {
+		}
+	}
 }
-.profile .modal-preview {
-	display: inline-block;
+
+#fileapi .modal-content {
+	display: table;
 }

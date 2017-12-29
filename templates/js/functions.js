@@ -32,7 +32,7 @@
 	 */
 	function chat_auto_height() {
 		let height = parseInt( $( window ).height() ) - 20;
-		console.log( height );
+
 		$( '.js-chat' ).height( height );
 		$( '.chat__messages-box' ).height( (height - $( '.chat__form' ).height()) );
 	}
@@ -54,7 +54,7 @@
 			 result = JSON.parse( result );
 
 			 if ( result[ 'error' ] === undefined ) {
-				 console.log( result );
+
 				 data         = form.serializeArray();
 				 let new_data = {
 					 'image' : shlo[ 'image' ],
@@ -91,7 +91,7 @@
 				 $( '[name=content]' ).val( '' );
 				 $( '[name=id_message]' ).val( '' );
 			 } else {
-				 console.log( result[ 'error' ] );
+				 //console.log( result[ 'error' ] );
 			 }
 		 } )
 		 .fail( function () {
@@ -138,7 +138,6 @@
 	function show_title( obj, limit ) {
 		let form   = $( obj ).closest( 'form' );
 		let length = $( obj ).val().length;
-		console.log( length );
 		if ( length > limit ) {
 			form.find( '[name="title"]' ).removeClass( 'hidden' );
 		} else {
@@ -171,7 +170,7 @@
 	$( '[name="content"]' ).on( 'keypress', function ( event ) {
 
 		if ( event.which === 13 && event.altKey ) {
-			console.log( 'sad' );
+
 			message_add( this );
 		}
 	} );
@@ -185,28 +184,42 @@
 	} );
 
 
-	/*Код жулинского для всплывающего окна*/
-
-
-	function Show() {
-		$( '.massive' ).addClass( "left" );
-		$( '#mex' ).addClass( "active" );
+	function swipe_show() {
+		$( '.swipe' ).removeClass( 'swipe-hidden' );
 	}
 
-	function Hide() {
-		$( '.massive' ).removeClass( "left" );
-		$( '#mex' ).removeClass( "active" );
+	function swipe_hide() {
+		$( '.swipe' ).addClass( 'swipe-hidden' );
 	}
 
-	$( '#mex' ).on( 'click', function () {
-		if ( $( '.massive' ).hasClass( "left" ) ) {
-			Hide();
+	$( '.swipe__button' ).on( 'click', function () {
+		let parent = $( this ).closest( '.swipe' );
+		if ( parent.hasClass( 'swipe-hidden' ) ) {
+			swipe_show();
 		} else {
-			Show();
+			swipe_hide();
 		}
-	});
+	} );
 
+	/**
+	 * Проверка соответствия введенных паролей
+	 */
+	$( '.password, .confirm_password' ).on( 'keyup', function () {
+		let parent  = $( this ).closest( 'form' );
+		let message = parent.find( '.profile__message' );
+		if ( $( '.password' ).val() !== $( '.confirm_password' ).val() && $( '.password, .confirm_password' ).val() !== '' ) {
+			message.html( 'Пароли не совпадают' );
+			parent.find( '[type="submit"]' ).prop( "disabled", true );
+		} else {
+			message.html( '' );
+			parent.find( '[type="submit"]' ).prop( "disabled", false );
+		}
+	} );
 
-	/*Конец кода Жулинского*/
+/*
+	$( "body" ).on( 'swipeleft', swipe_show() );
+	$( "body" ).on( 'swipeleft', swipe_hide() );
+*/
+
 
 })( jQuery );

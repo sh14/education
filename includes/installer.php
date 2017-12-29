@@ -16,11 +16,14 @@ function add_default_data() {
 	if ( $result_db ) {
 		$rows = $result_db->num_rows;
 		if ( $rows == 0 ) {
+
 			insert_tables();
-		} else {
+		}else{
+
 			return true;
 		}
 	}
+
 	$password = encript_password( 123 );
 
 	$sql_check_tables   = [];

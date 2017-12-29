@@ -4,7 +4,8 @@
  * User: Student
  * Date: 07.11.2017
  * Time: 21:52
- */?>
+ */
+?>
 <div class="main_container container">
     <div class="row">
         <div class="registrate col-sm-12">

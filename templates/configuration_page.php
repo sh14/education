@@ -6,38 +6,31 @@
  * Time: 23:04
  */
 ?>
-<form method="post">
-	<div class="form-group" class="form-horizontal">
-		<h4 class="col-lg-8">
-			<strong>Заполните все поля помеченные звёздочкой</strong>
-		</h4>
-	</div>
-	<div class="form-group" class="form-horizontal">
-		<label class="col-lg-3 control-label">Введите имя хоста:*</label>
-		<div class="col-lg-8">
-			<input class="form-control" type="text" name="host" value="">
+<div class="container">
+	<h3>Заполните все поля помеченные звёздочкой</h3>
+	<form method="post">
+		<div class="form-group">
+			<label for="host" class="control-label">Введите имя хоста:*</label>
+
+			<input class="form-control" type="text" id="host" name="host" value="localhost">
+
 		</div>
-	</div>
-	<div class="form-group">
-		<label class="col-lg-3 control-label">Введите логин:*</label>
-		<div class="col-lg-8">
-			<input class="form-control" type="text" name="login" value="">
+		<div class="form-group">
+			<label for="login" class="control-label">Введите логин:*</label>
+
+			<input class="form-control" type="text" id="login" name="login" value="">
 		</div>
-	</div>
-	<div class="form-group">
-		<label class="col-lg-3 control-label">Введите пароль:</label>
-		<div class="col-lg-8">
-			<input class="form-control" type="text" name="password" value="">
+		<div class="form-group">
+			<label for="password" class="control-label">Введите пароль:</label>
+
+			<input class="form-control" type="text" id="password" name="password" value="">
 		</div>
-	</div>
-	<div class="form-group">
-		<label class="col-lg-3 control-label">Введите название базы данных:*</label>
-		<div class="col-lg-8">
-			<input class="form-control" type="text" name="database" value="">
+		<div class="form-group">
+			<label for="database" class="control-label">Введите название базы данных:*</label>
+
+			<input class="form-control" type="text" id="database" name="database" value="">
 		</div>
-	</div>
-	<input type="hidden" name="action" value="configuration">
-	<div class="col-md-8">
-		<input type="submit" class="btn btn-primary" value="Сохранить изменения">
-	</div>
-</form>
+		<input type="hidden" name="action" value="configuration">
+		<button type="submit" class="btn btn-primary">Сохранить изменения</button>
+	</form>
+</div>
