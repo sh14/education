@@ -83,7 +83,8 @@
 
 				 // добавление сформированного сообщения в окно чата
 				 $( '.chat__messages-box' ).append( message );
-
+				 // обновление чата
+				 send_display_request();
 				 scroll_to_last_message();
 
 				 // очистка полей формы
@@ -101,6 +102,30 @@
 
 		 } );
 	}
+
+	/**
+	 * Функция редактирования сообщения
+	 */	
+	$( '.message__edit' ).on( 'click', function () {
+		let message = $(this).closest('.message');
+		let id_message = message.attr('data-id_message');
+		console.log(id_message);
+		message = message.find('.message__text').text();
+		$('.chat__message').text(message);
+		$('[name="id_message"]').val(id_message);
+	} );
+
+	/**
+	 * Функция отправляет запрос на отображении сообщений в чате
+	 */
+	function send_display_request() {
+		$.post( shlo['ajax_url'], 'action=display_message' ).done(function(result) {
+			$('.chat__messages-box').html(result);
+		});
+	}
+
+	send_display_request();
+	setInterval( send_display_request, 5000 );
 
 	/**
 	 * скрол чата к последнему элементу
@@ -167,10 +192,9 @@
 	/**
 	 * отслеживание отправки сообщения
 	 */
-	$( '[name="content"]' ).on( 'keypress', function ( event ) {
+	$( '[name="content"]' ).on( 'keydown', function ( event ) {
 
-		if ( event.which === 13 && event.altKey ) {
-
+		if ( event.key === 'Enter' && event.altKey ) {
 			message_add( this );
 		}
 	} );
@@ -216,10 +240,10 @@
 		}
 	} );
 
-/*
-	$( "body" ).on( 'swipeleft', swipe_show() );
-	$( "body" ).on( 'swipeleft', swipe_hide() );
-*/
+	/*
+		$( "body" ).on( 'swipeleft', swipe_show() );
+		$( "body" ).on( 'swipeleft', swipe_hide() );
+	*/
 
 
 })( jQuery );

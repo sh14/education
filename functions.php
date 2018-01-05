@@ -314,6 +314,7 @@ function wp_localize_script( $handle, $object_name, $l10n ) {
  */
 function display_message() {
 	if ( is_user_logged_in() ) {
+		if ( ! empty( $_POST['action'] ) && $_POST['action'] == 'display_message' ) {
 		$sql    = "SELECT * FROM message m LEFT JOIN users u ON u.ID = m.id_user ORDER BY datetime ASC LIMIT 30";
 		$result = do_query( $sql );
 		$count  = mysqli_num_rows( $result );
@@ -365,6 +366,7 @@ function display_message() {
 		} else {
 			echo '<h3>Вы будете первым, кто оставит тут запись!</h3>';
 		}
+		}
 	}
 }
 
@@ -390,7 +392,7 @@ function enqueue_scripts() {
 	enqueue_script( 'jquery.modal' );
 
 	register_script( 'bootstrap', get_stylesheet_directory() . '/bootstrap/js/bootstrap.min.js', [ 'jquery' ], '', true );
-	//enqueue_script( 'bootstrap' );
+	enqueue_script( 'bootstrap' );
 
 	register_script( 'fileapi', get_stylesheet_directory() . '/js/FileAPI/FileAPI.min.js', [],'', true );
 	enqueue_script( 'fileapi' );
@@ -496,6 +498,7 @@ function message_add() {
 		$data    = $_POST;
 		$user_id = get_current_user_id();
 		$errors  = [];
+		$datetime = date( 'Y-m-d H:i:s' );
 
 		if ( is_user_logged_in() && ! empty( $data['content'] ) ) {
 
@@ -507,7 +510,6 @@ function message_add() {
 				       "AND `id_user` = {$user_id}";
 			} else {
 
-				$datetime = date( 'Y-m-d H:i:s' );
 				$sql      = "INSERT INTO `message` " .
 				            "( `id_user`, `datetime`, `title`, `content` ) " .
 				            "VALUES ({$user_id}, '{$datetime}', '{$data['title']}', '{$data['content']}' )";

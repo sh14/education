@@ -12,9 +12,7 @@
 		<div class="col-md-12 col-sm-12 col-xs-12">
 			<div class="chat js-chat">
 				<div class="chat__messages">
-					<div class="chat__messages-box">
-						<?php echo display_message(); ?>
-					</div>
+					<div class="chat__messages-box"></div>
 				</div>
 				<form action="" method="post" class="chat__form">
 					<input type="text" class="form-control chat__title hidden" placeholder="Тема сообщения"
