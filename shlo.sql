@@ -73,7 +73,6 @@ CREATE TABLE `message` (
   `datetime` datetime,
   `title` text NOT NULL,
   `content` text NOT NULL,
-  `image` text,
   PRIMARY KEY (`id_message`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 

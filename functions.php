@@ -315,7 +315,7 @@ function wp_localize_script( $handle, $object_name, $l10n ) {
 function display_message() {
 	if ( is_user_logged_in() ) {
 		if ( ! empty( $_POST['action'] ) && $_POST['action'] == 'display_message' ) {
-		$sql    = "SELECT * FROM message m LEFT JOIN users u ON u.ID = m.id_user ORDER BY datetime ASC LIMIT 30";
+		$sql    = "SELECT * FROM (SELECT * FROM message m LEFT JOIN users u ON u.ID = m.id_user ORDER BY datetime DESC LIMIT 30) sub ORDER BY datetime ASC";
 		$result = do_query( $sql );
 		$count  = mysqli_num_rows( $result );
 		if ( $count > 0 ) {

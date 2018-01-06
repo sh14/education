@@ -62,6 +62,14 @@ div:after {
   margin-top: -34px;
   border-radius: 0 0 4px 0;
 }
+.chat__cancel {
+  float: right;
+  display: block;
+  position: absolute;
+  margin-top: -34px;
+  border-radius: 0 0 0 0;
+  right: 110px;
+}
 .message {
   padding: 10px;
 }

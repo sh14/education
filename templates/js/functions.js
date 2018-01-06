@@ -110,11 +110,11 @@
 		let message = $(this).closest('.message');
 		let title = message.find('.message__title').text();
 		let id_message = message.attr('data-id_message');
-		console.log(id_message);
 		message = message.find('.message__text').text();
+		$('.chat__cancel').removeClass( 'hidden' );
 		$('.chat__message').val(message);
+		$('.chat__title').removeClass( 'hidden' );
 		if (title.length != 0) {
-			$('.chat__title').removeClass( 'hidden' );
 			$('.chat__title').val(title);
 		}
 		$('[name="id_message"]').val(id_message);
@@ -131,6 +131,17 @@
 
 	send_display_request();
 	setInterval( send_display_request, 5000 );
+
+	/**
+	 * Функция отмены редактирования сообщения
+	 */
+	$('.chat__cancel').on('click',function(){
+		$(this).addClass( 'hidden' );
+		$( '[name=title]' ).addClass( 'hidden' );
+		$( '[name=title]' ).val( '' );
+		$( '[name=content]' ).val( '' );
+		$( '[name=id_message]' ).val( '' );
+	});
 
 	/**
 	 * скрол чата к последнему элементу

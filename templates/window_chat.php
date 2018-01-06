@@ -22,6 +22,7 @@
 					          name="content" autofocus></textarea>
 					<input type="hidden" name="action" value="message_add">
 					<input type="hidden" name="id_message" value="">
+					<button class="btn btn-success chat__cancel hidden" type="button">Отменить</button>
 					<button class="btn btn-success chat__submit" type="submit">Отправить</button>
 				</form>
 			</div>
