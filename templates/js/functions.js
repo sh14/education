@@ -106,12 +106,17 @@
 	/**
 	 * Функция редактирования сообщения
 	 */	
-	$( '.message__edit' ).on( 'click', function () {
+	$( '.chat__messages-box' ).on( 'click', '.message__edit', function () {
 		let message = $(this).closest('.message');
+		let title = message.find('.message__title').text();
 		let id_message = message.attr('data-id_message');
 		console.log(id_message);
 		message = message.find('.message__text').text();
-		$('.chat__message').text(message);
+		$('.chat__message').val(message);
+		if (title.length != 0) {
+			$('.chat__title').removeClass( 'hidden' );
+			$('.chat__title').val(title);
+		}
 		$('[name="id_message"]').val(id_message);
 	} );
 

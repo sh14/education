@@ -505,7 +505,7 @@ function message_add() {
 			// указан id сообщения6 которое необходимо обновить
 			if ( ! empty( $data['id_message'] ) ) {
 
-				$sql = "UPDATE `message` SET `content` = '{$data['content']}' " .
+				$sql = "UPDATE `message` SET `content` = '{$data['content']}', `title` = '{$data['title']}' " .
 				       "WHERE `id_message` = {$data['id_message']} " .
 				       "AND `id_user` = {$user_id}";
 			} else {
