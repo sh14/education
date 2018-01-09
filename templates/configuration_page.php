@@ -32,5 +32,7 @@
 		</div>
 		<input type="hidden" name="action" value="configuration">
 		<button type="submit" class="btn btn-primary">Сохранить изменения</button>
+		<label for="drop_database" class="form-check-label">Удалить таблицы</label>
+		<input id="drop_database" class="form-check-input" type="checkbox" name="drop_database">
 	</form>
 </div>

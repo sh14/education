@@ -16,10 +16,8 @@ function add_default_data() {
 	if ( $result_db ) {
 		$rows = $result_db->num_rows;
 		if ( $rows == 0 ) {
-
 			insert_tables();
-		}else{
-
+		} else {
 			return true;
 		}
 	}
@@ -52,9 +50,20 @@ function add_default_data() {
 			}
 		}
 	}
+	//header( "location:" . get_root_url() );
 }
 
 add_action( 'init', 'add_default_data' );
+
+function drop_database() {
+	if(!empty($_POST['drop_database'])/*$_POST['drop_database']=='on'*/) {
+		$sql = "DROP TABLE `message`,`users`";
+		do_query( $sql );
+		//header( "location:" . get_root_url() );
+	}
+}
+
+//add_action( 'init', 'drop_database' );
 
 /**
  * Функция проверки существования базы данных
