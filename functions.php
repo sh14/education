@@ -193,7 +193,7 @@ function get_stylesheet_directory() {
  *
  * @return string
  */
-function encript_password( $password ) {
+function encrypt_password( $password ) {
 	$password = md5( md5( trim( $password ) ) );
 
 	return $password;

@@ -28,7 +28,7 @@ function registration() {
 
 			$email = $_POST['email'];
 
-			$password = encript_password( $_POST['password'] );
+			$password = encrypt_password( $_POST['password'] );
 
 			do_query( "INSERT INTO users SET email='" . $email . "', password='" . $password . "'" );
 			header( "location:" . get_root_url() );
@@ -41,4 +41,4 @@ function registration() {
 	}
 }
 
-add_action( 'init', 'registration' );
+//add_action( 'init', 'registration' );

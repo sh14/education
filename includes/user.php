@@ -55,7 +55,7 @@ add_action( 'init', 'get_user_info' );
  * Функция регистрации пользователя
  */
 function registration() {
-	if ( ! empty( $_POST['email'] ) && ! empty( $_POST['password'] ) && ! empty( $_POST['first_name'] ) && ! empty( $_POST['last_name'] ) && ! empty( $_POST['action'] == 'registration' ) ) {
+	if ( ! empty( $_POST['email'] ) && ! empty( $_POST['password'] ) && ! empty( $_POST['first_name'] ) && ! empty( $_POST['last_name'] ) && ! empty( $_POST['action'] ) && $_POST['action'] == 'registration' ) {
 		$err = [];
 
 		if ( strlen( $_POST['email'] ) < 7 or strlen( $_POST['email'] ) > 255 ) {
@@ -64,6 +64,12 @@ function registration() {
 
 		if ( ! preg_match( "/[0-9a-z_\.\-]+@[0-9a-z_\.\-]+\.[a-z]{2,4}/i", $_POST['email'] ) ) {
 			$err[] = "Некорректный Email";
+		}
+
+		$query = do_query( "SELECT count(*) FROM users WHERE email='{$_POST['email']}'" );
+		$row = $query->fetch_row();
+		if ( $row[0] > 0 ) {
+			$err[] = "Пользователь с таким email существует";
 		}
 
 		if ( strlen( $_POST['password'] ) < 6 or strlen( $_POST['password'] ) > 255 ) {
@@ -78,14 +84,10 @@ function registration() {
 
 			$email = $_POST['email'];
 
-			$password = encript_password( $_POST['password'] );
+			$password = encrypt_password( $_POST['password'] );
 
 			do_query( "INSERT INTO users SET email='" . $email . "', password='" . $password . "', first_name='" . $first_name . "', last_name='" . $last_name . "'" );
-			$query = do_query( "SELECT count(*) FROM users WHERE email='{$_POST['email']}'" );
 
-			if ( mysqli_num_rows( $query ) > 0 ) {
-				$err[] = "Пользователь с таким email существует";
-			}
 			header( "location:" . get_root_url() );
 		} else {
 			echo "<strong>При регистрации произошли следующие ошибки:</strong><br>";
@@ -130,11 +132,11 @@ function user_logout( $args = '' ) {
  * Функция авторизации пользователя
  *
  */
-function autorization_user() {
-	if ( isset( $_POST['email_login'] ) && isset( $_POST['password_login'] ) ) {
+function authorization_user() {
+	if ( isset( $_POST['email_login'] ) && isset( $_POST['password_login'] ) && ! empty( $_POST['action'] ) && $_POST['action'] == 'authorization' ) {
 
 		$email    = $_POST['email_login'];
-		$password = encript_password( $_POST['password_login'] );
+		$password = encrypt_password( $_POST['password_login'] );
 		$sql      = "SELECT COUNT(*) FROM users WHERE email='{$email}' AND password='{$password}'";
 		$result   = do_query( $sql );
 		$rows     = $result->fetch_row();
@@ -151,7 +153,7 @@ function autorization_user() {
 	}
 }
 
-add_action( 'init', 'autorization_user' );
+add_action( 'init', 'authorization_user' );
 
 /**
  * Функция проверки - авторизирован ли пользователь
@@ -174,9 +176,8 @@ function is_user_logged_in() {
 				}
 			}
 		}
-
-		return false;
 	}
+	return false;
 }
 
 /**
@@ -187,13 +188,13 @@ function upload_file() {
 	$uploaddir  = get_root_path() . '/images/users/';
 	$path       = $_FILES['filedata']['name'];
 	$ext        = pathinfo( $path, PATHINFO_EXTENSION );
-	$user_id = get_current_user_id();
-	$file_name = 'avatar_id' . $user_id . '.' . $ext;
+	$user_id    = get_current_user_id();
+	$file_name  = 'avatar_id' . $user_id . '.' . $ext;
 	$uploadfile = $uploaddir . $file_name;
 
 
 	if ( move_uploaded_file( $_FILES['filedata']['tmp_name'], $uploadfile ) ) {
-		$sql_users   = "UPDATE users SET image = '{$file_name}' WHERE ID = $user_id";
+		$sql_users = "UPDATE users SET image = '{$file_name}' WHERE ID = $user_id";
 		do_query( $sql_users );
 	}
 	echo json_encode( [] );
@@ -230,7 +231,7 @@ function profile_edit() {
 		foreach ( $vars as $var_key => $var_value ) {
 			if ( ! empty( $_POST[ $var_value ] ) ) {
 				if ( $var_value == 'password' ) {
-					$password = encript_password( $_POST['password'] );
+					$password = encrypt_password( $_POST['password'] );
 					$values[] = "'$password'";
 				} else {
 					$values[] = "'$_POST[$var_value]'";

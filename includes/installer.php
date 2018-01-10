@@ -11,6 +11,7 @@
  */
 function add_default_data() {
 	global $link;
+	drop_database();
 	$sql_check_database = "SHOW TABLES FROM " . DATABASE;
 	$result_db          = do_query( $sql_check_database );
 	if ( $result_db ) {
@@ -18,11 +19,11 @@ function add_default_data() {
 		if ( $rows == 0 ) {
 			insert_tables();
 		} else {
-			return true;
+			return false;
 		}
 	}
 
-	$password = encript_password( 123 );
+	$password = encrypt_password( 123 );
 
 	$sql_check_tables   = [];
 	$sql_check_tables[] = "SELECT * FROM `message`";
@@ -38,8 +39,8 @@ function add_default_data() {
 	$sql_reset_id   = [];
 	$sql_set_id[]   = "SET @reset = 0";
 	$sql_set_id[]   = "SET @reset = 0";
-	$sql_reset_id[] = "UPDATE `message` SET id_message = @reset:= @reset + 1";
-	$sql_reset_id[] = "UPDATE `users` SET ID = @reset:= @reset + 1";
+	$sql_reset_id[] = "UPDATE `message` SET `id_message` = @reset:= @reset + 1";
+	$sql_reset_id[] = "UPDATE `users` SET `ID` = @reset:= @reset + 1";
 	if ( $link ) {
 		foreach ( $sql_check_tables as $key => $query ) {
 			$result[ $key ] = do_query( $query );
@@ -50,20 +51,20 @@ function add_default_data() {
 			}
 		}
 	}
-	//header( "location:" . get_root_url() );
+
+	return true;
 }
+
 
 add_action( 'init', 'add_default_data' );
 
 function drop_database() {
-	if(!empty($_POST['drop_database'])/*$_POST['drop_database']=='on'*/) {
+	if ( ! empty( $_POST['drop_database'] ) ) {
 		$sql = "DROP TABLE `message`,`users`";
 		do_query( $sql );
-		//header( "location:" . get_root_url() );
 	}
 }
-
-//add_action( 'init', 'drop_database' );
+add_action( 'init', 'drop_database' );
 
 /**
  * Функция проверки существования базы данных
@@ -126,6 +127,7 @@ function get_configuration_data() {
 			} else {
 				set_configuration_data( $values[0], $values[1], $values[2], $values[3] );
 			}
+			header( "location:" . get_root_url());
 		} elseif ( empty( $_POST['host'] ) ) {
 			echo 'Поле "Хост" не заполнено';
 		} elseif ( empty( $_POST['login'] ) ) {
@@ -142,6 +144,7 @@ function set_configuration_data( $host, $login, $password, $database ) {
 	$variables     = [ $host, $login, $password, $database ];
 	$constant_name = [ 'HOST', 'LOGIN', 'PASSWORD', 'DATABASE' ];
 	$file_exists   = file_exists( 'config.php' );
+	$file_array    = [];
 	if ( $file_exists === true ) {
 		$file_array = file( 'config.php' );
 	}

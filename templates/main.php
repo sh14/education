@@ -34,11 +34,11 @@
                                 <div class="form-group"><input class="form-control" type="email" name="email" id="email" placeholder="Email" required="required" ></div>
                                 <label for="password">Введите Ваш пароль</label>
                                 <div class="form-group"><input class="form-control" type="password" placeholder="Password" id="password" name="password" required="required" ></div>
-                                <div class="modal-footer">
+		                        <input type="hidden" name="action" value="registration">
+		                        <div class="modal-footer">
                                     <button class="btn btn-primary" type="submit">Зарегистрироваться</button>
                                     <button class="btn btn-danger" type="button" data-dismiss="modal">Да пошло оно все</button>
                                 </div>
-	                            <input type="hidden" name="action" value="registration">
                             </form>
                         </div>
                     </div>
@@ -60,7 +60,8 @@
                                     <div class="form-group"><input class="form-control login_input" type="email" name="email_login" id="email_login" placeholder="Email" required="required"/ ></div>
                                     <label for="password_login">Введите Ваш пароль</label>
                                     <div class="form-group"><input class="form-control password_login" type="password" placeholder="Пароль" id="password_login" name="password_login" required="required"/ ></div>
-                                    <input class="login btn btn-success" type="submit" name="login_send" value="Вход">
+	                                <input type="hidden" name="action" value="authorization">
+	                                <input class="login btn btn-success" type="submit" name="login_send" value="Вход">
                                     <button type="button" class="btn btn-success main_registration" data-toggle="modal" data-target="#modal-1" data-dismiss="modal">Регистрация</button>
                                 </form>
                             </div>
