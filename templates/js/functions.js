@@ -27,6 +27,17 @@
 		};
 	}
 
+	const events = [ 'click', 'mousemove', 'resize', 'scroll', 'touchstart', 'touchmove' ];
+
+	for ( let i = 0; i < events.length; i++ ) {
+		$( window ).on( events[ i ], debounce(function ( event ) {
+			let msg = "Handler for " + events[ i ] + " called at ";
+			msg += event.pageX + ", " + event.pageY;
+			console.log( msg );
+		}, 500) );
+	}
+
+
 	/**
 	 * Функция подстройки высоты окна чата под окно браузера
 	 */
@@ -105,28 +116,28 @@
 
 	/**
 	 * Функция редактирования сообщения
-	 */	
+	 */
 	$( '.chat__messages-box' ).on( 'click', '.message__edit', function () {
-		let message = $(this).closest('.message');
-		let title = message.find('.message__title').text();
-		let id_message = message.attr('data-id_message');
-		message = message.find('.message__text').text();
-		$('.chat__cancel').removeClass( 'hidden' );
-		$('.chat__message').val(message);
-		$('.chat__title').removeClass( 'hidden' );
-		if (title.length != 0) {
-			$('.chat__title').val(title);
+		let message    = $( this ).closest( '.message' );
+		let title      = message.find( '.message__title' ).text();
+		let id_message = message.attr( 'data-id_message' );
+		message        = message.find( '.message__text' ).text();
+		$( '.chat__cancel' ).removeClass( 'hidden' );
+		$( '.chat__message' ).val( message );
+		$( '.chat__title' ).removeClass( 'hidden' );
+		if ( title.length != 0 ) {
+			$( '.chat__title' ).val( title );
 		}
-		$('[name="id_message"]').val(id_message);
+		$( '[name="id_message"]' ).val( id_message );
 	} );
 
 	/**
 	 * Функция отправляет запрос на отображении сообщений в чате
 	 */
 	function send_display_request() {
-		$.post( shlo['ajax_url'], 'action=display_message' ).done(function(result) {
-			$('.chat__messages-box').html(result);
-		});
+		$.post( shlo[ 'ajax_url' ], 'action=display_message' ).done( function ( result ) {
+			$( '.chat__messages-box' ).html( result );
+		} );
 	}
 
 	send_display_request();
@@ -135,13 +146,13 @@
 	/**
 	 * Функция отмены редактирования сообщения
 	 */
-	$('.chat__cancel').on('click',function(){
-		$(this).addClass( 'hidden' );
+	$( '.chat__cancel' ).on( 'click', function () {
+		$( this ).addClass( 'hidden' );
 		$( '[name=title]' ).addClass( 'hidden' );
 		$( '[name=title]' ).val( '' );
 		$( '[name=content]' ).val( '' );
 		$( '[name=id_message]' ).val( '' );
-	});
+	} );
 
 	/**
 	 * скрол чата к последнему элементу
