@@ -23,7 +23,7 @@
 		<div class="form-group">
 			<label for="password" class="control-label">Введите пароль:</label>
 
-			<input class="form-control" type="text" id="password" name="password" value="">
+			<input class="form-control" type="password" id="password" name="password" value="">
 		</div>
 		<div class="form-group">
 			<label for="database" class="control-label">Введите название базы данных:*</label>

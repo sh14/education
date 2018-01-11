@@ -28,6 +28,30 @@
 	}
 
 	/**
+	 * Функция очистки полей формы, содержащих введенные пользователем данные
+	 */
+	function clear_message_form() {
+		// очистка полей формы
+		let title = $( '[name=title]' );
+		title.val( '' );
+		$( '[name=content]' ).val( '' );
+		$( '[name=id_message]' ).val( '' );
+		title.addClass( 'hidden' );
+		$( '.chat__cancel' ).addClass( 'hidden' );
+	}
+
+	const events = [ 'click', 'mousemove', 'resize', 'scroll', 'touchstart', 'touchmove' ];
+
+	for ( let i = 0; i < events.length; i++ ) {
+		$( window ).on( events[ i ], debounce(function ( event ) {
+			let msg = "Handler for " + events[ i ] + " called at ";
+			msg += event.pageX + ", " + event.pageY;
+			console.log( msg );
+		}, 500) );
+	}
+
+
+	/**
 	 * Функция подстройки высоты окна чата под окно браузера
 	 */
 	function chat_auto_height() {
@@ -35,6 +59,77 @@
 
 		$( '.js-chat' ).height( height );
 		$( '.chat__messages-box' ).height( (height - $( '.chat__form' ).height()) );
+	}
+
+	function message_append( one_message, form ) {
+		if ( one_message[ 'error' ] === undefined ) {
+
+			if ( form === undefined ) {
+				form = $( '.chat__form' );
+			}
+
+			let data     = form.serializeArray();
+			let new_data = {
+				'image' : shlo[ 'image' ],
+				'name' : shlo[ 'name' ],
+				'title' : '',
+				'content' : '',
+				'datetime' : '',
+				'class_name' : '',
+				'id_user' : '',
+				'id_message' : '',
+				'edit' : '',
+			};
+
+			// флаг в положении "редактирование сообщения"
+			let action = 'edit';
+			$.each( data, function ( index, el ) {
+
+				// если форма содержит данные в указанном поле
+				if ( el[ 'value' ] !== '' ) {
+
+					// данные добавляются в массив из формы
+					new_data[ el[ 'name' ] ] = el[ 'value' ];
+				} else {
+					// иначе данные добавляются в массив из результата запроса
+					new_data[ el[ 'name' ] ] = one_message[ el[ 'name' ] ];
+				}
+
+				// если id_message не указан, флаг в положение "добавление нового сообщения"
+				if ( el[ 'name' ] === 'id_message' && el[ 'value' ] === '' ) {
+					action = 'add';
+				}
+			} );
+
+			new_data[ 'id_user' ]    = one_message[ 'id_user' ];
+			new_data[ 'id_message' ] = one_message[ 'id_message' ];
+			new_data[ 'datetime' ]   = format_date( one_message[ 'datetime' ] );
+			new_data[ 'image' ]      = ' style="background-image:url(' + new_data[ 'image' ] + ');"';
+			new_data[ 'edit' ]       = '<span class="message__edit"></span>';
+
+			// вставка значений в шаблон сообщения
+			let message = tmpl( 'message_template', new_data );
+
+			// если нужно добавить сообщение
+			if ( action === 'add' ) {
+
+				// добавление сформированного сообщения в окно чата
+				$( '.chat__messages-box' ).append( message );
+			} else {
+
+				// редактирование указанного сообщения
+				let current_message = $( document ).find( '[data-id_message="' + new_data[ 'id_message' ] + '"]' );
+				current_message.find( '.message__title' ).text( new_data[ 'title' ] );
+				current_message.find( '.message__text' ).html( new_data[ 'content' ] );
+			}
+
+			// скрол к последнему сообщению
+			scroll_to_last_message();
+
+			clear_message_form();
+		} else {
+			//console.log( message[ 'error' ] );
+		}
 	}
 
 	/**
@@ -53,47 +148,9 @@
 
 			 result = JSON.parse( result );
 
-			 if ( result[ 'error' ] === undefined ) {
-
-				 data         = form.serializeArray();
-				 let new_data = {
-					 'image' : shlo[ 'image' ],
-					 'name' : shlo[ 'name' ],
-					 'title' : '',
-					 'content' : '',
-					 'datetime' : '',
-					 'class_name' : '',
-					 'id_user' : '',
-					 'id_message' : '',
-				 };
-				 $.each( data, function ( index, el ) {
-					 if ( !el[ 'value' ].empty ) {
-						 new_data[ el[ 'name' ] ] = el[ 'value' ];
-					 }
-
-				 } );
-
-				 new_data[ 'id_user' ]  = result[ 'id_user' ];
-				 new_data[ 'datetime' ] = format_date( result[ 'datetime' ] );
-				 new_data[ 'image' ]    = ' style="background-image:url(' + new_data[ 'image' ] + ');"';
-
-				 // вставка значений в шаблон сообщения
-				 let message = tmpl( 'message_template', new_data );
-
-
-				 // добавление сформированного сообщения в окно чата
-				 $( '.chat__messages-box' ).append( message );
-				 // обновление чата
-				 send_display_request();
-				 scroll_to_last_message();
-
-				 // очистка полей формы
-				 $( '[name=title]' ).val( '' );
-				 $( '[name=content]' ).val( '' );
-				 $( '[name=id_message]' ).val( '' );
-			 } else {
-				 //console.log( result[ 'error' ] );
-			 }
+			 $.each( result, function ( i, one_message ) {
+				 message_append( one_message, form );
+			 } );
 		 } )
 		 .fail( function () {
 
@@ -105,43 +162,61 @@
 
 	/**
 	 * Функция редактирования сообщения
-	 */	
+	 */
 	$( '.chat__messages-box' ).on( 'click', '.message__edit', function () {
-		let message = $(this).closest('.message');
-		let title = message.find('.message__title').text();
-		let id_message = message.attr('data-id_message');
-		message = message.find('.message__text').text();
-		$('.chat__cancel').removeClass( 'hidden' );
-		$('.chat__message').val(message);
-		$('.chat__title').removeClass( 'hidden' );
-		if (title.length != 0) {
-			$('.chat__title').val(title);
+		let message    = $( this ).closest( '.message' );
+		let title      = message.find( '.message__title' ).text();
+		let id_message = message.attr( 'data-id_message' );
+		let text       = message.find( '.message__text' ).html();
+
+		$( '.chat__cancel' ).removeClass( 'hidden' );
+		let content = $( '.chat__message' );
+		content.val( text );
+		content.focus();
+		if ( title.length > 0 ) {
+			let message_title = $( '[name=title]' );
+			message_title.removeClass( 'hidden' );
+			message_title.val( title );
 		}
-		$('[name="id_message"]').val(id_message);
+		$( '[name="id_message"]' ).val( id_message );
 	} );
 
 	/**
 	 * Функция отправляет запрос на отображении сообщений в чате
 	 */
 	function send_display_request() {
-		$.post( shlo['ajax_url'], 'action=display_message' ).done(function(result) {
-			$('.chat__messages-box').html(result);
-		});
+		if ( shlo[ 'user_id' ] > 0 ) {
+
+			// определение id последнего полученного сообщения
+			let last_message_id = $( '.chat__messages-box' ).find( '.message' ).last().attr( 'data-id_message' );
+
+			// составление запроса
+			let query = 'action=get_last_messages&last_message_id=' + last_message_id;
+
+			$.post( shlo[ 'ajax_url' ], query ).done( function ( result ) {
+				if ( result !== null ) {
+					result = JSON.parse( result );
+
+					$.each( result, function ( i, one_message ) {
+
+						message_append( one_message );
+					} );
+				}
+
+			} );
+		}
 	}
 
+
 	send_display_request();
-	setInterval( send_display_request, 5000 );
+	setInterval( send_display_request, 1500 );
 
 	/**
 	 * Функция отмены редактирования сообщения
 	 */
-	$('.chat__cancel').on('click',function(){
-		$(this).addClass( 'hidden' );
-		$( '[name=title]' ).addClass( 'hidden' );
-		$( '[name=title]' ).val( '' );
-		$( '[name=content]' ).val( '' );
-		$( '[name=id_message]' ).val( '' );
-	});
+	$( '.chat__cancel' ).on( 'click', function () {
+		clear_message_form();
+	} );
 
 	/**
 	 * скрол чата к последнему элементу

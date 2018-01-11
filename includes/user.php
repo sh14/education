@@ -55,8 +55,12 @@ add_action( 'init', 'get_user_info' );
  * Функция регистрации пользователя
  */
 function registration() {
-	if ( ! empty( $_POST['email'] ) && ! empty( $_POST['password'] ) && ! empty( $_POST['first_name'] ) && ! empty( $_POST['last_name'] ) && ! empty( $_POST['action'] ) && $_POST['action'] == 'registration' ) {
-		$err = [];
+	$err = [];
+	//die('asd');
+	if (
+		! empty( $_POST['email'] )
+		&& ! empty( $_POST['password'] )
+		&& ! empty( $_POST['action'] == 'registration' ) ) {
 
 		if ( strlen( $_POST['email'] ) < 7 or strlen( $_POST['email'] ) > 255 ) {
 			$err[] = "Email не должен быть меньше 7 символов и не больше 255";
@@ -66,35 +70,33 @@ function registration() {
 			$err[] = "Некорректный Email";
 		}
 
+		if ( strlen( $_POST['password'] ) < 6 or strlen( $_POST['password'] ) > 255 ) {
+			$err[] = "Длинна пароля должна быть от 6 до 255 символов";
+		}
 		$query = do_query( "SELECT count(*) FROM users WHERE email='{$_POST['email']}'" );
-		$row = $query->fetch_row();
-		if ( $row[0] > 0 ) {
+
+		if ( mysqli_num_rows( $query ) > 0 ) {
 			$err[] = "Пользователь с таким email существует";
 		}
 
-		if ( strlen( $_POST['password'] ) < 6 or strlen( $_POST['password'] ) > 255 ) {
-			$err[] = "Password не должен быть меньше 6 символов и не больше 255";
-		}
-
-		if ( count( $err ) == 0 ) {
-
-			$first_name = $_POST['first_name'];
-
-			$last_name = $_POST['last_name'];
+		if ( empty( $err ) ) {
 
 			$email = $_POST['email'];
 
-			$password = encrypt_password( $_POST['password'] );
+			$password = encript_password( $_POST['password'] );
 
-			do_query( "INSERT INTO users SET email='" . $email . "', password='" . $password . "', first_name='" . $first_name . "', last_name='" . $last_name . "'" );
-
+			do_query( "INSERT INTO users SET email='" . $email . "', password='" . $password . "'" );
 			header( "location:" . get_root_url() );
 		} else {
-			echo "<strong>При регистрации произошли следующие ошибки:</strong><br>";
-			foreach ( $err as $error ) {
-				echo $error . "<br>";
-			}
+			$err[] = "Возникли проблемы";
 		}
+	}
+
+	if ( ! empty( $err ) ) {
+		$msg = urlencode( json_encode( $err ) );
+		$url = '?p=error_register&msg=' . $msg;
+		header( "Location: " . $url );
+
 	}
 }
 

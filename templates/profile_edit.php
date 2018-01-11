@@ -73,6 +73,7 @@ if ( is_user_logged_in() ) {
 			<div class="profile__message text-danger bg-danger form-group"></div>
 			<input type="hidden" id="action" name="action" value="edit_user_info">
 			<button type="submit" class="btn btn-primary btn-block">Сохранить изменения</button>
+			<a href="?p=logout" class="btn btn-error btn-block">Выход</a>
 		</form>
 	</div>
 	<?php

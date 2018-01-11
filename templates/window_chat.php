@@ -12,7 +12,9 @@
 		<div class="col-md-12 col-sm-12 col-xs-12">
 			<div class="chat js-chat">
 				<div class="chat__messages">
-					<div class="chat__messages-box"></div>
+					<div class="chat__messages-box">
+						<?php echo display_message(); ?>
+					</div>
 				</div>
 				<form action="" method="post" class="chat__form">
 					<input type="text" class="form-control chat__title hidden" placeholder="Тема сообщения"
@@ -22,7 +24,7 @@
 					          name="content" autofocus></textarea>
 					<input type="hidden" name="action" value="message_add">
 					<input type="hidden" name="id_message" value="">
-					<button class="btn btn-success chat__cancel hidden" type="button">Отменить</button>
+					<button class="btn btn-danger chat__cancel hidden" type="button">Отменить</button>
 					<button class="btn btn-success chat__submit" type="submit">Отправить</button>
 				</form>
 			</div>
@@ -40,5 +42,6 @@
 		'class_name',
 		'id_user',
 		'id_message',
+		'edit',
 	] );
 	?></script>
