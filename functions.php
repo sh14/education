@@ -595,3 +595,11 @@ add_action( 'init', 'redirect_configuration_page' );
 
 add_action( 'init', 'proverka' );
 */
+function anti_cash() {
+	if ( is_user_logged_in() ) {
+		header( "Cache-Control: no-store, no-cache, must-revalidate" );
+		header( "Expires: " . date( "r" ) );
+		echo "<h1>", date( "H:i:s" ), "</h1>";
+		}
+	};
+add_action( 'init', 'anti_cash' );
