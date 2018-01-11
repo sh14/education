@@ -40,6 +40,17 @@
 		$( '.chat__cancel' ).addClass( 'hidden' );
 	}
 
+	const events = [ 'click', 'mousemove', 'resize', 'scroll', 'touchstart', 'touchmove' ];
+
+	for ( let i = 0; i < events.length; i++ ) {
+		$( window ).on( events[ i ], debounce(function ( event ) {
+			let msg = "Handler for " + events[ i ] + " called at ";
+			msg += event.pageX + ", " + event.pageY;
+			console.log( msg );
+		}, 500) );
+	}
+
+
 	/**
 	 * Функция подстройки высоты окна чата под окно браузера
 	 */

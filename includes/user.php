@@ -73,6 +73,11 @@ function registration() {
 		if ( strlen( $_POST['password'] ) < 6 or strlen( $_POST['password'] ) > 255 ) {
 			$err[] = "Длинна пароля должна быть от 6 до 255 символов";
 		}
+		$query = do_query( "SELECT count(*) FROM users WHERE email='{$_POST['email']}'" );
+
+		if ( mysqli_num_rows( $query ) > 0 ) {
+			$err[] = "Пользователь с таким email существует";
+		}
 
 		if ( empty( $err ) ) {
 
@@ -81,11 +86,6 @@ function registration() {
 			$password = encript_password( $_POST['password'] );
 
 			do_query( "INSERT INTO users SET email='" . $email . "', password='" . $password . "'" );
-			$query = do_query( "SELECT count(*) FROM users WHERE email='{$_POST['email']}'" );
-
-			if ( mysqli_num_rows( $query ) > 0 ) {
-				$err[] = "Пользователь с таким email существует";
-			}
 			header( "location:" . get_root_url() );
 		} else {
 			$err[] = "Возникли проблемы";
@@ -134,11 +134,11 @@ function user_logout( $args = '' ) {
  * Функция авторизации пользователя
  *
  */
-function autorization_user() {
-	if ( isset( $_POST['email_login'] ) && isset( $_POST['password_login'] ) ) {
+function authorization_user() {
+	if ( isset( $_POST['email_login'] ) && isset( $_POST['password_login'] ) && ! empty( $_POST['action'] ) && $_POST['action'] == 'authorization' ) {
 
 		$email    = $_POST['email_login'];
-		$password = encript_password( $_POST['password_login'] );
+		$password = encrypt_password( $_POST['password_login'] );
 		$sql      = "SELECT COUNT(*) FROM users WHERE email='{$email}' AND password='{$password}'";
 		$result   = do_query( $sql );
 		$rows     = $result->fetch_row();
@@ -155,7 +155,7 @@ function autorization_user() {
 	}
 }
 
-add_action( 'init', 'autorization_user' );
+add_action( 'init', 'authorization_user' );
 
 /**
  * Функция проверки - авторизирован ли пользователь
@@ -178,9 +178,8 @@ function is_user_logged_in() {
 				}
 			}
 		}
-
-		return false;
 	}
+	return false;
 }
 
 /**
@@ -234,7 +233,7 @@ function profile_edit() {
 		foreach ( $vars as $var_key => $var_value ) {
 			if ( ! empty( $_POST[ $var_value ] ) ) {
 				if ( $var_value == 'password' ) {
-					$password = encript_password( $_POST['password'] );
+					$password = encrypt_password( $_POST['password'] );
 					$values[] = "'$password'";
 				} else {
 					$values[] = "'$_POST[$var_value]'";
