@@ -6,11 +6,15 @@
  * Time: 19:43
  */
 function registration() {
-	if ( isset( $_POST['email'] ) && isset( $_POST['password'] ) && isset( $_POST['action'] ) && $_POST['action'] == 'registration' ) {
-		$err = [];
+	$err = [];
+	die('asd');
+	if ( isset( $_POST['email'] )
+	     && isset( $_POST['password'] )
+	     && isset( $_POST['action'] )
+	     && $_POST['action'] == 'registration' ) {
 
 		if ( ! preg_match( "/^[a-zA-Z0-9]+$/", $_POST['email'] ) ) {
-			$err = "Email может состоять только и букв английского языка";
+			$err = "Email может состоять только из букв английского языка";
 		}
 
 		if ( strlen( $_POST['email'] ) < 7 or strlen( $_POST['email'] ) > 255 ) {
@@ -24,7 +28,7 @@ function registration() {
 			$err[] = "Пользователь с таким email существует";
 		}
 
-		if ( count( $err ) == 0 ) {
+		if ( empty( $err ) ) {
 
 			$email = $_POST['email'];
 
@@ -33,11 +37,14 @@ function registration() {
 			do_query( "INSERT INTO users SET email='" . $email . "', password='" . $password . "'" );
 			header( "location:" . get_root_url() );
 		} else {
-			print "<strong>При регистрации произошли следующие ошибки:</strong><br>";
-			foreach ( $err as $error ) {
-				print $error . "<br>";
-			}
+			$err[] = "Что-то не так";
 		}
+	}
+
+	if ( ! empty( $err ) ) {
+		$url = '?p=error_register';
+		header( "Location: " . $url );
+
 	}
 }
 

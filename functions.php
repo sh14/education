@@ -314,8 +314,8 @@ function wp_localize_script( $handle, $object_name, $l10n ) {
  */
 function display_message() {
 	if ( is_user_logged_in() ) {
-		if ( ! empty( $_POST['action'] ) && $_POST['action'] == 'display_message' ) {
-		$sql    = "SELECT * FROM (SELECT * FROM message m LEFT JOIN users u ON u.ID = m.id_user ORDER BY datetime DESC LIMIT 30) sub ORDER BY datetime ASC";
+		//$sql    = "SELECT * FROM (SELECT * FROM message m LEFT JOIN users u ON u.ID = m.id_user ORDER BY datetime DESC LIMIT 30) sub ORDER BY datetime ASC";
+		$sql    = "SELECT * FROM message m LEFT JOIN users u ON u.ID = m.id_user ORDER BY datetime DESC LIMIT 30";
 		$result = do_query( $sql );
 		$count  = mysqli_num_rows( $result );
 		if ( $count > 0 ) {
@@ -329,8 +329,10 @@ function display_message() {
 				'class_name',
 				'id_user',
 				'id_message',
+				'edit',
 			] );
 			$current_user_id = get_current_user_id();
+			$messages        = [];
 			while ( $row = mysqli_fetch_array( $result, MYSQLI_ASSOC ) ) {
 
 				$image = '';
@@ -347,11 +349,14 @@ function display_message() {
 					$name = $row['first_name'] . ' ' . $row['last_name'];
 				}
 
-				$class = '';
 				if ( $current_user_id != $row['id_user'] ) {
 					$class = ' message_alien';
+					$edit  = '';
+				} else {
+					$edit  = '<span class="message__edit"></span>';
+					$class = '';
 				}
-				$message = get_template_string( $template, [
+				$messages[] = get_template_string( $template, [
 					'image'      => $image,
 					'name'       => $name,
 					'title'      => ! empty( $row['title'] ) ? $row['title'] : '',
@@ -359,13 +364,16 @@ function display_message() {
 					'datetime'   => $datetime,
 					'class_name' => $class,
 					'id_user'    => $row['id_user'],
-					'id_message' => $row ['id_message']
+					'id_message' => $row ['id_message'],
+					'edit'       => $edit,
 				] );
-				echo $message;
 			}
+
+			$messages = array_reverse( $messages );
+			$messages = implode( '', $messages );
+			echo $messages;
 		} else {
 			echo '<h3>Вы будете первым, кто оставит тут запись!</h3>';
-		}
 		}
 	}
 }
@@ -385,25 +393,25 @@ function enqueue_scripts() {
 	register_script( 'jquery', get_stylesheet_directory() . '/js/jquery-3.2.1.min.js' );
 	enqueue_script( 'jquery' );
 
-/*	register_script( 'jquery.mobile', get_stylesheet_directory() . '/js/jquery.mobile.custom.min.js' );
-	enqueue_script( 'jquery.mobile' );*/
+	/*	register_script( 'jquery.mobile', get_stylesheet_directory() . '/js/jquery.mobile.custom.min.js' );
+		enqueue_script( 'jquery.mobile' );*/
 
 	register_script( 'jquery.modal', get_stylesheet_directory() . '/js/jquery.modal.js' );
 	enqueue_script( 'jquery.modal' );
 
 	register_script( 'bootstrap', get_stylesheet_directory() . '/bootstrap/js/bootstrap.min.js', [ 'jquery' ], '', true );
-	enqueue_script( 'bootstrap' );
+	//enqueue_script( 'bootstrap' );
 
-	register_script( 'fileapi', get_stylesheet_directory() . '/js/FileAPI/FileAPI.min.js', [],'', true );
+	register_script( 'fileapi', get_stylesheet_directory() . '/js/FileAPI/FileAPI.min.js', [], '', true );
 	enqueue_script( 'fileapi' );
 
-	register_script( 'jquery.fileapi', get_stylesheet_directory() . '/js/FileAPI/jquery.fileapi.min.js', ['fileapi'],'', true );
+	register_script( 'jquery.fileapi', get_stylesheet_directory() . '/js/FileAPI/jquery.fileapi.min.js', [ 'fileapi' ], '', true );
 	enqueue_script( 'jquery.fileapi' );
 
-	register_script( 'jcrop', get_stylesheet_directory() . '/js/jcrop/js/jquery.Jcrop.min.js', [],'', true );
+	register_script( 'jcrop', get_stylesheet_directory() . '/js/jCrop/js/jquery.Jcrop.min.js', [], '', true );
 	enqueue_script( 'jcrop' );
 
-	register_script( 'fileapi_functions', get_stylesheet_directory() . '/js/fileapi_functions.js', [],'', true );
+	register_script( 'fileapi_functions', get_stylesheet_directory() . '/js/fileapi_functions.js', [], '', true );
 	enqueue_script( 'fileapi_functions' );
 
 	register_script( 'microtemplating', get_stylesheet_directory() . '/js/microtemplating.js', [], '', true );
@@ -418,11 +426,14 @@ function enqueue_scripts() {
 
 		$shlo['ajax_url'] = get_root_url() . '/ajax.php';
 		$shlo['name']     = $shlo['first_name'] . ' ' . $shlo['last_name'];
-		$shlo['user_id']     = $shlo['ID'];
+		$shlo['user_id']  = $shlo['ID'];
 		$shlo['image']    = get_root_url() . '/images/users/' . $shlo['image'];
 
-		wp_localize_script( 'functions', 'shlo', $shlo );
+
+	} else {
+		$shlo = [];
 	}
+	wp_localize_script( 'functions', 'shlo', $shlo );
 }
 
 add_action( 'init', 'enqueue_scripts' );
@@ -495,24 +506,41 @@ function message_add() {
 	global $link;
 	if ( ! empty( $_POST['action'] ) && $_POST['action'] == 'message_add' ) {
 
-		$data    = $_POST;
-		$user_id = get_current_user_id();
-		$errors  = [];
+		$data     = $_POST;
+		$user_id  = get_current_user_id();
+		$errors   = [];
 		$datetime = date( 'Y-m-d H:i:s' );
 
 		if ( is_user_logged_in() && ! empty( $data['content'] ) ) {
 
-			// указан id сообщения6 которое необходимо обновить
+			// обработка полученных данных
+			foreach ( $data as $key => $value ) {
+				if ( $key != 'id_message' ) {
+
+					// экранирование текстов
+					$data[ $key ] = esc_sql( $value );
+				} else {
+
+					// приведение данных к типу int
+					if ( ! empty( $data[ $key ] ) ) {
+						$data[ $key ] = intval( $value );
+					}
+
+				}
+			}
+
+
+			// указан id сообщения, которое необходимо обновить
 			if ( ! empty( $data['id_message'] ) ) {
-
-				$sql = "UPDATE `message` SET `content` = '{$data['content']}', `title` = '{$data['title']}' " .
-				       "WHERE `id_message` = {$data['id_message']} " .
-				       "AND `id_user` = {$user_id}";
+				$id_message = $data['id_message'];
+				$sql        = "UPDATE `message` SET `content` = '{$data['content']}', `title` = '{$data['title']}' " .
+				              "WHERE `id_message` = {$id_message} " .
+				              "AND `id_user` = {$user_id}";
 			} else {
-
-				$sql      = "INSERT INTO `message` " .
-				            "( `id_user`, `datetime`, `title`, `content` ) " .
-				            "VALUES ({$user_id}, '{$datetime}', '{$data['title']}', '{$data['content']}' )";
+				$id_message = 0;
+				$sql        = "INSERT INTO `message` " .
+				              "( `id_user`, `datetime`, `title`, `content` ) " .
+				              "VALUES ({$user_id}, '{$datetime}', '{$data['title']}', '{$data['content']}' )";
 			}
 		} else {
 			$errors[] = 'Сообщение не указано';
@@ -522,8 +550,12 @@ function message_add() {
 		if ( ! do_query( $sql ) ) {
 			$errors[] = 'Что-то пошло не так';
 		} else {
-			$data               = [];
-			$data['id_message'] = mysqli_insert_id( $link );
+			$data = [];
+			if ( empty( $id_message ) ) {
+				$id_message = mysqli_insert_id( $link );
+			}
+
+			$data['id_message'] = $id_message;
 			$data['datetime']   = $datetime;
 			$data['id_user']    = $user_id;
 		}
@@ -533,7 +565,7 @@ function message_add() {
 		}
 
 		if ( ! empty( $_POST['action'] ) ) {
-			echo json_encode( $data );
+			echo json_encode( [ $data ] );
 			die();
 		} else {
 			header( 'location: index.php' );
@@ -544,21 +576,27 @@ function message_add() {
 // Функция получения последних n сообщений и конвертация их в формат json
 function get_last_messages() {
 	if ( ! empty( $_POST['last_message_id'] ) ) {
-		$last_message_id = $_POST['last_message_id'];
+		$messages = [];
+		if ( ! empty( $_POST['last_message_id'] ) ) {
+			$last_message_id = $_POST['last_message_id'];
 
-		$sql    = "SELECT * FROM `message` ORDER BY `id_message` DESC LIMIT 3";
-		$result = do_query( $sql );
+			$sql    = "SELECT * FROM `message` WHERE id_message > {$last_message_id} ORDER BY `id_message` ASC";
+			$result = do_query( $sql );
 
-		while ( $rows = mysqli_fetch_array( $result, MYSQLI_ASSOC ) ) {
-			$messages[] = $rows;
+			if ( $result->num_rows > 0 ) {
 
+				// подготовка массива сообщений к выводу
+				while ( $rows = mysqli_fetch_array( $result, MYSQLI_ASSOC ) ) {
+					$messages[] = $rows;
+				}
+			}
 		}
+
 		echo json_encode( $messages );
+
 		die();
 	}
 }
-
-add_action( 'init', 'get_last_messages' );
 
 function redirect_configuration_page() {
 	global $redirect;

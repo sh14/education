@@ -87,6 +87,24 @@ div:before, div:after {
 		display: table;
 		width: 50%;
 	}
+	&__edit {
+		/*
+		background: url('data:image/svg+xml;<?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1000 1000" enable-background="new 0 0 1000 1000" xml:space="preserve"><metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata><g><path d="M110.8,717.2l516.8-517l172.3,172.3L283,889.5L110.8,717.2z M799.9,27.8C823.7,4,862.2,4,886,27.8l86.1,86.1c23.8,23.8,23.8,62.4,0,86.2L842.9,329.4L670.7,157.1L799.9,27.8L799.9,27.8z M10,990l57.3-229.8l172.3,172.4L10,990z"/></g></svg>') 50% 50% no-repeat;
+		*/
+		background: url(../images/edit.svg) 50% 50% no-repeat;
+		width: .9em;
+		height: .9em;
+		margin-top: .2em;
+		margin-left: 10px;
+		cursor: pointer;
+		display: table;
+		float: right;
+		opacity: .1;
+		&:hover, &:focus {
+			opacity: .5;
+		}
+	}
+
 	&__user {
 		&-avatar {
 			display: table-cell;
@@ -138,6 +156,7 @@ div:before, div:after {
 		font-size: .8em;
 		color: rgba(0, 0, 0, .4);
 	}
+
 
 	&_alien &__data-box {
 		background: #ddf1ff;
@@ -449,4 +468,31 @@ div:before, div:after {
 
 #fileapi .modal-content {
 	display: table;
+}
+
+.forms {
+	display: table;
+	margin: auto;
+	background: #fff;
+	padding: 15px;
+	margin-top: 15px;
+	border-radius: 10px;
+	width: 100%;
+	max-width: 600px;
+}
+
+.error-message {
+	margin: 10px 0;
+	padding: 15px;
+}
+
+.fade {
+	animation: fade 5s;
+}
+
+@keyframes fade {
+	0% {opacity: 1;}
+	75% {opacity: 1;}
+	99% {opacity: 0;}
+	100% {display: none;}
 }

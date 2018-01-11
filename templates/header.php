@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
 	<meta charset="UTF-8">
@@ -7,7 +7,7 @@
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 
 	<link rel="stylesheet" href="<?php echo get_stylesheet_directory(); ?>/bootstrap/css/bootstrap.min.css">
-	<link rel="stylesheet" href="<?php echo get_stylesheet_directory(); ?>/js/jcrop/css/jquery.Jcrop.min.css">
+	<link rel="stylesheet" href="<?php echo get_stylesheet_directory(); ?>/js/jCrop/css/jquery.Jcrop.min.css">
 	<link rel="stylesheet" href="<?php echo get_stylesheet_directory(); ?>/style.css">
 	<script>window.FileAPI = {
 			media : true,
