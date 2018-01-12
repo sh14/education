@@ -25,14 +25,13 @@
 					</div>
 
 					<button class="btn btn-primary" type="submit">Зарегистрироваться</button>
-
 					<input type="hidden" name="action" value="registration">
 					<?php
-					if(get_page()=='error_register'){
-						$msg = json_decode($_GET['msg']);
-						if(!empty($msg)){
-							foreach ($msg as $message){
-								echo '<p class="bg-danger text-danger error-message">'.$message.'</p>';
+					if ( get_page() == 'error_register' ) {
+						$msg = json_decode( $_GET['msg'] );
+						if ( ! empty( $msg ) ) {
+							foreach ( $msg as $message ) {
+								echo '<p class="bg-danger text-danger error-message">' . $message . '</p>';
 							}
 						}
 					}
@@ -53,8 +52,9 @@
 					</div>
 
 					<button class="login btn btn-success" type="submit" name="login_send">Вход</button>
+					<input type="hidden" name="action" value="authorization">
 					<?php
-					if(get_page()=='error_login'){
+					if ( get_page() == 'error_login' ) {
 						echo '<p class="bg-danger text-danger error-message fade">Данные не верны</p>';
 					}
 					?>

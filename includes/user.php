@@ -56,11 +56,9 @@ add_action( 'init', 'get_user_info' );
  */
 function registration() {
 	$err = [];
-	//die('asd');
-	if (
-		! empty( $_POST['email'] )
-		&& ! empty( $_POST['password'] )
-		&& ! empty( $_POST['action'] == 'registration' ) ) {
+
+	if ( ! empty( $_POST['email'] ) && ! empty( $_POST['password'] )
+	     && ! empty( $_POST['action'] ) && $_POST['action'] == 'registration' ) {
 
 		if ( strlen( $_POST['email'] ) < 7 or strlen( $_POST['email'] ) > 255 ) {
 			$err[] = "Email не должен быть меньше 7 символов и не больше 255";
@@ -71,11 +69,12 @@ function registration() {
 		}
 
 		if ( strlen( $_POST['password'] ) < 6 or strlen( $_POST['password'] ) > 255 ) {
-			$err[] = "Длинна пароля должна быть от 6 до 255 символов";
+			$err[] = "Длина пароля должна быть от 6 до 255 символов";
 		}
 		$query = do_query( "SELECT count(*) FROM users WHERE email='{$_POST['email']}'" );
 
-		if ( mysqli_num_rows( $query ) > 0 ) {
+		$row = $query->fetch_row();
+		if ( $row[0] == 1 ) {
 			$err[] = "Пользователь с таким email существует";
 		}
 
@@ -83,7 +82,7 @@ function registration() {
 
 			$email = $_POST['email'];
 
-			$password = encript_password( $_POST['password'] );
+			$password = encrypt_password($_POST['password']);
 
 			do_query( "INSERT INTO users SET email='" . $email . "', password='" . $password . "'" );
 			header( "location:" . get_root_url() );
@@ -135,7 +134,7 @@ function user_logout( $args = '' ) {
  *
  */
 function authorization_user() {
-	if ( isset( $_POST['email_login'] ) && isset( $_POST['password_login'] ) && ! empty( $_POST['action'] ) && $_POST['action'] == 'authorization' ) {
+	if ( ! empty ( $_POST['email_login'] ) && ! empty( $_POST['password_login'] ) && ! empty( $_POST['action'] ) && $_POST['action'] == 'authorization' ) {
 
 		$email    = $_POST['email_login'];
 		$password = encrypt_password( $_POST['password_login'] );
@@ -179,6 +178,7 @@ function is_user_logged_in() {
 			}
 		}
 	}
+
 	return false;
 }
 
