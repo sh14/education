@@ -308,6 +308,70 @@ function wp_localize_script( $handle, $object_name, $l10n ) {
 }
 
 
+// Функция получения последних n сообщений и конвертация их в формат json
+function get_last_messages() {
+	if ( ! empty( $_POST['last_message_id'] ) || ! empty( $_POST['message_id'] ) ) {
+		$messages = [];
+		if ( ! empty( $_POST['last_message_id'] ) ) {
+			$message_id = $_POST['last_message_id'];
+			$sign       = '>';
+		} else {
+			$message_id = $_POST['message_id'];
+			$sign       = '=';
+		}
+
+		$sql = "SELECT * FROM message m LEFT JOIN users u ON u.ID = m.id_user WHERE m.id_message {$sign} {$message_id} ORDER BY datetime DESC LIMIT 30";
+
+		$result = do_query( $sql );
+
+		if ( $result->num_rows > 0 ) {
+			$current_user_id = get_current_user_id();
+			// подготовка массива сообщений к выводу
+			while ( $row = mysqli_fetch_array( $result, MYSQLI_ASSOC ) ) {
+				//$messages[] = $rows;
+
+				$image = '';
+				if ( ! empty( $row['image'] ) ) {
+					$image = $row['image'];
+				}
+				$name = '';
+				if ( ! empty( $row['first_name'] ) || ! empty( $row['last_name'] ) ) {
+					$name = $row['first_name'] . ' ' . $row['last_name'];
+				}
+				$datetime = '';
+				if ( ! empty( $row['datetime'] ) ) {
+
+					$datetime = date( 'H:i:s, d.m.Y', strtotime( $row['datetime'] ) );
+				}
+
+				if ( $current_user_id != $row['id_user'] ) {
+					$class = 0;
+					$edit  = 0;
+				} else {
+					$edit  = 1;
+					$class = 1;
+				}
+				$messages[] = [
+					'image'      => $image,
+					'name'       => $name,
+					'title'      => ! empty( $row['title'] ) ? $row['title'] : '',
+					'content'    => ! empty( $row['content'] ) ? $row['content'] : '',
+					'datetime'   => $datetime,
+					'class_name' => $class,
+					'id_user'    => $row['id_user'],
+					'id_message' => $row ['id_message'],
+					'edit'       => $edit,
+				];
+			}
+		}
+
+
+		echo json_encode( $messages );
+
+		die();
+	}
+}
+
 /**
  * Вывод сообщений на дисплей
  *
@@ -424,10 +488,11 @@ function enqueue_scripts() {
 	if ( ! empty( $shlo ) ) {
 		$shlo = array_merge( [], $shlo );
 
-		$shlo['ajax_url'] = get_root_url() . '/ajax.php';
-		$shlo['name']     = $shlo['first_name'] . ' ' . $shlo['last_name'];
-		$shlo['user_id']  = $shlo['ID'];
-		$shlo['image']    = get_root_url() . '/images/users/' . $shlo['image'];
+		$shlo['ajax_url']  = get_root_url() . '/ajax.php';
+		$shlo['name']      = $shlo['first_name'] . ' ' . $shlo['last_name'];
+		$shlo['user_id']   = $shlo['ID'];
+		$shlo['image']     = get_root_url() . '/images/users/' . $shlo['image'];
+		$shlo['image_url'] = get_root_url() . '/images/users/';
 
 
 	} else {
@@ -573,30 +638,6 @@ function message_add() {
 	}
 }
 
-// Функция получения последних n сообщений и конвертация их в формат json
-function get_last_messages() {
-	if ( ! empty( $_POST['last_message_id'] ) ) {
-		$messages = [];
-		if ( ! empty( $_POST['last_message_id'] ) ) {
-			$last_message_id = $_POST['last_message_id'];
-
-			$sql    = "SELECT * FROM `message` WHERE id_message > {$last_message_id} ORDER BY `id_message` ASC";
-			$result = do_query( $sql );
-
-			if ( $result->num_rows > 0 ) {
-
-				// подготовка массива сообщений к выводу
-				while ( $rows = mysqli_fetch_array( $result, MYSQLI_ASSOC ) ) {
-					$messages[] = $rows;
-				}
-			}
-		}
-
-		echo json_encode( $messages );
-
-		die();
-	}
-}
 
 function redirect_configuration_page() {
 	global $redirect;

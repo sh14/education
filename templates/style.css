@@ -26,12 +26,25 @@ div:after {
   display: table-row;
   margin: 0;
 }
+.chat__form-tag {
+  display: block;
+}
+.chat__table {
+  display: table;
+  width: 100%;
+  position: relative;
+  border-top: 1px solid #ccc;
+}
 .chat__title {
   display: block;
   box-shadow: none;
   border-radius: 0;
   border-color: transparent;
   border-top-color: #ccc;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 100%;
 }
 .chat__title:hover,
 .chat__title:focus {
@@ -40,15 +53,19 @@ div:after {
   border-color: transparent;
   border-top-color: #ccc;
 }
-.chat__message {
-  border-radius: 0 0 4px 4px;
-  border-width: 1px 0 1px 0;
-  border-color: transparent;
-  border-top-color: #ccc;
-  box-shadow: none;
+.chat__message,
+.chat__buttons {
+  display: table-cell;
+  vertical-align: top;
 }
-.chat__message:hover,
-.chat__message:focus {
+.chat__message-field {
+  border-radius: 0 0 4px 4px;
+  border: none;
+  box-shadow: none;
+  resize: none;
+}
+.chat__message-field:hover,
+.chat__message-field:focus {
   outline: none;
   box-shadow: none;
   border-color: transparent;
@@ -57,18 +74,20 @@ div:after {
 .chat__messages-box {
   overflow-y: scroll;
 }
+.chat__buttons {
+  width: 10px;
+  position: relative;
+}
 .chat__submit {
-  float: right;
-  margin-top: -34px;
   border-radius: 0 0 4px 0;
+  float: right;
+  margin-top: -1px;
 }
 .chat__cancel {
-  float: right;
-  display: block;
-  position: absolute;
-  margin-top: -34px;
   border-radius: 0 0 0 0;
-  right: 110px;
+  position: absolute;
+  right: calc(100% - 1px);
+  top: -1px;
 }
 .message {
   padding: 10px;

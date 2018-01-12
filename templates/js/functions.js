@@ -43,11 +43,11 @@
 	const events = [ 'click', 'mousemove', 'resize', 'scroll', 'touchstart', 'touchmove' ];
 
 	for ( let i = 0; i < events.length; i++ ) {
-		$( window ).on( events[ i ], debounce(function ( event ) {
+		$( window ).on( events[ i ], debounce( function ( event ) {
 			let msg = "Handler for " + events[ i ] + " called at ";
 			msg += event.pageX + ", " + event.pageY;
 			console.log( msg );
-		}, 500) );
+		}, 500 ) );
 	}
 
 
@@ -61,102 +61,111 @@
 		$( '.chat__messages-box' ).height( (height - $( '.chat__form' ).height()) );
 	}
 
-	function message_append( one_message, form ) {
-		if ( one_message[ 'error' ] === undefined ) {
+	function message_push( result ) {
+		if ( result !== null ) {
 
-			if ( form === undefined ) {
-				form = $( '.chat__form' );
-			}
+			// перевод полученной строки в массив
+			result = JSON.parse( result );
 
-			let data     = form.serializeArray();
-			let new_data = {
-				'image' : shlo[ 'image' ],
-				'name' : shlo[ 'name' ],
-				'title' : '',
-				'content' : '',
-				'datetime' : '',
-				'class_name' : '',
-				'id_user' : '',
-				'id_message' : '',
-				'edit' : '',
-			};
 
-			// флаг в положении "редактирование сообщения"
-			let action = 'edit';
-			$.each( data, function ( index, el ) {
+			// перебор массива, содержащего сообщения
+			$.each( result, function ( i, message_data ) {
 
-				// если форма содержит данные в указанном поле
-				if ( el[ 'value' ] !== '' ) {
+				// если ошибок нет
+				if ( message_data[ 'error' ] === undefined ) {
 
-					// данные добавляются в массив из формы
-					new_data[ el[ 'name' ] ] = el[ 'value' ];
+					// объединение данных сообщения с шаблонным массивом данных
+					message_data = $.extend( {
+						'image' : shlo[ 'image' ],
+						'name' : shlo[ 'name' ],
+						'title' : '',
+						'content' : '',
+						'datetime' : '',
+						'class_name' : '',
+						'id_user' : '',
+						'id_message' : '',
+						'edit' : '',
+					}, message_data );
+
+					// определение шаблона для сообщения
+					let message_box = $( '.chat__messages-box' );
+
+					// флаг в положении "редактирование сообщения"
+					let action = 'edit';
+
+					// поиск указанного сообщения в окне чата
+					let current_message = message_box.find( '[data-id_message="' + message_data[ 'id_message' ] + '"]' );
+
+					// если id_message не указан, флаг в положение "добавление нового сообщения"
+					// и сообщения с указанным id еще нет в чате
+					if ( current_message.length === 0 ) {
+						action = 'add';
+					}
+
+					// определение необходимости давать возможность редактировать сообщение
+					if ( message_data[ 'edit' ] === 1 ) {
+						message_data[ 'edit' ] = '<span class="message__edit"></span>';
+					} else {
+						message_data[ 'edit' ] = '';
+					}
+
+					// обозначение своего/чужого сообщения
+					if ( message_data[ 'class_name' ] === 0 ) {
+						message_data[ 'class_name' ] = ' message_alien';
+					} else {
+						message_data[ 'class_name' ] = '';
+					}
+
+					// указание пути к файлу аватара
+					if ( message_data[ 'image' ] !== '' ) {
+						message_data[ 'image' ] = ' style="background-image:url(' + shlo[ 'image_url' ] + message_data[ 'image' ] + ');"';
+					}
+
+					//message_data[ 'datetime' ]   = format_date( message_data[ 'datetime' ] );
+
+					// вставка значений в шаблон сообщения
+					let message = tmpl( 'message_template', message_data );
+
+					// если нужно добавить сообщение
+					if ( action === 'add' ) {
+
+						// добавление сформированного сообщения в окно чата
+						message_box.append( message );
+					} else {
+
+						// замена указанного сообщения на обновленное
+						current_message.replaceWith( message );
+					}
+
+					// скрол к последнему сообщению
+					scroll_to_last_message();
 				} else {
-					// иначе данные добавляются в массив из результата запроса
-					new_data[ el[ 'name' ] ] = one_message[ el[ 'name' ] ];
-				}
-
-				// если id_message не указан, флаг в положение "добавление нового сообщения"
-				if ( el[ 'name' ] === 'id_message' && el[ 'value' ] === '' ) {
-					action = 'add';
+					//console.log( message[ 'error' ] );
 				}
 			} );
-
-			new_data[ 'id_user' ]    = one_message[ 'id_user' ];
-			new_data[ 'id_message' ] = one_message[ 'id_message' ];
-			new_data[ 'datetime' ]   = format_date( one_message[ 'datetime' ] );
-			new_data[ 'image' ]      = ' style="background-image:url(' + new_data[ 'image' ] + ');"';
-			new_data[ 'edit' ]       = '<span class="message__edit"></span>';
-
-			// вставка значений в шаблон сообщения
-			let message = tmpl( 'message_template', new_data );
-
-			// если нужно добавить сообщение
-			if ( action === 'add' ) {
-
-				// добавление сформированного сообщения в окно чата
-				$( '.chat__messages-box' ).append( message );
-			} else {
-
-				// редактирование указанного сообщения
-				let current_message = $( document ).find( '[data-id_message="' + new_data[ 'id_message' ] + '"]' );
-				current_message.find( '.message__title' ).text( new_data[ 'title' ] );
-				current_message.find( '.message__text' ).html( new_data[ 'content' ] );
-			}
-
-			// скрол к последнему сообщению
-			scroll_to_last_message();
-
-			clear_message_form();
-		} else {
-			//console.log( message[ 'error' ] );
 		}
 	}
 
+
 	/**
-	 * Функция отправляет введенные пользователем данные и если передача прошла успешно, выводит сообщение в чат
+	 * Функция отправляет введенные пользователем данные
 	 *
 	 * @param obj
 	 */
 	function message_add( obj ) {
 
-		let form = $( obj ).closest( 'form' );
-
-		let data = form.serialize();
+		let data = $( obj ).closest( 'form' ).serialize();
 
 		$.post( shlo[ 'ajax_url' ], data + '&action=message_add' )
-		 .done( function ( result ) {
-
-			 result = JSON.parse( result );
-
-			 $.each( result, function ( i, one_message ) {
-				 message_append( one_message, form );
-			 } );
-		 } )
-		 .fail( function () {
-
-		 } )
-		 .always( function () {
-
+		 .done( function () {
+			 let id_message = $( '[name="id_message"]' ).val();
+			 if ( id_message !== '' ) {
+				 send_display_request( id_message );
+			 }else{
+				 send_display_request();
+			 }
+			 // если данные отпралены успешно, происходит очистка формы
+			 clear_message_form();
 		 } );
 	}
 
@@ -184,32 +193,28 @@
 	/**
 	 * Функция отправляет запрос на отображении сообщений в чате
 	 */
-	function send_display_request() {
+	function send_display_request( id ) {
 		if ( shlo[ 'user_id' ] > 0 ) {
 
-			// определение id последнего полученного сообщения
-			let last_message_id = $( '.chat__messages-box' ).find( '.message' ).last().attr( 'data-id_message' );
+			let query = 'action=get_last_messages&';
+			console.log( id );
+			if ( id === undefined ) {
+				// определение id последнего полученного сообщения
+				id = $( '.chat__messages-box' ).find( '.message' ).last().attr( 'data-id_message' );
 
-			// составление запроса
-			let query = 'action=get_last_messages&last_message_id=' + last_message_id;
+				// составление запроса
+				query += 'last_message_id=' + id;
+			} else {
+				// составление запроса
+				query += 'message_id=' + id;
+			}
 
 			$.post( shlo[ 'ajax_url' ], query ).done( function ( result ) {
-				if ( result !== null ) {
-					result = JSON.parse( result );
-
-					$.each( result, function ( i, one_message ) {
-
-						message_append( one_message );
-					} );
-				}
-
+				console.log( result );
+				message_push( result );
 			} );
 		}
 	}
-
-
-	send_display_request();
-	setInterval( send_display_request, 1500 );
 
 	/**
 	 * Функция отмены редактирования сообщения
@@ -336,5 +341,6 @@
 		$( "body" ).on( 'swipeleft', swipe_hide() );
 	*/
 
+	setInterval( send_display_request, 1500 );
 
 })( jQuery );

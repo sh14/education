@@ -34,6 +34,15 @@ div:before, div:after {
 	&__form {
 		display: table-row;
 		margin: 0;
+		&-tag {
+			display: block;
+		}
+	}
+	&__table {
+		display: table;
+		width: 100%;
+		position: relative;
+		border-top: 1px solid #ccc;
 	}
 	&__title {
 		display: block;
@@ -41,6 +50,11 @@ div:before, div:after {
 		border-radius: 0;
 		border-color: transparent;
 		border-top-color: #ccc;
+		position: absolute;
+		left: 0;
+		right: 0;
+		bottom: 100%;
+
 		&:hover, &:focus {
 			outline: none;
 			box-shadow: none;
@@ -48,34 +62,46 @@ div:before, div:after {
 			border-top-color: #ccc;
 		}
 	}
+
+	&__message, &__buttons {
+		display: table-cell;
+		vertical-align: top;
+	}
+
 	&__message {
-		border-radius: 0 0 4px 4px;
-		border-width: 1px 0 1px 0;
-		border-color: transparent;
-		border-top-color: #ccc;
-		box-shadow: none;
-		&:hover, &:focus {
-			outline: none;
+
+		&-field {
+			border-radius: 0 0 4px 4px;
+			border: none;
 			box-shadow: none;
-			border-color: transparent;
-			border-top-color: #ccc;
+			resize: none;
+
+			&:hover, &:focus {
+				outline: none;
+				box-shadow: none;
+				border-color: transparent;
+				border-top-color: #ccc;
+			}
 		}
+
 	}
 	&__messages-box {
 		overflow-y: scroll;
 	}
+	&__buttons {
+		width: 10px;
+		position: relative;
+	}
 	&__submit {
-		float: right;
-		margin-top: -34px;
 		border-radius: 0 0 4px 0;
+		float: right;
+		margin-top: -1px;
 	}
 	&__cancel {
-		 float: right;
-		 display: block;
-		 position: absolute;
-		 margin-top: -34px;
-		 border-radius: 0 0 0 0;
-		 right: 110px;
+		border-radius: 0 0 0 0;
+		position: absolute;
+		right: ~'calc(100% - 1px)';
+		top:-1px;
 	}
 }
 
@@ -156,7 +182,6 @@ div:before, div:after {
 		font-size: .8em;
 		color: rgba(0, 0, 0, .4);
 	}
-
 
 	&_alien &__data-box {
 		background: #ddf1ff;
@@ -318,7 +343,6 @@ div:before, div:after {
 	right: 0;
 	transition: 300ms ease;
 	overflow: hidden;
-
 
 	&__container {
 		position: absolute;
@@ -491,8 +515,16 @@ div:before, div:after {
 }
 
 @keyframes fade {
-	0% {opacity: 1;}
-	75% {opacity: 1;}
-	99% {opacity: 0;}
-	100% {display: none;}
+	0% {
+		opacity: 1;
+	}
+	75% {
+		opacity: 1;
+	}
+	99% {
+		opacity: 0;
+	}
+	100% {
+		display: none;
+	}
 }
