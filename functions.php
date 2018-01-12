@@ -284,60 +284,91 @@ function enqueue_script( $handle, $object_name = '' ) {
 }
 
 /**
- * Вывод переменной
+ * Вывод глобальной js переменной
  *
  * @param $handle
  * @param $object_name
  * @param $l10n
  */
 function wp_localize_script( $handle, $object_name, $l10n ) {
-	$out   = [];
+	$out = [];
+
+	// формирование js кода, определяющего глобальную переменную
 	$out[] = 'var ' . $object_name . '= {';
 
+	// перебор массива
 	foreach ( $l10n as $key => $value ) {
+
+		// если значение строковое - строка указывается в кавычках
 		if ( is_string( $value ) ) {
 			$value = "'{$value}'";
+		}
+
+		// если значение пусто
+		if ( empty( $value ) ) {
+
+			// для  js указываются пустые кавычки
+			$value = "''";
 		}
 		$out[] = "'$key':{$value},";
 	}
 	$out[] = '};';
 
+	// преобразование массива в строку
 	$out = implode( "\n", $out );
+
+	// регистрация скрипта
 	register_script( $handle . $object_name, [ $out ] );
+
+	// указание на вывод на странице
 	enqueue_script( $handle . $object_name, $object_name );
 }
 
 
-// Функция получения последних n сообщений и конвертация их в формат json
+/**
+ * Функция возвращает список сообщений, которые пользователь еще не видели, либо конкретного сообщения, которое было
+ * изменено. Сообщения возвращаются в формате json.
+ */
 function get_last_messages() {
+
+	// если пришел запрос на получение последних сообщений или конкретного сообщения
 	if ( ! empty( $_POST['last_message_id'] ) || ! empty( $_POST['message_id'] ) ) {
+
+		// определяется переменная, которая будет содержать список сообщений
 		$messages = [];
+
+		// если запрос пришел на получение последних сообщений
 		if ( ! empty( $_POST['last_message_id'] ) ) {
+
+			// определяется id сообщения, после которого пользователь не получал новых сообщений
 			$message_id = $_POST['last_message_id'];
-			$sign       = '>';
+
+			// указывается знак сравнения для sql запроса
+			$sign = '>';
 		} else {
 			$message_id = $_POST['message_id'];
 			$sign       = '=';
 		}
 
+		// запрос на получение не прочитанных пользователем сообщений или конкретного сообщения, в зависимости от знака сравнения
 		$sql = "SELECT * FROM message m LEFT JOIN users u ON u.ID = m.id_user WHERE m.id_message {$sign} {$message_id} ORDER BY datetime DESC LIMIT 30";
 
 		$result = do_query( $sql );
 
+		// если хоть одно сообщение найдено
 		if ( $result->num_rows > 0 ) {
-			$current_user_id = get_current_user_id();
-			// подготовка массива сообщений к выводу
-			while ( $row = mysqli_fetch_array( $result, MYSQLI_ASSOC ) ) {
-				//$messages[] = $rows;
 
-				$image = '';
-				if ( ! empty( $row['image'] ) ) {
-					$image = $row['image'];
-				}
+			// определяется id текущего пользователя
+			$current_user_id = get_current_user_id();
+
+			// производится подготовка массива сообщений к выводу
+			while ( $row = mysqli_fetch_array( $result, MYSQLI_ASSOC ) ) {
+
 				$name = '';
 				if ( ! empty( $row['first_name'] ) || ! empty( $row['last_name'] ) ) {
 					$name = $row['first_name'] . ' ' . $row['last_name'];
 				}
+
 				$datetime = '';
 				if ( ! empty( $row['datetime'] ) ) {
 
@@ -352,7 +383,7 @@ function get_last_messages() {
 					$class = 1;
 				}
 				$messages[] = [
-					'image'      => $image,
+					'image'      => ! empty( $row['image'] ) ? $row['image'] : '',
 					'name'       => $name,
 					'title'      => ! empty( $row['title'] ) ? $row['title'] : '',
 					'content'    => ! empty( $row['content'] ) ? $row['content'] : '',
@@ -485,67 +516,31 @@ function enqueue_scripts() {
 	enqueue_script( 'functions' );
 
 	$shlo = get_user_info();
+
 	if ( ! empty( $shlo ) ) {
-		$shlo = array_merge( [], $shlo );
-
-		$shlo['ajax_url']  = get_root_url() . '/ajax.php';
-		$shlo['name']      = $shlo['first_name'] . ' ' . $shlo['last_name'];
-		$shlo['user_id']   = $shlo['ID'];
-		$shlo['image']     = get_root_url() . '/images/users/' . $shlo['image'];
-		$shlo['image_url'] = get_root_url() . '/images/users/';
-
+		$shlo['name'] = trim( $shlo['first_name'] . ' ' . $shlo['last_name'] );
+		unset( $shlo['password'] );
 
 	} else {
 		$shlo = [];
 	}
+	$shlo['ajax_url']  = get_root_url() . '/ajax.php';
+	$shlo['image_url'] = get_root_url() . '/images/users/';
+	if ( ! empty( $shlo['ID'] ) ) {
+		$shlo['user_id'] = $shlo['ID'];
+		$shlo['image']   = get_root_url() . '/images/users/' . $shlo['image'];
+	}
+
+	//pr( $shlo );
 	wp_localize_script( 'functions', 'shlo', $shlo );
 }
 
 add_action( 'init', 'enqueue_scripts' );
 
 
-/*
- * это недоработанная функция сохраниня пользователя
- * function save_profile() {
-	list( $url ) = explode( '?', $_SERVER['REQUEST_URI'] ); вычденияем из url строки елементы
-	$event = ''; здесь создали переменную для опреления положения в url строке
-
-	if(!empty($_GET['event']) && $_GET['event'] == 'save' && !empty($_POST)) {    создаем условие в котором прописываем занесение в базу данных
-																				  информации из инпутов при удачном случае и изменении значения url строки
-		$vars_string = array_map('trim', explode(',', 'first_name, last_name, nickname, Email, Password'));
-		$values = [];
-		$allow_query       = 1;
-		foreach ($vars_string as $var) {
-			if(empty($_POST[$var])){
-				$allow_query = 0;
-				break;
-			}
-			$values[] = "'$_POST[$var]'";
-		}
-		if ($allow_query == 1) {
-			$event = 'success';
-			$vars_string = implode(',' , $vars_string);
-			$values = implode(',' , $values);
-			$query = "INSERT INTO users ($vars_string) VALUES ($values)";
-
-			do_query($query);
-		} else {
-			$event = "error";
-		}
-	}
-
-	if ( ! empty( $event ) ) {
-		$event = '?event=' . $event;
-		header( 'location: ' . $url . $event );
-	}
-}*/
-
 /**
  * Функция валидации email
  */
-
-//$email = 'Почтовый ящик';
-
 function emailValidation( $email ) {
 	if ( $email ) {
 		if ( preg_match( "/[0-9a-z_\.\-]+@[0-9a-z_\.\-]+\.[a-z]{2,4}/i", $email ) ) {
@@ -559,9 +554,6 @@ function emailValidation( $email ) {
 
 	return $message;
 }
-
-//$message = emailValidation( $email );
-//echo emailValidation($email);
 
 
 /**
@@ -650,35 +642,82 @@ function redirect_configuration_page() {
 
 add_action( 'init', 'redirect_configuration_page' );
 
-//function proverka() {
 
-/*	//Получение данных из $_POST (от Влада)
-//	$_POST['content'] = 'ne jfuy';
-//	$_POST['event'] = 'message_update';
-//	$_POST['id_message'] = 4;
-//	$_POST['id_user'] = 2;
-	// Проверка на наличие и значение атрибута 'event'
-	if ( ! empty( $_POST['event'] && $_POST['event'] == 'message_update' ) ) {
-		$sql    = "SELECT COUNT(*) FROM `message` WHERE `id_message` = {$_POST['id_message']} AND  `id_user` = {$_POST['id_user']}";
-		$result = do_query( $sql );
-		$row    = $result->fetch_row();
-	//	pr( $row );
-	//  Замена старого сообщения в дб на новое, при прохождении проверки
-		if ( $row = 1 ) {
-			$new_message = $_POST['content'];
-			$update      = "UPDATE `message` SET `content` = '{$new_message}' WHERE `id_message` = {$_POST['id_message']}";
-			do_query( $update );
-		}
-	}
-}
-
-add_action( 'init', 'proverka' );
-*/
 function anti_cash() {
 	if ( is_user_logged_in() ) {
 		header( "Cache-Control: no-store, no-cache, must-revalidate" );
-		header( "Expires: " . date( "r" ) );
-		echo "<h1>", date( "H:i:s" ), "</h1>";
-		}
-	};
+		header( "Expires: " . date( "r", ( time() - 24 * 3600 ) ) );
+		//echo "<h1>", date( "H:i:s" ), "</h1>";
+	}
+}
+
 add_action( 'init', 'anti_cash' );
+
+function error_messages_add( $error_name ) {
+	if ( is_array( $error_name ) ) {
+		$error_name = implode( ',', $error_name );
+	}
+
+	if ( ! empty( $_COOKIE['error_messages'] ) ) {
+		$messages   = array_map( 'trim', explode( ',', $_COOKIE['error_messages'] ) );
+		$messages[] = $error_name;
+		$messages   = implode( ',', $messages );
+	} else {
+		$messages = $error_name;
+	}
+	setcookie( 'error_messages', $messages );
+}
+
+/**
+ * Вывод сообщений об ошибках в указанных местах
+ */
+function error_messages() {
+
+
+	if ( ! empty( $_COOKIE['error_messages'] ) ) {
+		$errors   = array_map( 'trim', explode( ',', $_COOKIE['error_messages'] ) );
+		$messages = [];
+		foreach ( $errors as $error ) {
+			$err[] = "Email не должен быть меньше 7 символов и не больше 255";
+			$err[] = "Некорректный Email";
+			$err[] = "Длинна пароля должна быть от 6 до 255 символов";
+			$err[] = "Пользователь с таким email существует";
+
+			switch ( $error ) {
+				case 'wrong_login':
+					$messages['login_error'][] = 'Данные не верны';
+					break;
+				case 'email_length':
+					$messages['reg_error'][] = 'Email не должен быть меньше 7 символов и не больше 255';
+					break;
+				case 'email_incorrect':
+					$messages['reg_error'][] = 'Некорректный Email';
+					break;
+				case 'password_length':
+					$messages['reg_error'][] = 'Длинна пароля должна быть от 6 до 255 символов';
+					break;
+				case 'user_exists':
+					$messages['reg_error'][] = 'Пользователь с таким email существует';
+					break;
+			}
+
+		}
+
+		foreach ( $messages as $key => $message ) {
+			$messages_key = '';
+			foreach ( $message as $line ) {
+				$messages_key .= '<p class="bg-danger text-danger error-message">' . $line . '</p>';
+			}
+
+			// вывод сообщения об ошибке в указанном месте
+			add_action( $key, function () use ( $messages_key ) {
+				echo $messages_key;
+			} );
+		}
+
+
+		setcookie( 'error_messages', 0, time() - 60 * 60 * 24 );
+	}
+}
+
+add_action( 'init', 'error_messages' );

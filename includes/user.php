@@ -55,48 +55,46 @@ add_action( 'init', 'get_user_info' );
  * Функция регистрации пользователя
  */
 function registration() {
-	$err = [];
-	//die('asd');
 	if (
 		! empty( $_POST['email'] )
 		&& ! empty( $_POST['password'] )
 		&& ! empty( $_POST['action'] == 'registration' ) ) {
 
-		if ( strlen( $_POST['email'] ) < 7 or strlen( $_POST['email'] ) > 255 ) {
-			$err[] = "Email не должен быть меньше 7 символов и не больше 255";
+		$err = [];
+
+		$email    = $_POST['email'];
+		$password = encrypt_password( $_POST['password'] );
+
+		if ( strlen( $email ) < 7 || strlen( $email ) > 255 ) {
+			$err[] = 'email_length';
 		}
 
-		if ( ! preg_match( "/[0-9a-z_\.\-]+@[0-9a-z_\.\-]+\.[a-z]{2,4}/i", $_POST['email'] ) ) {
-			$err[] = "Некорректный Email";
+		if ( ! preg_match( "/[0-9a-z_\.\-]+@[0-9a-z_\.\-]+\.[a-z]{2,4}/i", $email ) ) {
+			$err[] = 'email_incorrect';
 		}
 
-		if ( strlen( $_POST['password'] ) < 6 or strlen( $_POST['password'] ) > 255 ) {
-			$err[] = "Длинна пароля должна быть от 6 до 255 символов";
-		}
-		$query = do_query( "SELECT count(*) FROM users WHERE email='{$_POST['email']}'" );
-
-		if ( mysqli_num_rows( $query ) > 0 ) {
-			$err[] = "Пользователь с таким email существует";
+		if ( strlen( $_POST['password'] ) < 6 || strlen( $_POST['password'] ) > 255 ) {
+			$err[] = 'password_length';
 		}
 
 		if ( empty( $err ) ) {
 
-			$email = $_POST['email'];
+			$query = do_query( "SELECT * FROM users WHERE email='{$email}'" );
 
-			$password = encript_password( $_POST['password'] );
+			if ( mysqli_num_rows( $query ) > 0 ) {
+				$err[] = 'user_exists';
+			}
 
-			do_query( "INSERT INTO users SET email='" . $email . "', password='" . $password . "'" );
-			header( "location:" . get_root_url() );
-		} else {
-			$err[] = "Возникли проблемы";
+			if ( empty( $err ) ) {
+				do_query( "INSERT INTO users SET email='" . $email . "', password='" . $password . "'" );
+			}
 		}
-	}
 
-	if ( ! empty( $err ) ) {
-		$msg = urlencode( json_encode( $err ) );
-		$url = '?p=error_register&msg=' . $msg;
-		header( "Location: " . $url );
+		if ( ! empty( $err ) ) {
+			error_messages_add($err);
+		}
 
+		header( "Location: " . get_root_url() );
 	}
 }
 
@@ -106,52 +104,41 @@ add_action( 'init', 'registration' );
 /**
  * Функция разлогинивания
  */
-function logout() {
-	if ( get_page() == 'logout' ) {
-		user_logout();
+function logout( $logout = false ) {
+	if ( get_page() == 'logout' || $logout == true ) {
+		setcookie( 'shlo_chat', '', time() - 60 * 60 * 24 );
+
+		header( "Location: " . get_root_url() );
+		die();
 	}
 }
 
 add_action( 'init', 'logout' );
 
 /**
- * Функция логаута
- *
- * @param $args
- */
-function user_logout( $args = '' ) {
-	setcookie( 'shlo_chat', '', time() - 60 * 60 * 24 );
-	if ( ! empty( $args ) && is_array( $args ) ) {
-		$args = '?' . implode( '&', $args );
-	}
-	$url = get_root_url() . $args;
-
-	header( "Location: " . $url );
-	die();
-}
-
-/**
  * Функция авторизации пользователя
  *
  */
 function authorization_user() {
-	if ( isset( $_POST['email_login'] ) && isset( $_POST['password_login'] ) && ! empty( $_POST['action'] ) && $_POST['action'] == 'authorization' ) {
+	//pr($_POST);die();
+	if ( isset( $_POST['email'] ) && isset( $_POST['password'] ) && ! empty( $_POST['action'] ) && $_POST['action'] == 'authorization' ) {
 
-		$email    = $_POST['email_login'];
-		$password = encrypt_password( $_POST['password_login'] );
+		$email    = $_POST['email'];
+		$password = encrypt_password( $_POST['password'] );
 		$sql      = "SELECT COUNT(*) FROM users WHERE email='{$email}' AND password='{$password}'";
 		$result   = do_query( $sql );
 		$rows     = $result->fetch_row();
 
+		// если авторизация прошла успешно
 		if ( $rows[0] == 1 ) {
 			setcookie( 'shlo_chat', implode( ';', [ $email, $password ] ), time() + 60 * 60 * 24 );
-			$url = get_root_url();
+			header( "Location: " . get_root_url() );
+			die();
 		} else {
-			$url = '?p=error_login';
-			user_logout( $url );
+			//setcookie( 'wrong_login', 1 );
+			error_messages_add('wrong_login');
+			logout( true     );
 		}
-		header( "Location: " . $url );
-		die();
 	}
 }
 
@@ -179,6 +166,7 @@ function is_user_logged_in() {
 			}
 		}
 	}
+
 	return false;
 }
 

@@ -40,17 +40,6 @@
 		$( '.chat__cancel' ).addClass( 'hidden' );
 	}
 
-	const events = [ 'click', 'mousemove', 'resize', 'scroll', 'touchstart', 'touchmove' ];
-
-	for ( let i = 0; i < events.length; i++ ) {
-		$( window ).on( events[ i ], debounce( function ( event ) {
-			let msg = "Handler for " + events[ i ] + " called at ";
-			msg += event.pageX + ", " + event.pageY;
-			console.log( msg );
-		}, 500 ) );
-	}
-
-
 	/**
 	 * Функция подстройки высоты окна чата под окно браузера
 	 */
@@ -61,88 +50,96 @@
 		$( '.chat__messages-box' ).height( (height - $( '.chat__form' ).height()) );
 	}
 
+	/**
+	 * Функция обработки полученных от сервера данных - добавление или исправление сообщений в чате
+	 *
+	 * @param result - массив в формате json, содержащий сообщения
+	 */
 	function message_push( result ) {
 		if ( result !== null ) {
 
 			// перевод полученной строки в массив
 			result = JSON.parse( result );
 
+			// если массив что-то содержит
+			if ( result.length > 0 ) {
 
-			// перебор массива, содержащего сообщения
-			$.each( result, function ( i, message_data ) {
+				// осуществляется перебор сообщений из массива
+				$.each( result, function ( i, message_data ) {
 
-				// если ошибок нет
-				if ( message_data[ 'error' ] === undefined ) {
+					// если ошибок в сообщении нет
+					if ( message_data[ 'error' ] === undefined ) {
 
-					// объединение данных сообщения с шаблонным массивом данных
-					message_data = $.extend( {
-						'image' : shlo[ 'image' ],
-						'name' : shlo[ 'name' ],
-						'title' : '',
-						'content' : '',
-						'datetime' : '',
-						'class_name' : '',
-						'id_user' : '',
-						'id_message' : '',
-						'edit' : '',
-					}, message_data );
+						// объединение данных сообщения с шаблонным массивом данных
+						message_data = $.extend( {
+							'image' : shlo[ 'image' ],
+							'name' : shlo[ 'name' ],
+							'title' : '',
+							'content' : '',
+							'datetime' : '',
+							'class_name' : '',
+							'id_user' : '',
+							'id_message' : '',
+							'edit' : '',
+						}, message_data );
 
-					// определение шаблона для сообщения
-					let message_box = $( '.chat__messages-box' );
+						// определение шаблона для сообщения
+						let message_box = $( '.chat__messages-box' );
 
-					// флаг в положении "редактирование сообщения"
-					let action = 'edit';
+						// флаг в положении "редактирование сообщения"
+						let action = 'edit';
 
-					// поиск указанного сообщения в окне чата
-					let current_message = message_box.find( '[data-id_message="' + message_data[ 'id_message' ] + '"]' );
+						// поиск указанного сообщения в окне чата
+						let current_message = message_box.find( '[data-id_message="' + message_data[ 'id_message' ] + '"]' );
 
-					// если id_message не указан, флаг в положение "добавление нового сообщения"
-					// и сообщения с указанным id еще нет в чате
-					if ( current_message.length === 0 ) {
-						action = 'add';
-					}
+						// если id_message не указан, флаг в положение "добавление нового сообщения"
+						// и сообщения с указанным id еще нет в чате
+						if ( current_message.length === 0 ) {
+							action = 'add';
+						}
 
-					// определение необходимости давать возможность редактировать сообщение
-					if ( message_data[ 'edit' ] === 1 ) {
-						message_data[ 'edit' ] = '<span class="message__edit"></span>';
+						// определение необходимости давать возможность редактировать сообщение
+						if ( message_data[ 'edit' ] === 1 ) {
+							message_data[ 'edit' ] = '<span class="message__edit"></span>';
+						} else {
+							message_data[ 'edit' ] = '';
+						}
+
+						// обозначение своего/чужого сообщения
+						if ( message_data[ 'class_name' ] === 0 ) {
+							message_data[ 'class_name' ] = ' message_alien';
+						} else {
+							message_data[ 'class_name' ] = '';
+						}
+
+						// указание пути к файлу аватара
+						if ( message_data[ 'image' ] !== '' ) {
+							message_data[ 'image' ] = ' style="background-image:url(' + shlo[ 'image_url' ] + message_data[ 'image' ] + ');"';
+						}
+
+						//message_data[ 'datetime' ]   = format_date( message_data[ 'datetime' ] );
+
+						// вставка значений в шаблон сообщения
+						let message = tmpl( 'message_template', message_data );
+
+						// если нужно добавить сообщение
+						if ( action === 'add' ) {
+
+							// добавление сформированного сообщения в окно чата
+							message_box.append( message );
+						} else {
+
+							// замена указанного сообщения на обновленное
+							current_message.replaceWith( message );
+						}
+
+						// скрол к последнему сообщению
+						scroll_to_last_message();
 					} else {
-						message_data[ 'edit' ] = '';
+						//console.log( message[ 'error' ] );
 					}
-
-					// обозначение своего/чужого сообщения
-					if ( message_data[ 'class_name' ] === 0 ) {
-						message_data[ 'class_name' ] = ' message_alien';
-					} else {
-						message_data[ 'class_name' ] = '';
-					}
-
-					// указание пути к файлу аватара
-					if ( message_data[ 'image' ] !== '' ) {
-						message_data[ 'image' ] = ' style="background-image:url(' + shlo[ 'image_url' ] + message_data[ 'image' ] + ');"';
-					}
-
-					//message_data[ 'datetime' ]   = format_date( message_data[ 'datetime' ] );
-
-					// вставка значений в шаблон сообщения
-					let message = tmpl( 'message_template', message_data );
-
-					// если нужно добавить сообщение
-					if ( action === 'add' ) {
-
-						// добавление сформированного сообщения в окно чата
-						message_box.append( message );
-					} else {
-
-						// замена указанного сообщения на обновленное
-						current_message.replaceWith( message );
-					}
-
-					// скрол к последнему сообщению
-					scroll_to_last_message();
-				} else {
-					//console.log( message[ 'error' ] );
-				}
-			} );
+				} );
+			}
 		}
 	}
 
@@ -161,7 +158,7 @@
 			 let id_message = $( '[name="id_message"]' ).val();
 			 if ( id_message !== '' ) {
 				 send_display_request( id_message );
-			 }else{
+			 } else {
 				 send_display_request();
 			 }
 			 // если данные отпралены успешно, происходит очистка формы
@@ -170,34 +167,13 @@
 	}
 
 	/**
-	 * Функция редактирования сообщения
-	 */
-	$( '.chat__messages-box' ).on( 'click', '.message__edit', function () {
-		let message    = $( this ).closest( '.message' );
-		let title      = message.find( '.message__title' ).text();
-		let id_message = message.attr( 'data-id_message' );
-		let text       = message.find( '.message__text' ).html();
-
-		$( '.chat__cancel' ).removeClass( 'hidden' );
-		let content = $( '.chat__message' );
-		content.val( text );
-		content.focus();
-		if ( title.length > 0 ) {
-			let message_title = $( '[name=title]' );
-			message_title.removeClass( 'hidden' );
-			message_title.val( title );
-		}
-		$( '[name="id_message"]' ).val( id_message );
-	} );
-
-	/**
-	 * Функция отправляет запрос на отображении сообщений в чате
+	 * Функция отправляет запрос для получения еще не полученных сообщений, либо на измененное сообщение.
 	 */
 	function send_display_request( id ) {
 		if ( shlo[ 'user_id' ] > 0 ) {
 
 			let query = 'action=get_last_messages&';
-			console.log( id );
+
 			if ( id === undefined ) {
 				// определение id последнего полученного сообщения
 				id = $( '.chat__messages-box' ).find( '.message' ).last().attr( 'data-id_message' );
@@ -210,18 +186,12 @@
 			}
 
 			$.post( shlo[ 'ajax_url' ], query ).done( function ( result ) {
-				console.log( result );
+
+				// обработка ответа сервера
 				message_push( result );
 			} );
 		}
 	}
-
-	/**
-	 * Функция отмены редактирования сообщения
-	 */
-	$( '.chat__cancel' ).on( 'click', function () {
-		clear_message_form();
-	} );
 
 	/**
 	 * скрол чата к последнему элементу
@@ -266,11 +236,57 @@
 		}
 	}
 
+
+	function swipe_show() {
+		$( '.swipe' ).removeClass( 'swipe-hidden' );
+	}
+
+	function swipe_hide() {
+		$( '.swipe' ).addClass( 'swipe-hidden' );
+	}
+
+	$( '.swipe__button' ).on( 'click', function () {
+		let parent = $( this ).closest( '.swipe' );
+		if ( parent.hasClass( 'swipe-hidden' ) ) {
+			swipe_show();
+		} else {
+			swipe_hide();
+		}
+	} );
+
 	// авто размер чата
 	chat_auto_height();
 
 	// скрол к последнему сообщению
 	scroll_to_last_message();
+
+	/**
+	 * Функция редактирования сообщения
+	 */
+	$( '.chat__messages-box' ).on( 'click', '.message__edit', function () {
+		let message    = $( this ).closest( '.message' );
+		let title      = message.find( '.message__title' ).text();
+		let id_message = message.attr( 'data-id_message' );
+		let text       = message.find( '.message__text' ).html();
+
+		$( '.chat__cancel' ).removeClass( 'hidden' );
+		let content = $( '.chat__message' );
+		content.val( text );
+		content.focus();
+		if ( title.length > 0 ) {
+			let message_title = $( '[name=title]' );
+			message_title.removeClass( 'hidden' );
+			message_title.val( title );
+		}
+		$( '[name="id_message"]' ).val( id_message );
+	} );
+
+	/**
+	 * Функция отмены редактирования сообщения
+	 */
+	$( '.chat__cancel' ).on( 'click', function () {
+		clear_message_form();
+	} );
 
 	/**
 	 * Изменение размера окна чата при изменении размера окна с задержкой
@@ -303,24 +319,6 @@
 		message_add( this );
 	} );
 
-
-	function swipe_show() {
-		$( '.swipe' ).removeClass( 'swipe-hidden' );
-	}
-
-	function swipe_hide() {
-		$( '.swipe' ).addClass( 'swipe-hidden' );
-	}
-
-	$( '.swipe__button' ).on( 'click', function () {
-		let parent = $( this ).closest( '.swipe' );
-		if ( parent.hasClass( 'swipe-hidden' ) ) {
-			swipe_show();
-		} else {
-			swipe_hide();
-		}
-	} );
-
 	/**
 	 * Проверка соответствия введенных паролей
 	 */
@@ -336,11 +334,21 @@
 		}
 	} );
 
-	/*
-		$( "body" ).on( 'swipeleft', swipe_show() );
-		$( "body" ).on( 'swipeleft', swipe_hide() );
-	*/
+		$( document ).on( 'swipeleft', swipe_show() );
+		$( document ).on( 'swipeleft', swipe_hide() );
 
 	setInterval( send_display_request, 1500 );
+
+
+	const events = [ 'click', 'mousemove', 'resize', 'scroll', 'touchstart', 'touchmove' ];
+
+	for ( let i = 0; i < events.length; i++ ) {
+		$( window ).on( events[ i ], debounce( function ( event ) {
+			let msg = "Handler for " + events[ i ] + " called at ";
+			msg += event.pageX + ", " + event.pageY;
+			console.log( msg );
+		}, 500 ) );
+	}
+
 
 })( jQuery );
