@@ -5,6 +5,54 @@
 	"use strict";
 
 	/**
+	 * Функция постановки задач в очередь. Функции выполняются по очереди, это сделано для сокращения кол-ва таймеров
+	 * до одного, с целью предотвращения зависания.
+	 */
+	let Scheduler = (function () {
+		let tasks      = [];
+		let minimum    = 10;
+		let timeoutvar = null;
+		let output     = {
+			add : function ( func, context, timer, once ) {
+				let iTimer = parseInt( timer );
+				context    = context && typeof context === 'object' ? context : null;
+				if ( typeof func === 'function' && !isNaN( iTimer ) && iTimer > 0 ) {
+					tasks.push( [ func, context, iTimer, iTimer * minimum, once ] );
+				}
+			},
+			remove : function ( func, context ) {
+				for ( let i = 0, l = tasks.length; i < l; i++ ) {
+					if ( tasks[ i ][ 0 ] === func && (tasks[ i ][ 1 ] === context || tasks[ i ][ 1 ] == null) ) {
+						tasks.splice( i, 1 );
+						return;
+					}
+				}
+			},
+			halt : function () {
+				if ( timeoutvar ) {
+					clearInterval( timeoutvar );
+				}
+			}
+		};
+		let schedule   = function () {
+			for ( let i = 0, l = tasks.length; i < l; i++ ) {
+				if ( tasks[ i ] instanceof Array ) {
+					tasks[ i ][ 3 ] -= minimum;
+					if ( tasks[ i ][ 3 ] < 0 ) {
+						tasks[ i ][ 3 ] = tasks[ i ][ 2 ] * minimum;
+						tasks[ i ][ 0 ].apply( tasks[ i ][ 1 ] );
+						if ( tasks[ i ][ 4 ] ) {
+							tasks.splice( i, 1 );
+						}
+					}
+				}
+			}
+		};
+		timeoutvar     = setInterval( schedule, minimum );
+		return output;
+	})();
+
+	/**
 	 * Функция задержки, помогает не "положить" браузер под нагрузкой пересчетов размера окна
 	 *
 	 * @param func
@@ -83,6 +131,7 @@
 							'edit' : '',
 						}, message_data );
 
+						message_data[ 'content' ] = message_data[ 'content' ].replace( /<\/?[^>]+>/gi, '' );
 						message_data[ 'content' ] = links_encode( message_data[ 'content' ] );
 
 						// определение шаблона для сообщения
@@ -191,7 +240,7 @@
 			}
 
 			$.post( shlo[ 'ajax_url' ], query ).done( function ( result ) {
-
+				console.log( new Date() );
 				// обработка ответа сервера
 				message_push( result );
 			} );
@@ -292,7 +341,7 @@
 		let text       = message.find( '.message__text' ).html();
 
 		// преобразование html ссылок в url'ы
-		text           = links_decode( text );
+		text = links_decode( text );
 
 		$( '.chat__cancel' ).removeClass( 'hidden' );
 		let content = $( '.chat__message-field' );
@@ -358,18 +407,23 @@
 			parent.find( '[type="submit"]' ).prop( "disabled", false );
 		}
 	} );
-	setInterval( send_display_request, 1500 );
 
 
-	const events = [ 'click', 'mousemove', 'resize', 'scroll', 'touchstart', 'touchmove' ];
+	Scheduler.add( send_display_request, null, 1000, false );
+	//setInterval( send_display_request, 1500 );
 
-	for ( let i = 0; i < events.length; i++ ) {
-		$( window ).on( events[ i ], debounce( function ( event ) {
-			let msg = "Handler for " + events[ i ] + " called at ";
-			msg += event.pageX + ", " + event.pageY;
-			console.log( msg );
-		}, 500 ) );
-	}
+	/*
+
+		const events = [ 'click', 'mousemove', 'resize', 'scroll', 'touchstart', 'touchmove' ];
+
+		for ( let i = 0; i < events.length; i++ ) {
+			$( window ).on( events[ i ], debounce( function ( event ) {
+				let msg = "Handler for " + events[ i ] + " called at ";
+				msg += event.pageX + ", " + event.pageY;
+				console.log( msg );
+			}, 500 ) );
+		}
+	*/
 
 
 })( jQuery );
