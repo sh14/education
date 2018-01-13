@@ -316,6 +316,14 @@
 		return text;
 	}
 
+	function swipe_show() {
+		$( '.swipe' ).removeClass( 'swipe-hidden' );
+	}
+
+	function swipe_hide() {
+		$( '.swipe' ).addClass( 'swipe-hidden' );
+	}
+
 	$( '.swipe__button' ).on( 'click', function () {
 		let parent = $( this ).closest( '.swipe' );
 		if ( parent.hasClass( 'swipe-hidden' ) ) {

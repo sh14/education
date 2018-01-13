@@ -93,6 +93,12 @@ function registration() {
 
 			if ( empty( $err ) ) {
 				do_query( "INSERT INTO users SET email='" . $email . "', password='" . $password . "'" );
+				$data = [
+					'email'    => $_POST['email'],
+					'password' => $_POST['password'],
+					'action'   => 'login',
+				];
+				login( $data );
 			}
 		}
 
@@ -104,33 +110,25 @@ function registration() {
 	}
 }
 
-
 add_action( 'init', 'registration' );
-
-/**
- * Функция разлогинивания
- */
-function logout( $logout = false ) {
-	if ( get_page() == 'logout' || $logout == true ) {
-		setcookie( 'shlo_chat', '', time() - 60 * 60 * 24 );
-
-		header( "Location: " . get_root_url() );
-		die();
-	}
-}
-
-add_action( 'init', 'logout' );
 
 /**
  * Функция авторизации пользователя
  *
  */
-function authorization_user() {
+function login( $data = null) {
 	//pr($_POST);die();
-	if ( isset( $_POST['email'] ) && isset( $_POST['password'] ) && ! empty( $_POST['action'] ) && $_POST['action'] == 'authorization' ) {
+	if ( empty( $data ) ) {
+		$data = $_POST;
+	}
 
-		$email    = $_POST['email'];
-		$password = encrypt_password( $_POST['password'] );
+	if ( isset( $data['email'] )
+	     && isset( $data['password'] )
+	     && ! empty( $data['action'] )
+	     && $data['action'] == 'login' ) {
+
+		$email    = $data['email'];
+		$password = encrypt_password( $data['password'] );
 		$sql      = "SELECT COUNT(*) FROM users WHERE email='{$email}' AND password='{$password}'";
 		$result   = do_query( $sql );
 		$rows     = $result->fetch_row();
@@ -148,7 +146,22 @@ function authorization_user() {
 	}
 }
 
-add_action( 'init', 'authorization_user' );
+add_action( 'init', 'login' );
+
+/**
+ * Функция разлогинивания
+ */
+function logout( $logout = false ) {
+	if ( get_page() == 'logout' || $logout == true ) {
+		setcookie( 'shlo_chat', '', time() - 60 * 60 * 24 );
+
+		header( "Location: " . get_root_url() );
+		die();
+	}
+}
+
+add_action( 'init', 'logout' );
+
 
 /**
  * Функция проверки - авторизирован ли пользователь

@@ -41,7 +41,7 @@
 						<input class="form-control password_login" type="password" placeholder="Пароль"
 						       id="password_login" name="password" required="required"/>
 					</div>
-					<input type="hidden" name="action" value="authorization"/>
+					<input type="hidden" name="action" value="login"/>
 					<button class="login btn btn-success" type="submit" name="login_send">Вход</button>
 					<?php do_action( 'login_error' ); ?>
 				</form>
