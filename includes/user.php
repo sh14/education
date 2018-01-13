@@ -26,21 +26,27 @@ function get_current_user_id() {
  *
  * @return mixed
  */
-function get_user_info() {
-	global $current_user;
+function get_user_info( $user_id = 0 ) {
+	if ( $user_id > 0 ) {
+		$sql    = "SELECT * FROM users WHERE ID={$user_id}";
+		$result = do_query( $sql );
+		$user   = $result->fetch_array( MYSQLI_ASSOC );
+	} else {
+		global $current_user;
 
-	$user = $current_user;
+		$user = $current_user;
 
-	if ( is_user_logged_in() ) {
+		if ( is_user_logged_in() ) {
 
-		if ( empty( $current_user ) ) {
-			list( $email, $password ) = explode( ';', esc_sql( $_COOKIE['shlo_chat'] ) );
+			if ( empty( $current_user ) ) {
+				list( $email, $password ) = explode( ';', esc_sql( $_COOKIE['shlo_chat'] ) );
 
-			if ( ! empty( $email ) && ! empty( $password ) ) {
-				$sql          = "SELECT * FROM users WHERE email='{$email}' AND password='{$password}'";
-				$result       = do_query( $sql );
-				$user         = $result->fetch_array( MYSQLI_ASSOC );
-				$current_user = $user;
+				if ( ! empty( $email ) && ! empty( $password ) ) {
+					$sql          = "SELECT * FROM users WHERE email='{$email}' AND password='{$password}'";
+					$result       = do_query( $sql );
+					$user         = $result->fetch_array( MYSQLI_ASSOC );
+					$current_user = $user;
+				}
 			}
 		}
 	}
@@ -91,7 +97,7 @@ function registration() {
 		}
 
 		if ( ! empty( $err ) ) {
-			error_messages_add($err);
+			error_messages_add( $err );
 		}
 
 		header( "Location: " . get_root_url() );
@@ -136,8 +142,8 @@ function authorization_user() {
 			die();
 		} else {
 			//setcookie( 'wrong_login', 1 );
-			error_messages_add('wrong_login');
-			logout( true     );
+			error_messages_add( 'wrong_login' );
+			logout( true );
 		}
 	}
 }

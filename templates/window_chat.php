@@ -5,19 +5,6 @@
  * Date: 12.11.2017
  * Time: 14:47
  */
-/*
-$last_message_id = 17;
-$sql    = "SELECT * FROM message m LEFT JOIN users u ON u.ID = m.id_user WHERE m.id_message > {$last_message_id} ORDER BY datetime DESC LIMIT 30";
-
-//$sql    = "SELECT * FROM `message` WHERE id_message > {$last_message_id} ORDER BY `id_message` ASC";
-$result = do_query( $sql );
-if ( $result->num_rows > 0 ) {
-	while ( $rows = mysqli_fetch_array( $result, MYSQLI_ASSOC ) ) {
-		pr( $rows );
-	}
-}else{
-	pr( $result );
-}*/
 ?>
 
 <div class="page container">

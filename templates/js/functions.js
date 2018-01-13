@@ -83,6 +83,8 @@
 							'edit' : '',
 						}, message_data );
 
+						message_data[ 'content' ] = links_encode( message_data[ 'content' ] );
+
 						// определение шаблона для сообщения
 						let message_box = $( '.chat__messages-box' );
 
@@ -157,8 +159,11 @@
 		 .done( function () {
 			 let id_message = $( '[name="id_message"]' ).val();
 			 if ( id_message !== '' ) {
+
+				 // отправка запроса на получение конкретного сообщения
 				 send_display_request( id_message );
 			 } else {
+				 // отправка запроса на получение последних сообщений
 				 send_display_request();
 			 }
 			 // если данные отпралены успешно, происходит очистка формы
@@ -236,13 +241,30 @@
 		}
 	}
 
-
-	function swipe_show() {
-		$( '.swipe' ).removeClass( 'swipe-hidden' );
+	/**
+	 * Перевод url'а в html ссылку
+	 *
+	 * @param text
+	 * @returns {*}
+	 */
+	function links_encode( text ) {
+		let exp   = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+		let text1 = text.replace( exp, "<a target=\"_blank\" href='$1'>$1</a>" );
+		let exp2  = /(^|[^\/])(www\.[\S]+(\b|$))/gim;
+		text      = text1.replace( exp2, '$1<a target="_blank" href="http://$2">$2</a>' );
+		return text;
 	}
 
-	function swipe_hide() {
-		$( '.swipe' ).addClass( 'swipe-hidden' );
+	/**
+	 * Перевод html ссылки в url
+	 *
+	 * @param text
+	 * @returns {string | * | void}
+	 */
+	function links_decode( text ) {
+		let exp = /<a(.*?)href="(.*?)">(.*?)<\/a>/ig;
+		text    = text.replace( exp, '$3' );
+		return text;
 	}
 
 	$( '.swipe__button' ).on( 'click', function () {
@@ -269,8 +291,11 @@
 		let id_message = message.attr( 'data-id_message' );
 		let text       = message.find( '.message__text' ).html();
 
+		// преобразование html ссылок в url'ы
+		text           = links_decode( text );
+
 		$( '.chat__cancel' ).removeClass( 'hidden' );
-		let content = $( '.chat__message' );
+		let content = $( '.chat__message-field' );
 		content.val( text );
 		content.focus();
 		if ( title.length > 0 ) {
@@ -333,10 +358,6 @@
 			parent.find( '[type="submit"]' ).prop( "disabled", false );
 		}
 	} );
-
-		$( document ).on( 'swipeleft', swipe_show() );
-		$( document ).on( 'swipeleft', swipe_hide() );
-
 	setInterval( send_display_request, 1500 );
 
 

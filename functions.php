@@ -364,10 +364,7 @@ function get_last_messages() {
 			// производится подготовка массива сообщений к выводу
 			while ( $row = mysqli_fetch_array( $result, MYSQLI_ASSOC ) ) {
 
-				$name = '';
-				if ( ! empty( $row['first_name'] ) || ! empty( $row['last_name'] ) ) {
-					$name = $row['first_name'] . ' ' . $row['last_name'];
-				}
+				$name = get_user_name( $row['id_user'] );
 
 				$datetime = '';
 				if ( ! empty( $row['datetime'] ) ) {
@@ -439,10 +436,6 @@ function display_message() {
 
 					$datetime = date( 'H:i:s, d.m.Y', strtotime( $row['datetime'] ) );
 				}
-				$name = '';
-				if ( ! empty( $row['first_name'] ) || ! empty( $row['last_name'] ) ) {
-					$name = $row['first_name'] . ' ' . $row['last_name'];
-				}
 
 				if ( $current_user_id != $row['id_user'] ) {
 					$class = ' message_alien';
@@ -453,9 +446,9 @@ function display_message() {
 				}
 				$messages[] = get_template_string( $template, [
 					'image'      => $image,
-					'name'       => $name,
+					'name'       => get_user_name( $row['id_user'] ),
 					'title'      => ! empty( $row['title'] ) ? $row['title'] : '',
-					'content'    => ! empty( $row['content'] ) ? $row['content'] : '',
+					'content'    => ! empty( $row['content'] ) ? links_encode( $row['content'] ) : '',
 					'datetime'   => $datetime,
 					'class_name' => $class,
 					'id_user'    => $row['id_user'],
@@ -515,10 +508,14 @@ function enqueue_scripts() {
 	register_script( 'functions', get_stylesheet_directory() . '/js/functions.js', [ 'jquery' ], '', true );
 	enqueue_script( 'functions' );
 
+	// получение данных текущего пользователя
 	$shlo = get_user_info();
 
 	if ( ! empty( $shlo ) ) {
-		$shlo['name'] = trim( $shlo['first_name'] . ' ' . $shlo['last_name'] );
+
+		// получение имени пользователя
+		$shlo['name'] = get_user_name();
+
 		unset( $shlo['password'] );
 
 	} else {
@@ -526,6 +523,8 @@ function enqueue_scripts() {
 	}
 	$shlo['ajax_url']  = get_root_url() . '/ajax.php';
 	$shlo['image_url'] = get_root_url() . '/images/users/';
+
+	// если пользователь авторизован
 	if ( ! empty( $shlo['ID'] ) ) {
 		$shlo['user_id'] = $shlo['ID'];
 		$shlo['image']   = get_root_url() . '/images/users/' . $shlo['image'];
@@ -537,22 +536,24 @@ function enqueue_scripts() {
 
 add_action( 'init', 'enqueue_scripts' );
 
-
 /**
- * Функция валидации email
+ * Получение имени текущего пользователя
+ *
+ * @return bool|string
  */
-function emailValidation( $email ) {
-	if ( $email ) {
-		if ( preg_match( "/[0-9a-z_\.\-]+@[0-9a-z_\.\-]+\.[a-z]{2,4}/i", $email ) ) {
-			$message = 'Корректный Email';
-		} else {
-			$message = 'Некорректный Email';
-		}
-	} else {
-		$message = 'Email не указан';
+function get_user_name( $user_id = 0 ) {
+
+	// получение данных текущего пользователя
+	$user = get_user_info( $user_id );
+
+	// формирование имени пользователя
+	$user['name'] = trim( $user['first_name'] . ' ' . $user['last_name'] );
+
+	if ( empty( $user['name'] ) ) {
+		$user['name'] = substr( $user['email'], 0, strpos( $user['email'], '@' ) );
 	}
 
-	return $message;
+	return $user['name'];
 }
 
 
@@ -653,6 +654,14 @@ function anti_cash() {
 
 add_action( 'init', 'anti_cash' );
 
+/**
+ * Функция добавления сообщений об ошибках. При вызове функции в нее передается информация об имени ошибки,
+ * в последствии текст указанной ошибки будет выведен в определенном месте.
+ *
+ * Информация об ошибках записывается в специально созданную для этого куку.
+ *
+ * @param $error_name
+ */
 function error_messages_add( $error_name ) {
 	if ( is_array( $error_name ) ) {
 		$error_name = implode( ',', $error_name );
@@ -703,8 +712,11 @@ function error_messages() {
 
 		}
 
+		// перебор массива содержащего тексты ошибок распределенные по местам, в которых они должны быть выведены
 		foreach ( $messages as $key => $message ) {
 			$messages_key = '';
+
+			// перебор текстов, которые будут выведены в одном месте
 			foreach ( $message as $line ) {
 				$messages_key .= '<p class="bg-danger text-danger error-message">' . $line . '</p>';
 			}
@@ -715,9 +727,48 @@ function error_messages() {
 			} );
 		}
 
-
+		// удаление куки с ошибками
 		setcookie( 'error_messages', 0, time() - 60 * 60 * 24 );
 	}
 }
 
 add_action( 'init', 'error_messages' );
+
+/**
+ * Перевод url'а в html ссылку
+ *
+ * @param $text
+ *
+ * @return null|string|string[]
+ */
+function links_encode( $text ) {
+	$template = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
+
+	// проверка наличая url'а в тексте
+	if ( preg_match( $template, $text, $url ) ) {
+
+		// преобразование url'ов в ссылки
+		$text = preg_replace( $template, '<a target="_blank" href="' . $url[0] . '">' . $url[0] . '</a> ', $text );
+	}
+
+	return $text;
+}
+
+/**
+ * Перевод html ссылку в url
+ *
+ * @param $text
+ *
+ * @return null|string|string[]
+ */
+function links_decode( $text ) {
+	$template = '/<a(.*?)href="(.*?)">(.*?)<\/a>/';
+
+	// преобразование url'ов в ссылки
+	$text = preg_replace( $template, '$3', $text );
+
+	return $text;
+}
+
+
+// eof
