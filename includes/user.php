@@ -116,7 +116,7 @@ add_action( 'init', 'registration' );
  * Функция авторизации пользователя
  *
  */
-function login( $data = null) {
+function login( $data = null ) {
 	//pr($_POST);die();
 	if ( empty( $data ) ) {
 		$data = $_POST;
@@ -200,7 +200,7 @@ function upload_file() {
 	$user_id    = get_current_user_id();
 	$file_name  = 'avatar_id' . $user_id . '.' . $ext;
 	$uploadfile = $uploaddir . $file_name;
-
+	$file_name  .= '?' . rand( 0, 10000 );
 
 	if ( move_uploaded_file( $_FILES['filedata']['tmp_name'], $uploadfile ) ) {
 		$sql_users = "UPDATE users SET image = '{$file_name}' WHERE ID = $user_id";

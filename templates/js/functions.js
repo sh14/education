@@ -387,8 +387,9 @@
 	 * отслеживание отправки сообщения
 	 */
 	$( '[name="content"]' ).on( 'keydown', function ( event ) {
-
-		if ( event.key === 'Enter' && event.altKey ) {
+		//event.preventDefault();
+		//if ( event.key === 'Enter' && event.altKey ) {
+		if ( event.key === 'Enter' ) {
 			message_add( this );
 		}
 	} );

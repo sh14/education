@@ -24,7 +24,7 @@
 							       name="title">
 							<div class="chat__message">
 								<textarea class="form-control chat__message-field" rows="1"
-								          placeholder="Для отправки сообщения нажмите Alt + Enter"
+								          placeholder="Для отправки сообщения нажмите Enter"
 								          name="content" autofocus></textarea>
 							</div>
 							<div class="chat__buttons">

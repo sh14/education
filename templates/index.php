@@ -10,8 +10,8 @@ if ( redirect_configuration_page() === true ) {
 	// если пользователь авторизован
 	if ( is_user_logged_in() ) {
 
-		get_template_part( 'window_chat' );
+		get_template_part( 'chat' );
 	}else{
-		get_template_part( 'main' );
+		get_template_part( 'login' );
 	}
 }

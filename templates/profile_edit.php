@@ -29,7 +29,7 @@ if ( is_user_logged_in() ) {
 					<div class="upload-image__sign js-edit-button"></div>
 					<input class="upload-image__file" name="filedata" type="file">
 				</label>
-				<div class="upload-image__caption js-edit-button">Выбирите файл</div>
+				<div class="upload-image__caption js-edit-button">Выберите файл</div>
 				<div class="upload-image__upload js-upload" style="display: none;">
 					<div class="upload-image__progress progress progress-success">
 						<div class="js-progress bar upload-image__progress_bar "></div>

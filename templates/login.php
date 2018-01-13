@@ -23,7 +23,7 @@
 						       name="password" required="required">
 					</div>
 
-					<button class="btn btn-primary" type="submit">Зарегистрироваться</button>
+					<button class="btn btn-primary btn-block" type="submit">Зарегистрироваться</button>
 					<input type="hidden" name="action" value="registration">
 					<?php do_action( 'reg_error' ); ?>
 				</form>
@@ -42,7 +42,7 @@
 						       id="password_login" name="password" required="required"/>
 					</div>
 					<input type="hidden" name="action" value="login"/>
-					<button class="login btn btn-success" type="submit" name="login_send">Вход</button>
+					<button class="login btn btn-success btn-block" type="submit" name="login_send">Вход</button>
 					<?php do_action( 'login_error' ); ?>
 				</form>
 			</div>

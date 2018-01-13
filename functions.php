@@ -429,7 +429,7 @@ function display_message() {
 
 				$image = '';
 				if ( ! empty( $row['image'] ) ) {
-					$image = ' style="background-image:url(' . get_root_url() . '/images/users/' . $row['image'] . ');"';
+					$image = ' style="background-image:url(' . get_root_url() . '/images/users/' . $row['image'] .');"';
 				}
 				$datetime = '';
 				if ( ! empty( $row['datetime'] ) ) {

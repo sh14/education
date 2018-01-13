@@ -66,7 +66,7 @@
 									$( this ).remove();
 
 									// файл загружается
-									$( selector ).fileapi( 'upload' );
+									$( selector ).fileapi( 'upload');
 
 								} );
 
@@ -104,7 +104,6 @@
 										} );
 									}
 								} );
-
 							}
 						} ).open();
 					}
