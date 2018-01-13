@@ -24,7 +24,6 @@
 					</div>
 
 					<button class="btn btn-primary" type="submit">Зарегистрироваться</button>
-
 					<input type="hidden" name="action" value="registration">
 					<?php do_action( 'reg_error' ); ?>
 				</form>
