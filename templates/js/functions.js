@@ -5,6 +5,12 @@
 	"use strict";
 
 	/**
+	 * Массив событий пользователя
+	 */
+
+	const events = [ 'click', 'mousemove'/*, 'resize', 'scroll','keyup', 'touchstart', 'touchmove'*/ ];
+
+	/**
 	 * Функция постановки задач в очередь. Функции выполняются по очереди, это сделано для сокращения кол-ва таймеров
 	 * до одного, с целью предотвращения зависания.
 	 */
@@ -419,20 +425,37 @@
 
 
 	Scheduler.add( send_display_request, null, 1000, false );
-	//setInterval( send_display_request, 1500 );
 
-	/*
-
-		const events = [ 'click', 'mousemove', 'resize', 'scroll', 'touchstart', 'touchmove' ];
-
-		for ( let i = 0; i < events.length; i++ ) {
-			$( window ).on( events[ i ], debounce( function ( event ) {
-				let msg = "Handler for " + events[ i ] + " called at ";
-				msg += event.pageX + ", " + event.pageY;
-				console.log( msg );
+	/**
+	 * Функция отслеживания событий пользователей
+	 */
+	function event_tracking() {
+		let passed_events = [];
+		send_display_request();
+		events.forEach( function ( element ) {
+			$( window ).on( element, debounce( function () {
+				passed_events.push( element );
+				console.log( passed_events );
+				if ( passed_events.length > 0 ) {
+					Scheduler.remove( send_display_request );
+					Scheduler.add( send_display_request, null, 1000, false );
+				}
 			}, 500 ) );
-		}
-	*/
+		} );
+		Scheduler.remove( send_display_request );
+		Scheduler.add( send_display_request, null, 6000, false );
+	}
+	//event_tracking();
+	/*function tracking_cycle() {
+		Scheduler.remove(event_tracking);
+		Scheduler.add(event_tracking, null, 1, true);
+	}
+	//Scheduler.add( event_tracking, null, 1, true );*/
+	//Scheduler.remove( event_tracking );
+	//Scheduler.add( tracking_cycle, null, 1000, false );
+	//Scheduler.add(tracking_cycle,null, 6000,false);
+
+
 
 
 })( jQuery );
